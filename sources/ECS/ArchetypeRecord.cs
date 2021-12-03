@@ -23,6 +23,42 @@ namespace WonkECS
         public bool Has<T>() where T : struct
             => Archetype.Storage.ContainsKey(typeof(T));
 
+
+        public void Add<T>(T c) where T : struct
+        {
+            var id = ArchetypeIndex;
+            List<ComponentBox> comps = Archetype.Storage.Values.Select(x => x.RemoveAt(id)).ToList();
+            comps.Add(new ComponentBox<T>(c));
+            if(Archetype.Edges.Add.TryGetValue(typeof(T), out var newArch))
+            {
+                // Step 1 add all components to new archetype
+               
+                Archetype.RemoveEntityIndex(id);
+                newArch.EntityID.Add(Entity.Index);
+                ArchetypeIndex = newArch.EntityID.Count;
+                Archetype = newArch;
+                foreach(var cmp in comps)
+                {
+                    newArch.Storage[cmp.GetComponentType()].Add(cmp);
+                }
+            }
+            else
+            {
+                var aid = new ArchetypeID(comps.Select(c => c.GetComponentType()));
+
+                var world = Entity.World;
+    
+                Archetype = world.GenerateArchetype(aid, comps);
+                Archetype.EntityID.Add(Entity.Index);
+                foreach(var cmp in comps)
+                {
+                    Archetype.Storage[cmp.GetComponentType()].Add(cmp);
+                }
+                world.BuildGraph();
+            }
+        }
+
+
         public void Remove<T>() where T : struct
         {
             var id = ArchetypeIndex;

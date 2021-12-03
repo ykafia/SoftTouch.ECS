@@ -9,7 +9,7 @@ namespace WonkECS.Test
     {
 
         [TestMethod]
-        public void TestAddComponent()
+        public void TestCreateEntity()
         {
             var world = new World();
             world
@@ -44,6 +44,18 @@ namespace WonkECS.Test
                 .Build();
             world[0].Remove<NameComponent>();
             Assert.IsFalse(world[0].Has<NameComponent>());
+            Assert.IsTrue(world[0].Has<HealthComponent>());
+        }
+        [TestMethod]
+        public void TestAddComponent()
+        {
+            var world = new World();
+            world
+                .CreateEntity()
+                .With(new HealthComponent{LifePoints = 100})
+                .Build();
+            world[0].Add(new NameComponent{Name = "Lola"});
+            Assert.IsTrue(world[0].Has<NameComponent>());
             Assert.IsTrue(world[0].Has<HealthComponent>());
         }
     }
