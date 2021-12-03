@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WonkECS", "sources\ECS\Wonk
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WonkECS.Test", "sources\WonkECS.Test\WonkECS.Test.csproj", "{E446B83D-8E62-40D9-BCA9-DE8ADB0178BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WonkECS.Benchmark", "sources\WonkECS.Benchmark\WonkECS.Benchmark.csproj", "{D9A4C094-013A-4F90-9571-880FA33CC9E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +28,14 @@ Global
 		{E446B83D-8E62-40D9-BCA9-DE8ADB0178BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E446B83D-8E62-40D9-BCA9-DE8ADB0178BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E446B83D-8E62-40D9-BCA9-DE8ADB0178BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9A4C094-013A-4F90-9571-880FA33CC9E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9A4C094-013A-4F90-9571-880FA33CC9E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9A4C094-013A-4F90-9571-880FA33CC9E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9A4C094-013A-4F90-9571-880FA33CC9E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{34B323D4-5CDE-4761-B036-C726F824B95E} = {1F9F4560-CA0F-477A-B8F6-AA8072ADA27C}
 		{E446B83D-8E62-40D9-BCA9-DE8ADB0178BD} = {1F9F4560-CA0F-477A-B8F6-AA8072ADA27C}
+		{D9A4C094-013A-4F90-9571-880FA33CC9E2} = {1F9F4560-CA0F-477A-B8F6-AA8072ADA27C}
 	EndGlobalSection
 EndGlobal
