@@ -44,7 +44,7 @@ namespace WonkECS.Test
                 .Build();
             world[0].Remove<NameComponent>();
             Assert.IsFalse(world[0].Has<NameComponent>());
-            Assert.IsTrue(world[0].Has<NameComponent>());
+            Assert.IsTrue(world[0].Has<HealthComponent>());
         }
     }
 }
