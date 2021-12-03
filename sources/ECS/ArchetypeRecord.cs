@@ -17,6 +17,9 @@ namespace WonkECS
         public void Set<T>(T cmp) where T : struct
             => Archetype.SetComponent(ArchetypeIndex, cmp);
         
+        public T Get<T>() where T : struct
+            => Archetype.GetComponentArray<T>()[ArchetypeIndex];
+        
         public bool Has<T>() where T : struct
             => Archetype.Storage.ContainsKey(typeof(T));
 
