@@ -7,7 +7,7 @@ namespace WonkECS
     public class EntityBuilder : IEntity
     {
         public Entity? Entity;
-        public World? World {get;set;}
+        public World? World => Entity.World;
         public HashSet<Type> ComponentTypes => Components.Keys.ToHashSet();
 
         public Dictionary<Type, ComponentBox> Components = new();

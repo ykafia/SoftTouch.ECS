@@ -20,7 +20,7 @@ namespace WonkECS
 
         public EntityBuilder CreateEntity()
         {
-            var e = new EntityBuilder { Entity = new Entity { Index = Entities.Count }, World = this };
+            var e = new EntityBuilder { Entity = new Entity { Index = Entities.Count, World = this }};
             Entities[e.Entity.Index] = new();
             return e;
         }

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace WonkECS
 {
-    public struct ArchetypeRecord
+    public class ArchetypeRecord
     {
         public Entity Entity;
         public Archetype Archetype;
@@ -25,21 +25,34 @@ namespace WonkECS
 
         public void Remove<T>() where T : struct
         {
-            var aid = new ArchetypeID(Archetype.Storage.Keys.Where(x => x != typeof(T)));
+            var id = ArchetypeIndex;
+            List<ComponentBox> comps = Archetype.Storage.Values.Select(x => x.RemoveAt(id)).Where(x => x.GetComponentType() != typeof(T)).ToList();
             if(Archetype.Edges.Remove.TryGetValue(typeof(T), out var newArch))
             {
                 // Step 1 add all components to new archetype
-                var id = ArchetypeIndex;
-                List<ComponentBox> comps = Archetype.Storage.Values.Select(x => x.RemoveAt(id)).ToList();
+               
                 Archetype.RemoveEntityIndex(id);
                 newArch.EntityID.Add(Entity.Index);
                 ArchetypeIndex = newArch.EntityID.Count;
                 Archetype = newArch;
                 foreach(var cmp in comps)
                 {
-                    if(cmp.GetComponentType() != typeof(T))
-                        newArch.Storage[cmp.GetComponentType()].Add(cmp);
+                    newArch.Storage[cmp.GetComponentType()].Add(cmp);
                 }
+            }
+            else
+            {
+                var aid = new ArchetypeID(Archetype.Storage.Keys.Where(x => x != typeof(T)));
+
+                var world = Entity.World;
+    
+                Archetype = world.GenerateArchetype(aid, comps);
+                Archetype.EntityID.Add(Entity.Index);
+                foreach(var cmp in comps)
+                {
+                    Archetype.Storage[cmp.GetComponentType()].Add(cmp);
+                }
+                world.BuildGraph();
             }
         }
     }
