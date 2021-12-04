@@ -58,6 +58,16 @@ namespace WonkECS.Test
             Assert.IsTrue(world[0].Has<NameComponent>());
             Assert.IsTrue(world[0].Has<HealthComponent>());
         }
+
+        [TestMethod]
+        public void TestSpawnRemove10000()
+        {
+            var world = new World();
+            for(int i = 0; i < 3; i++)
+                world.CreateEntity().With(new NameComponent{Name = "Lola"}).With(new HealthComponent()).Build();
+            for(int i = 0; i < 3; i++)
+                world[i].Remove<NameComponent>();
+        }
     }
 }
 

@@ -30,7 +30,6 @@ namespace WonkECS
             World[Entity.Index] = new ArchetypeRecord
             {
                 Entity = Entity,
-                ArchetypeIndex = archetype.Length,
                 Archetype = archetype
             };
             archetype.EntityID.Add(Entity.Index);

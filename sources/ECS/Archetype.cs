@@ -59,7 +59,7 @@ namespace WonkECS
             }
         }
 
-        public void RemoveEntityIndex(int i) => EntityID.RemoveAt(i);
+        public void RemoveEntity(Entity e) => EntityID.RemoveAt(EntityID.IndexOf(e.Index));
         
         public void SetLastComponent<T>(T component, long entity) where T : struct
         {
@@ -76,6 +76,8 @@ namespace WonkECS
                 ((ComponentArray<T>)Storage[typeof(T)])[index] = component;
             }
         }
+
+        internal void AddEntity(Entity entity) => EntityID.Add(entity.Index);
 
         public override string ToString()
         {

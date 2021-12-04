@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ECS\WonkECS.csproj" />
+    <ProjectReference Include="..\WonkECS.Components\WonkECS.Components.csproj" />
   </ItemGroup>
 
 </Project>

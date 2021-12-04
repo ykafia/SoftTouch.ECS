@@ -29,7 +29,7 @@ namespace WonkECS
         {
             if (Archetypes.TryGetValue(types, out Archetype? a) && e.Entity != null)
             {
-                return new ArchetypeRecord { Entity = e.Entity, ArchetypeIndex = a.Length, Archetype = a };
+                return new ArchetypeRecord { Entity = e.Entity, Archetype = a };
             }
             else
             {

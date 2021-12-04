@@ -1,21 +1,39 @@
 ﻿using System;
 using BenchmarkDotNet;
 using BenchmarkDotNet.Attributes;
-
+using WonkECS.Components;
+using System.Linq;
 namespace WonkECS.Benchmark
 {
     public class Benchmarks
     {
+
+        public World W1 = new World();
+        public World W2 = new World();
+        public World W3 = new World();
+
         [Benchmark]
-        public void Scenario1()
+        public void CreateNewEntitiesSameArchetype()
         {
-            // Implement your benchmark here
+            for(int i = 0; i < 10000; i++)
+                W1.CreateEntity().With(new NameComponent{Name = "Lola"}).Build();
         }
 
         [Benchmark]
-        public void Scenario2()
+        public void CreateNewEntitiesSameArchetype2()
         {
-            // Implement your benchmark here
+            for(int i = 0; i < 10000; i++)
+                W2.CreateEntity().With(new NameComponent{Name = "Lola"}).With(new HealthComponent()).Build();
         }
+
+        [Benchmark]
+        public void RemoveComponent()
+        {
+            for(int i = 0; i < 5000; i++)
+                W3.CreateEntity().With(new NameComponent{Name = "Lola"}).With(new HealthComponent()).Build();
+            for(int i = 0; i < 5000; i++)
+                W3[i].Remove<NameComponent>();
+        }
+        
     }
 }
