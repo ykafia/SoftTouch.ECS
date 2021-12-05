@@ -1,6 +1,6 @@
 # ECSharp
 
-This project is a prototype for an ECS implementation with archetypal storage, heavily inspired by FLECS.
+This project is a prototype for a lightweight ECS implementation with archetypal storage, heavily inspired by FLECS. It performs relatively well but there is room for improvement.
 
 ## Example
 
@@ -18,7 +18,9 @@ public struct NameComponent
 }
 ```
 
-Then a processor for `NameComponent` :
+As you can see, components are `struct`s, and they can only be value types.
+
+Then we create a processor for `NameComponent` :
 
 ```csharp
 public class NameProcessor : Processor<QueryEntity<NameComponent>>
@@ -52,7 +54,9 @@ world.CreateEntity()
     .With(new NameComponent{Name = "Name2"})
     .With(new HealthComponent{})
     .Build();
-world.Update();
 
 world.Add(new NameProcessor());
+// After this line of code every NameComponent will be updated by the processor
+world.Update();
+
 ```
