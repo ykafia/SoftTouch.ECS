@@ -5,7 +5,5 @@ namespace ECSharp.Components
     {
         public float LifePoints;
         public float Shield;
-        
-
     }
 }
