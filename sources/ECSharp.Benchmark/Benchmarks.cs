@@ -1,9 +1,9 @@
 ﻿using System;
 using BenchmarkDotNet;
 using BenchmarkDotNet.Attributes;
-using WonkECS.Components;
+using ECSharp.Components;
 using System.Linq;
-namespace WonkECS.Benchmark
+namespace ECSharp.Benchmark
 {
     public class Benchmarks
     {

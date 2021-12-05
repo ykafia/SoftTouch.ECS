@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sources", "sources", "{1F9F4560-CA0F-477A-B8F6-AA8072ADA27C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WonkECS", "sources\ECS\WonkECS.csproj", "{34B323D4-5CDE-4761-B036-C726F824B95E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECSharp", "sources\ECS\ECSharp.csproj", "{34B323D4-5CDE-4761-B036-C726F824B95E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WonkECS.Test", "sources\WonkECS.Test\WonkECS.Test.csproj", "{E446B83D-8E62-40D9-BCA9-DE8ADB0178BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECSharp.Test", "sources\ECSharp.Test\ECSharp.Test.csproj", "{E446B83D-8E62-40D9-BCA9-DE8ADB0178BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WonkECS.Benchmark", "sources\WonkECS.Benchmark\WonkECS.Benchmark.csproj", "{D9A4C094-013A-4F90-9571-880FA33CC9E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECSharp.Benchmark", "sources\ECSharp.Benchmark\ECSharp.Benchmark.csproj", "{D9A4C094-013A-4F90-9571-880FA33CC9E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

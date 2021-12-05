@@ -1,5 +1,5 @@
 
-namespace WonkECS.Components
+namespace ECSharp.Components
 {
     public struct HealthComponent
     {

@@ -1,8 +1,8 @@
-using WonkECS;
-using WonkECS.Components;
+using ECSharp;
+using ECSharp.Components;
 using BenchmarkDotNet.Running;
 
-namespace WonkECS.Benchmark
+namespace ECSharp.Benchmark
 {
     public class Program
     {        

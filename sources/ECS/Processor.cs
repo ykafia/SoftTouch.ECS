@@ -1,4 +1,4 @@
-namespace WonkECS
+namespace ECSharp
 {
     public partial class Processor
     {

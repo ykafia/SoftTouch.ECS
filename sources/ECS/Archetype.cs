@@ -3,7 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WonkECS
+namespace ECSharp
 {
     public class Archetype
     {

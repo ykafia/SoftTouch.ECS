@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ECS\WonkECS.csproj" />
-    <ProjectReference Include="..\WonkECS.Components\WonkECS.Components.csproj" />
+    <ProjectReference Include="..\ECS\ECSharp.csproj" />
+    <ProjectReference Include="..\ECSharp.Shared\ECSharp.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using WonkECS;
-using WonkECS.Components;
+using ECSharp;
+using ECSharp.Components;
 
-namespace WonkECS.Test
+namespace ECSharp.Test
 {
     [TestClass]
     public class UnitTest1

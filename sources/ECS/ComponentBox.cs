@@ -1,6 +1,6 @@
 using System;
 
-namespace WonkECS
+namespace ECSharp
 {
     public partial class ComponentBox
     {

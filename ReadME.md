@@ -1,9 +1,8 @@
-# WONK-ECS
+# ECSharp
 
-It's a wonky Entity-Component-System library using Archetypal storage.
-It's heavily inspired by FLECS.
+This project is a prototype for an ECS implementation with archetypal storage, heavily inspired by FLECS.
 
-## UseCase
+## Example
 
 ```csharp
 var world = new World();
@@ -25,8 +24,3 @@ world[0].Remove<HealthComponent>();
 world.Processors.Add(new NameProcessor());
 world.Update();
 ```
-
-## FAQ
-
-1. Why is it wonky ?
-    Well it's not benchmarked, the api is not battle tested and i don't trust my current knowledge of C# enough to second guess it's performance.

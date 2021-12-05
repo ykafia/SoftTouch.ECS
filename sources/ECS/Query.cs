@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace WonkECS
+namespace ECSharp
 {
     public interface IQueryEntity
     {
