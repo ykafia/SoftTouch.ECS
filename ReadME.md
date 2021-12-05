@@ -33,7 +33,7 @@ public class NameProcessor : Processor<QueryEntity<NameComponent>>
         .AsParallel()
         .ForAll(
             x => {
-                for(int i =0; i< x.Length; i++)
+                for(int i = 0; i< x.Length; i++)
                     x.GetComponentArray<NameComponent>()[i] = 
                         new NameComponent{Name = "Lola2"};
             }
