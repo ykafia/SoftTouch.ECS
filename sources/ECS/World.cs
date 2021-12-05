@@ -67,20 +67,26 @@ namespace ECSharp
             }
         }
 
-        public List<Archetype> QueryArchetypes(ArchetypeID types)
+        public IEnumerable<Archetype> QueryArchetypes(ArchetypeID types)
         {
             return Archetypes
                 .Where(arch => arch.Value.ID.IsSupersetOf(types))
-                .Select(arch => arch.Value)
-                .ToList();
+                .Select(arch => arch.Value);
         }
 
+        public void Add(Processor p)
+        {
+            p.World = this;
+            Processors.Add(p);
+        }
+        public void Remove(Processor p) => Processors.Add(p);
+        
 
         public void Update()
         {
             Processors
                 .ForEach(
-                    x => x.Update(this)
+                    x => x.Update()
                 );
         }
 

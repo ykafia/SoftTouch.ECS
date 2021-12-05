@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ECSharp;
 using ECSharp.Components;
+using ECSharp.Processors;
 
 namespace ECSharp.Test
 {
@@ -67,6 +68,25 @@ namespace ECSharp.Test
                 world.CreateEntity().With(new NameComponent{Name = "Lola"}).With(new HealthComponent()).Build();
             for(int i = 0; i < 3; i++)
                 world[i].Remove<NameComponent>();
+        }
+
+        [TestMethod]
+        public void TestProcessorName()
+        {
+            var world = new World();
+            world.Add(new NameProcessor());
+            world.CreateEntity()
+                .With(new NameComponent{Name = "Name"})
+                .Build();
+            world.CreateEntity()
+                .With(new NameComponent{Name = "Name2"})
+                .With(new HealthComponent{})
+                .Build();
+            world.Update();
+            Assert.AreEqual(world[0].Get<NameComponent>().Name, "Lola2");
+            Assert.AreEqual(world[1].Get<NameComponent>().Name, "Lola2");
+
+            
         }
     }
 }
