@@ -75,18 +75,18 @@ namespace ECSharp.Test
         {
             var world = new World();
             world.Add(new NameProcessor());
+            world.Add(new ModelProcessor());
             world.CreateEntity()
                 .With(new NameComponent{Name = "Name"})
                 .Build();
             world.CreateEntity()
                 .With(new NameComponent{Name = "Name2"})
                 .With(new HealthComponent{})
+                .With(new ModelComponent())
                 .Build();
             world.Update();
             Assert.AreEqual(world[0].Get<NameComponent>().Name, "Lola2");
-            Assert.AreEqual(world[1].Get<NameComponent>().Name, "Lola2");
-
-            
+            Assert.AreEqual(world[1].Get<NameComponent>().Name, "Lola2");            
         }
     }
 }
