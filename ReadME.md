@@ -16,9 +16,13 @@ public struct NameComponent
 {
     public string Name;
 }
+public class ModelComponent
+{
+    public byte[] Buffer;
+}
 ```
 
-As you can see, components are `struct`s, and they can only be value types.
+As you can see, components are either structs or objects of type `Component`.
 
 Then we create a processor for `NameComponent` :
 
@@ -34,8 +38,25 @@ public class NameProcessor : Processor<QueryEntity<NameComponent>>
         .ForAll(
             x => {
                 for(int i = 0; i< x.Length; i++)
-                    x.GetComponentArray<NameComponent>()[i] = 
+                    x.GetComponentArrayStruct<NameComponent>()[i] = 
                         new NameComponent{Name = "Lola2"};
+            }
+        );
+    }
+}
+
+public class ModelProcessor : Processor<QueryEntity<ModelComponent>>
+{
+    public override void Update()
+    {
+        // Query1 returns a list of archetypes containing the types
+        // mentionned in the first QueryEntity of the processor's generics
+        GetQuery1()
+        .AsParallel()
+        .ForAll(
+            x => {
+                for(int i = 0; i< x.Length; i++)
+                    x.GetComponentArray<ModelComponent>()[i].Buffer[5] = 1;
             }
         );
     }
@@ -53,6 +74,7 @@ world.CreateEntity()
 world.CreateEntity()
     .With(new NameComponent{Name = "Name2"})
     .With(new HealthComponent{})
+    .With(new ModelComponent())
     .Build();
 
 world.Add(new NameProcessor());
