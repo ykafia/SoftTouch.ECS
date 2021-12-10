@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ECSharp.ComponentData;
 
 namespace ECSharp
 {
@@ -37,16 +38,15 @@ namespace ECSharp
             }
         }
 
-        internal Archetype GenerateArchetype(ArchetypeID types, List<ComponentBox> components)
+        internal Archetype GenerateArchetype(ArchetypeID types, List<ComponentBase> components)
         {
             if (!Archetypes.ContainsKey(types))
             {
-                Archetypes.Add(types, new Archetype(components));
+                Archetypes.Add(types, new Archetype(components.ToList()));
                 return Archetypes[types];
             }
             else
                 return Archetypes[types];
-
         }
 
         public void BuildGraph()

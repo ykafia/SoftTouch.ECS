@@ -1,9 +1,10 @@
 using ECSharp.Components;
 using System.Linq;
+using System.Numerics;
 
 namespace ECSharp.Processors
 {
-    public class NameProcessor : Processor<QueryEntity<NameComponent>>
+    public class ModelProcessor : Processor<QueryEntity<ModelComponent>>
     {
         public override void Update()
         {
@@ -12,7 +13,9 @@ namespace ECSharp.Processors
             .ForAll(
                 x => {
                     for(int i =0; i< x.Length; i++)
-                        x.GetComponentArrayStruct<NameComponent>()[i] = new NameComponent{Name = "Lola2"};
+                    {
+                        x.GetComponentArray<ModelComponent>()[i].Buffer.Add(Vector3.One);
+                    }
                 }
             );
         }

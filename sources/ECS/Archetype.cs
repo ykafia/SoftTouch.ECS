@@ -2,12 +2,14 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using ECSharp.Arrays;
+using ECSharp.ComponentData;
 
 namespace ECSharp
 {
     public class Archetype
     {
-        public Dictionary<Type, ComponentArray> Storage = new();
+        public Dictionary<Type, ComponentArrayBase> Storage = new();
         public List<long> EntityID = new();
 
         public ArchetypeID ID = new();
@@ -16,7 +18,7 @@ namespace ECSharp
 
         public int Length => EntityID.Count;
 
-        public Archetype(List<ComponentBox> components)
+        public Archetype(List<ComponentBase> components)
         {
             foreach(var c in components)
             {
@@ -32,25 +34,39 @@ namespace ECSharp
         public IEnumerable<Type> TypeExcept(Archetype t) => this.ID.Except(t.ID);
 
 
-        public void SetValue<T>(int index, in T component ) where T : struct
+        public void SetValue<T>(int index, in T component) where T : struct
+        {
+            ((ComponentArrayStruct<T>)Storage[typeof(T)])[index] = component;
+        }
+        public void SetValue<T>(int index, T component) where T : Component
         {
             ((ComponentArray<T>)Storage[typeof(T)])[index] = component;
         }
-        public void GetComponentArrayRef<T>(out ComponentArray<T> array ) where T : struct
+
+        public ComponentArrayStruct<T> GetComponentArrayStruct<T>() where T : struct
         {
-            array = (ComponentArray<T>)Storage[typeof(T)];
+            return (ComponentArrayStruct<T>)Storage[typeof(T)];
         }
-        public ComponentArray<T> GetComponentArray<T>() where T : struct
+        public ComponentArray<T> GetComponentArray<T>() where T : Component
         {
-            GetComponentArrayRef(out ComponentArray<T> output);
-            return output;
+            return (ComponentArray<T>)Storage[typeof(T)];
         }
 
-        public ComponentArray GetComponentArray(Type t)
+        public ComponentArrayBase GetArray<T>() => Storage[typeof(T)];
+
+        public ComponentArrayBase GetComponentArray(Type t)
         {
             return Storage[t];
         }
-        public void AddComponent<T>(ref T component, long entity) where T : struct
+        public void AddComponent<T>(in T component, long entity) where T : struct
+        {
+            if(Storage.ContainsKey(typeof(T)))
+            {
+                ((ComponentArrayStruct<T>)Storage[typeof(T)]).Add(component);
+                EntityID.Add(entity);
+            }
+        }
+        public void AddComponent<T>(T component, long entity) where T : Component
         {
             if(Storage.ContainsKey(typeof(T)))
             {
@@ -61,15 +77,14 @@ namespace ECSharp
 
         public void RemoveEntity(Entity e) => EntityID.RemoveAt(EntityID.IndexOf(e.Index));
         
-        public void SetLastComponent<T>(T component, long entity) where T : struct
+        public void SetComponent<T>(int index, in T component) where T : struct
         {
             if(Storage.ContainsKey(typeof(T)))
             {
-                ((ComponentArray<T>)Storage[typeof(T)])[Storage.Count-1] = component;
-                EntityID[^1] = entity;
+                ((ComponentArrayStruct<T>)Storage[typeof(T)])[index] = component;
             }
         }
-        public void SetComponent<T>(int index, in T component) where T : struct
+        public void SetComponent<T>(int index, T component) where T : Component
         {
             if(Storage.ContainsKey(typeof(T)))
             {

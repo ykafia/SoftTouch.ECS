@@ -1,27 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ECSharp.ComponentData;
 
-namespace ECSharp
+namespace ECSharp.Arrays
 {
 
-    public partial class ComponentArray
-    {
-        public virtual string StringRepresentation() => "";
-        public virtual void AddComponents(List<object> components){}
-        public virtual void Add(ComponentBox c){}
-        public virtual ComponentBox RemoveAt(int i) => null;
-        
-        public virtual ComponentArray New(ComponentBox c) => null;
-        
-        public virtual Type GetElementType() => GetType();
-        public virtual void Merge(ComponentArray other){}
-        public virtual ComponentArray EmptyFrom(ComponentArray array) => new();
-        public virtual int GetLength() => 0;
-        public virtual List<object> GetArray() => new();
-    }
-
-    public class ComponentArray<T> : ComponentArray where T : struct
+    public class ComponentArray<T> : ComponentArrayBase where T : Component
     {
         public List<T> Elements = new();
         public override int GetLength() => Elements.Count;
@@ -49,26 +34,19 @@ namespace ECSharp
             set{Elements[i] = value;}
         }
         
-        public override ComponentArray New(ComponentBox c) => new ComponentArray<T>((T)c.Get());
-
+        public override ComponentArrayBase New(object c) => new ComponentArray<T>();
         #region operations
         public void Add(T e) => Elements.Add(e);
-
-        public override void Add(ComponentBox c)
-        {
-            Add((T)c.Get());
-        }
-
         public void Remove(T e) => Elements.Remove(e);
 
-        public override ComponentBox RemoveAt(int i)
+        public override T RemoveAt(int i)
         {
-            ComponentBox<T> cmp = new(Elements[i]);
+            T cmp = Elements[i];
             Elements.RemoveAt(i);
             return cmp;
         }
 
-        public override void Merge(ComponentArray other)
+        public override void Merge(ComponentArrayBase other)
         {
             if(other.GetElementType() == ElementType) Elements.AddRange(other.GetArray().Cast<T>());
         }
@@ -86,7 +64,7 @@ namespace ECSharp
             return ElementType;
         }
 
-        public override ComponentArray EmptyFrom(ComponentArray array) => new ComponentArray<T>(new List<T>());
+        public override ComponentArrayBase EmptyFrom(ComponentArrayBase array) => new ComponentArray<T>();
         
 
         public override string StringRepresentation()
