@@ -30,7 +30,7 @@ namespace ECSharp
             return this;
         }
 
-        public void Build()
+        public Entity Build()
         {
             var types = new ArchetypeID(ComponentTypes);
             Archetype archetype = World.GenerateArchetype(types, Components.Values.ToList());
@@ -44,6 +44,7 @@ namespace ECSharp
                 };
             archetype.EntityID.Add(Entity.Index);
             World.BuildGraph();
+            return Entity;
         }
 
         public override string ToString() => "[" + Entity.Index.ToString() + " : <" + string.Join(",",ComponentTypes.Select(x => x.Name)) +">]";
