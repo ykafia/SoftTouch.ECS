@@ -5,6 +5,8 @@ using ECSharp.Components;
 using System.Linq;
 namespace ECSharp.Benchmark
 {
+    [MemoryDiagnoser]
+    [SimpleJob(launchCount: 3, warmupCount: 10, targetCount: 15)]
     public class Benchmarks
     {
 
@@ -15,24 +17,20 @@ namespace ECSharp.Benchmark
         [Benchmark]
         public void CreateNewEntitiesSameArchetype()
         {
-            for(int i = 0; i < 10000; i++)
-                W1.CreateEntity().With(new NameComponent{Name = "Lola"}).Build();
+            W1.CreateEntity().With(new NameComponent{Name = "Lola"}).Build();
         }
 
         [Benchmark]
         public void CreateNewEntitiesSameArchetype2()
         {
-            for(int i = 0; i < 10000; i++)
-                W2.CreateEntity().With(new NameComponent{Name = "Lola"}).With(new HealthComponent()).Build();
+            W2.CreateEntity().With(new NameComponent{Name = "Lola"}).With(new HealthComponent()).Build();
         }
 
         [Benchmark]
         public void RemoveComponent()
         {
-            for(int i = 0; i < 5000; i++)
-                W3.CreateEntity().With(new NameComponent{Name = "Lola"}).With(new HealthComponent()).Build();
-            for(int i = 0; i < 5000; i++)
-                W3[i].Remove<NameComponent>();
+            W2.CreateEntity().With(new NameComponent{Name = "Lola"}).With(new HealthComponent()).Build();
+            W2[0].Remove<NameComponent>();
         }
         
     }

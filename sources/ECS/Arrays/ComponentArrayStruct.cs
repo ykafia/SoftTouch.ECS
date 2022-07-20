@@ -70,18 +70,20 @@ namespace ECSharp.Arrays
             Elements.Add(c.Value);
         }
 
-        public override void AddComponents(List<object> components)
+        public override void AddComponents(List<ComponentBase> components)
         {
             throw new NotImplementedException();
         }
 
         public override void Add(ComponentBase c)
         {
-            if(c.GetComponentType() == typeof(T))
-                Elements.Add((T)c.Get());
+            if(c is ComponentStruct<T> r)
+                Elements.Add(r.Value);
+            else
+                throw new Exception("Attempted to add a wrong component");
         }
 
-        public override ComponentArrayBase New(object c)
+        public override ComponentArrayBase New(ComponentBase c)
         {
             throw new NotImplementedException();
         }
