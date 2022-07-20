@@ -31,7 +31,7 @@ namespace ECSharp.Test
                 .With(new NameComponent{Name = "Jojo"})
                 .Build();
             
-            Assert.AreEqual(world[0].Get<NameComponent>().Name,  "Jojo");
+            Assert.AreEqual("Jojo", world[0].Get<NameComponent>().Name);
         }
 
         [TestMethod]

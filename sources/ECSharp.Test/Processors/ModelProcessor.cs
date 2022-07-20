@@ -8,7 +8,7 @@ namespace ECSharp.Processors
     {
         public override void Update()
         {
-            GetQuery1()
+            Query1
             .AsParallel()
             .ForAll(
                 x => {

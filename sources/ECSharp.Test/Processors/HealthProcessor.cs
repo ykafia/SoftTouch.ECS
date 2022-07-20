@@ -7,14 +7,14 @@ namespace ECSharp.Processors
     {
         public override void Update()
         {
-            GetQuery1()
+            Query1
             .AsParallel()
             .ForAll(
                 x => {
                     for(int i =0; i< x.Length; i++)
                     {
-                        var v = x.GetComponentArrayStruct<HealthComponent>()[i];
-                        x.GetComponentArrayStruct<HealthComponent>()[i] = v with {LifePoints = v.LifePoints - 50};
+                        var v = x.GetComponentArray<HealthComponent>()[i];
+                        x.GetComponentArray<HealthComponent>()[i] = v with {LifePoints = v.LifePoints - 50};
                     }
                 }
             );

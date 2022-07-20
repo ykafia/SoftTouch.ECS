@@ -19,7 +19,7 @@ namespace ECSharp.ComponentData
         public override Type GetComponentType() => typeof(T);
 
         public override ComponentArrayBase ToArray() => new ComponentArrayStruct<T>(Value);
-        public override ComponentArrayBase EmptyArray() => new ComponentArrayStruct<T>();
+        public override ComponentArrayBase EmptyArray() => ComponentArrayStruct<T>.Empty;
 
     }
 }

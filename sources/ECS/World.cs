@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ECSharp.Arrays;
 using ECSharp.ComponentData;
 
 namespace ECSharp
@@ -38,11 +39,21 @@ namespace ECSharp
             }
         }
 
+        internal Archetype GenerateArchetype(ArchetypeID types, List<ComponentArrayBase> components)
+        {
+            if (!Archetypes.ContainsKey(types))
+            {
+                Archetypes.Add(types, new Archetype(components));
+                return Archetypes[types];
+            }
+            else
+                return Archetypes[types];
+        }
         internal Archetype GenerateArchetype(ArchetypeID types, List<ComponentBase> components)
         {
             if (!Archetypes.ContainsKey(types))
             {
-                Archetypes.Add(types, new Archetype(components.ToList()));
+                Archetypes.Add(types, new Archetype(components));
                 return Archetypes[types];
             }
             else

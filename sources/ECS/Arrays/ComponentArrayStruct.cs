@@ -9,6 +9,9 @@ namespace ECSharp.Arrays
     public class ComponentArrayStruct<T> : ComponentArrayBase 
         where T : struct
     {
+
+        public static ComponentArrayStruct<T> Empty = new ComponentArrayStruct<T>();
+
         public List<T> Elements = new();
         public override int GetLength() => Elements.Count;
         public Type ElementType => typeof(T);
@@ -47,14 +50,7 @@ namespace ECSharp.Arrays
             return cmp;
         }
 
-        public override void Merge(ComponentArrayBase other)
-        {
-            if(other.GetElementType() == ElementType) Elements.AddRange(other.GetArray().Cast<T>());
-        }
-        public override List<object> GetArray()
-        {
-            return Elements.Cast<object>().ToList();
-        }
+        
 
         #endregion
 
@@ -64,14 +60,30 @@ namespace ECSharp.Arrays
         {
             return ElementType;
         }
-
-        public override ComponentArrayBase EmptyFrom(ComponentArrayBase array) => new ComponentArrayStruct<T>(new List<T>());
-        
-
         public override string StringRepresentation()
         {
             return string.Join("; ",Elements.Select(x => x.ToString()).ToList());
         }
-        
+
+        public void Add(ComponentStruct<T> c)
+        {
+            Elements.Add(c.Value);
+        }
+
+        public override void AddComponents(List<object> components)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Add(ComponentBase c)
+        {
+            if(c.GetComponentType() == typeof(T))
+                Elements.Add((T)c.Get());
+        }
+
+        public override ComponentArrayBase New(object c)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

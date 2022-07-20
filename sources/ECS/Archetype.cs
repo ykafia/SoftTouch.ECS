@@ -27,6 +27,12 @@ namespace ECSharp
             ID = new ArchetypeID(components.Select(x => x.GetComponentType()));
         }
 
+        public Archetype(List<ComponentArrayBase> componentArrays)
+        {
+            componentArrays.ForEach(ca => {
+                Storage[ca.GetElementType()] = ca;
+            });
+        }
 
         public bool IsSupersetOf(Archetype t) => this.ID.IsSupersetOf(t.ID);
         public bool IsSubsetOf(Archetype t) => this.ID.IsSubsetOf(t.ID);
@@ -38,18 +44,10 @@ namespace ECSharp
         {
             ((ComponentArrayStruct<T>)Storage[typeof(T)])[index] = component;
         }
-        public void SetValue<T>(int index, T component) where T : Component
-        {
-            ((ComponentArray<T>)Storage[typeof(T)])[index] = component;
-        }
 
-        public ComponentArrayStruct<T> GetComponentArrayStruct<T>() where T : struct
+        public ComponentArrayStruct<T> GetComponentArray<T>() where T : struct
         {
             return (ComponentArrayStruct<T>)Storage[typeof(T)];
-        }
-        public ComponentArray<T> GetComponentArray<T>() where T : Component
-        {
-            return (ComponentArray<T>)Storage[typeof(T)];
         }
 
         public ComponentArrayBase GetArray<T>() => Storage[typeof(T)];
@@ -66,14 +64,6 @@ namespace ECSharp
                 EntityID.Add(entity);
             }
         }
-        public void AddComponent<T>(T component, long entity) where T : Component
-        {
-            if(Storage.ContainsKey(typeof(T)))
-            {
-                ((ComponentArray<T>)Storage[typeof(T)]).Add(component);
-                EntityID.Add(entity);
-            }
-        }
 
         public void RemoveEntity(Entity e) => EntityID.RemoveAt(EntityID.IndexOf(e.Index));
         
@@ -84,26 +74,20 @@ namespace ECSharp
                 ((ComponentArrayStruct<T>)Storage[typeof(T)])[index] = component;
             }
         }
-        public void SetComponent<T>(int index, T component) where T : Component
-        {
-            if(Storage.ContainsKey(typeof(T)))
-            {
-                ((ComponentArray<T>)Storage[typeof(T)])[index] = component;
-            }
-        }
 
         internal void AddEntity(Entity entity) => EntityID.Add(entity.Index);
 
         public override string ToString()
         {
-            var result = new StringBuilder();
-            result.Append("Type : [");
-            result.Append(string.Join(";",ID.Types?.Select(x => x.Name).ToList()??new List<string>()));
-            result.Append(']');
-            result.AppendLine();
-            result.Append("Storages : [");
-            result.Append(string.Join(";",Storage.Values.ToList().Select(x => x.StringRepresentation())));
-            result.Append(']');
+            var result = 
+            new StringBuilder()
+                .Append("Type : [")
+                .Append(string.Join(";", Storage.Keys.Select(x => x.Name).ToList()??new List<string>()))
+                .Append(']')
+                .AppendLine()
+                .Append("Storages : [")
+                .Append(string.Join(";",Storage.Values.ToList().Select(x => x.StringRepresentation())))
+                .Append(']');
             return result.ToString();
         }
 

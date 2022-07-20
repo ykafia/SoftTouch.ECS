@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using ECSharp.ComponentData;
+using ECSharp.Arrays;
 
 namespace ECSharp
 {
@@ -15,18 +16,7 @@ namespace ECSharp
 
         public EntityBuilder With<T>(in T component) where T : struct
         {
-            if(!typeof(T).GetInterfaces().Contains(typeof(IEntity)))
-            {
-                Components[typeof(T)] = new ComponentStruct<T>(component);
-            }
-            return this;
-        }
-        public EntityBuilder With<T>(T component) where T : Component
-        {
-            if(!typeof(T).GetInterfaces().Contains(typeof(IEntity)))
-            {
-                Components[typeof(T)] = component;
-            }
+            Components[typeof(T)] = new ComponentStruct<T>(component);
             return this;
         }
 
