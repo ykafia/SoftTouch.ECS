@@ -9,6 +9,7 @@ namespace ECSharp
 {
     public class Archetype
     {
+        public static Archetype Empty = new Archetype(new List<ComponentBase>());
         public Dictionary<Type, ComponentArrayBase> Storage = new();
         public List<long> EntityID = new();
 

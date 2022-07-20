@@ -22,8 +22,9 @@ namespace ECSharp
 
         public EntityBuilder CreateEntity()
         {
-            var e = new EntityBuilder { Entity = new Entity { Index = Entities.Count, World = this }};
-            Entities[e.Entity.Index] = new();
+            var e = new EntityBuilder(new Entity(Entities.Count, this));
+            
+            Entities[e.Entity.Index] = new ArchetypeRecord{Entity = e.Entity, Archetype = Archetype.Empty};
             return e;
         }
 

@@ -8,7 +8,7 @@ namespace ECSharp.Benchmark
     {        
         public static void Main(string[] args)
         {
-            BenchmarkRunner.Run<Benchmarks>();
+            BenchmarkRunner.Run<BenchAlloc>();
         }
     }
 }

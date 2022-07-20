@@ -10,7 +10,13 @@ namespace ECSharp
     public class Entity
     {
         public long Index{get;set;}
-        public World? World{get;set;}
+        public World World{get;set;}
+
+        public Entity(long index, World w)
+        {
+            Index = index;
+            World = w;
+        }
     }
     
 }
