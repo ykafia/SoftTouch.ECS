@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>ECSharp.Benchmark.CreationBench-20220721-111235</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.12.1, OS=Windows 10.0.22000
+AMD Ryzen 5 3500U with Radeon Vega Mobile Gfx, 1 CPU, 8 logical and 4 physical cores
+.NET Core SDK=6.0.302
+  [Host]     : .NET Core 6.0.7 (CoreCLR 6.0.722.32202, CoreFX 6.0.722.32202), X64 RyuJIT
+  Job-OOUKRJ : .NET Core 6.0.7 (CoreCLR 6.0.722.32202, CoreFX 6.0.722.32202), X64 RyuJIT
+</code></pre>
+<pre><code>IterationCount=15  LaunchCount=3  WarmupCount=10  
+</code></pre>
+
+<table>
+<thead><tr><th>                   Method</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Gen 0</th><th>Gen 1</th><th>Gen 2</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>CreateNewEntitiesSameArchetype</td><td>6.553 &mu;s</td><td>0.2832 &mu;s</td><td>0.5107 &mu;s</td><td>2.5024</td><td>0.6180</td><td>-</td><td>5.12 KB</td>
+</tr><tr><td>CreateNewEntitiesSameArchetype2</td><td>180.427 &mu;s</td><td>24.4734 &mu;s</td><td>44.1306 &mu;s</td><td>9.7046</td><td>1.1597</td><td>-</td><td>19.91 KB</td>
+</tr><tr><td>RemoveComponent</td><td>208.018 &mu;s</td><td>21.7971 &mu;s</td><td>36.4180 &mu;s</td><td>25.3906</td><td>1.0986</td><td>-</td><td>52.09 KB</td>
+</tr></tbody></table>
+</body>
+</html>
