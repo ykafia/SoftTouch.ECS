@@ -7,7 +7,7 @@ namespace ECSharp
 {
     public struct ArchetypeID
     {
-        public List<Type> Types = new();
+        public readonly List<Type> Types = new();
 
         public int Count => Types?.Count ?? 0;
 
@@ -17,7 +17,7 @@ namespace ECSharp
         }
         public ArchetypeID(IEnumerable<Type> types)
         {
-            Types= types.ToHashSet().ToList();
+            Types= types.ToList();
         }
 
         public bool IsSupersetOf(ArchetypeID other)

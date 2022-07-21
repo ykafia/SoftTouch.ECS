@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ECSharp;
 using ECSharp.Components;
 using ECSharp.Processors;
+using System.Linq;
 
 namespace ECSharp.Test
 {
@@ -84,8 +85,8 @@ namespace ECSharp.Test
                 .With(new ModelComponent())
                 ;
             world.Update();
-            Assert.AreEqual(world[0].Get<NameComponent>().Name, "Lola2");
-            Assert.AreEqual(world[1].Get<NameComponent>().Name, "Lola2");
+            Assert.AreEqual("Lola", world[0].Get<NameComponent>().Name);
+            Assert.AreEqual("Lola", world[1].Get<NameComponent>().Name);
         }
     }
 }

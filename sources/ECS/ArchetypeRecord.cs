@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using ECSharp.Arrays;
 using ECSharp.ComponentData;
 
 namespace ECSharp
@@ -28,15 +29,15 @@ namespace ECSharp
 
         public void Add<T>(in T c) where T : struct
         {
-            List<ComponentBase> comps = Archetype.Storage.Values.Select(x => x.RemoveAt(ArchetypeIndex)).ToList();
-            comps.Add(new ComponentStruct<T>(c));
+            var arrays = Archetype.Storage;
+            
             if(Archetype.Edges.Add.TryGetValue(typeof(T), out var newArch))
             {
                 // Add all components to new archetype
-                foreach(var cmp in comps)
-                    newArch.Storage[cmp.GetComponentType()].Add(cmp);
+                foreach(var cmp in arrays)
+                    cmp.Value.TransferTo(newArch.Storage[cmp.Key], ArchetypeIndex);
                 // Add entity
-                newArch.AddEntity(Entity);
+                newArch.AddComponent(c,Entity.Index);
                 // Remove Entity from old
                 Archetype.RemoveEntity(Entity);
                 // Change archetype
@@ -45,28 +46,26 @@ namespace ECSharp
             }
             else
             {
-                var aid = new ArchetypeID(comps.Select(c => c.GetComponentType()));
+                var aid = new ArchetypeID(arrays.Keys.Append(typeof(T)));
 
                 var world = Entity.World;
+                var arch = world.GenerateArchetype(aid, arrays.Values.Append(new ComponentArrayStruct<T>()));
+                arch.AddComponent(c, Entity.Index);
+                foreach(var cmp in arrays)
+                    cmp.Value.TransferTo(arch.Storage[cmp.Key],ArchetypeIndex);
                 Archetype.RemoveEntity(Entity);
-                Archetype = world.GenerateArchetype(aid, comps.Cast<ComponentBase>().ToList());
-                Archetype.EntityID.Add(Entity.Index);
-                foreach(var cmp in comps)
-                {
-                    Archetype.Storage[cmp.GetComponentType()].Add(cmp);
-                }
+                Archetype = arch;
                 world.BuildGraph();
             }
         }
         public void Remove<T>() where T : struct
         {
-            List<ComponentBase> comps = Archetype.Storage.Values.Select(x => x.RemoveAt(ArchetypeIndex)).ToList();
+            var arrays = Archetype.Storage;
             if(Archetype.Edges.Remove.TryGetValue(typeof(T), out var newArch))
             {
                 // Add all components to new archetype
-                foreach(var cmp in comps)
-                    if(typeof(T) != cmp.GetComponentType())
-                        newArch.Storage[cmp.GetComponentType()].Add(cmp);
+                foreach(var cmp in arrays.Where(x => x.Key != typeof(T)))
+                    cmp.Value.TransferTo(newArch.Storage[cmp.Key], ArchetypeIndex);
                 // Add entity
                 newArch.AddEntity(Entity);
                 // Remove Entity from old
@@ -76,16 +75,15 @@ namespace ECSharp
             }
             else
             {
-                var aid = new ArchetypeID(comps.Select(c => c.GetComponentType()).Where(ty => ty != typeof(T)));
+                var aid = new ArchetypeID(arrays.Select(c => c.Key).Where(ty => ty != typeof(T)));
 
                 var world = Entity.World;
+                var arch = world.GenerateArchetype(aid, arrays.Where(c => c.Key != typeof(T)).Select(x => x.Value));
+                arch.AddEntity(Entity);
+                foreach(var cmp in arrays.Where(x => x.Key != typeof(T)))
+                    cmp.Value.TransferTo(arch.Storage[cmp.Key], ArchetypeIndex);
                 Archetype.RemoveEntity(Entity);
-                Archetype = world.GenerateArchetype(aid, comps.Where(c => c.GetComponentType() != typeof(T)).Cast<ComponentBase>().ToList());
-                Archetype.EntityID.Add(Entity.Index);
-                foreach(var cmp in comps.Where(ty => ty.GetComponentType() != typeof(T)))
-                {
-                    Archetype.Storage[cmp.GetComponentType()].Add(cmp);
-                }
+                Archetype = arch;
                 world.BuildGraph();
             }
         }

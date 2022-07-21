@@ -9,7 +9,7 @@ namespace ECSharp
 {
     public class Archetype
     {
-        public static Archetype Empty = new Archetype(new List<ComponentBase>());
+        public static Archetype Empty = new(new List<ComponentBase>());
         public Dictionary<Type, ComponentArrayBase> Storage = new();
         public List<long> EntityID = new();
 
@@ -19,7 +19,7 @@ namespace ECSharp
 
         public int Length => EntityID.Count;
 
-        public Archetype(List<ComponentBase> components)
+        public Archetype(IEnumerable<ComponentBase> components)
         {
             foreach(var c in components)
             {
@@ -28,11 +28,14 @@ namespace ECSharp
             ID = new ArchetypeID(components.Select(x => x.GetComponentType()));
         }
 
-        public Archetype(List<ComponentArrayBase> componentArrays)
+        public Archetype(IEnumerable<ComponentArrayBase> componentArrays)
         {
-            componentArrays.ForEach(ca => {
-                Storage[ca.GetElementType()] = ca;
-            });
+            foreach(var ca in componentArrays)
+            {
+                Storage[ca.GetElementType()] = ca.New(ca.GetElementType());
+            };
+            ID = new ArchetypeID(componentArrays.Select(x => x.GetElementType()));
+            
         }
 
         public bool IsSupersetOf(Archetype t) => this.ID.IsSupersetOf(t.ID);
@@ -83,11 +86,11 @@ namespace ECSharp
             var result = 
             new StringBuilder()
                 .Append("Type : [")
-                .Append(string.Join(";", Storage.Keys.Select(x => x.Name).ToList()??new List<string>()))
+                .Append(string.Join(";", Storage.Keys.Select(x => x.Name)??new List<string>()))
                 .Append(']')
                 .AppendLine()
                 .Append("Storages : [")
-                .Append(string.Join(";",Storage.Values.ToList().Select(x => x.StringRepresentation())))
+                .Append(string.Join(";",Storage.Values.Select(x => x.StringRepresentation())))
                 .Append(']');
             return result.ToString();
         }

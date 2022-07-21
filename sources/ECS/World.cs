@@ -50,7 +50,7 @@ namespace ECSharp
             }
         }
 
-        internal Archetype GenerateArchetype(ArchetypeID types, List<ComponentArrayBase> components)
+        internal Archetype GenerateArchetype(ArchetypeID types, IEnumerable<ComponentArrayBase> components)
         {
             if (!Archetypes.ContainsKey(types))
             {
@@ -73,19 +73,22 @@ namespace ECSharp
 
         public void BuildGraph()
         {
-            var stor = Archetypes.Values.ToList();
+            var stor = Archetypes.Values;
             foreach (var arch in Archetypes.Values)
             {
-                stor
+                foreach( var x in stor
                     .Where(x => x.ID.IsAddedType(arch.ID))
-                    .Select(other => (arch.TypeExcept(other).First(), other))
-                    .ToList()
-                    .ForEach(x => arch.Edges.Add[x.Item1] = x.other);
-                stor
+                    .Select(other => (arch.TypeExcept(other).First(), other)))
+                {
+                    arch.Edges.Add[x.Item1] = x.other;
+                }
+                foreach( var x in stor
                     .Where(x => x.ID.IsRemovedType(arch.ID))
                     .Select(other => (other.TypeExcept(arch).First(), other))
-                    .ToList()
-                    .ForEach(x => arch.Edges.Remove[x.Item1]= x.other);
+                )
+                {
+                    arch.Edges.Remove[x.Item1]= x.other;
+                }
             }
         }
 
@@ -93,6 +96,12 @@ namespace ECSharp
         {
             return Archetypes
                 .Where(arch => arch.Value.ID.IsSupersetOf(types))
+                .Select(arch => arch.Value);
+        }
+        public IEnumerable<Archetype> QueryArchetypes(params Type[] types)
+        {
+            return Archetypes
+                .Where(arch => arch.Value.ID.IsSupersetOf(new ArchetypeID(types.ToHashSet())))
                 .Select(arch => arch.Value);
         }
 

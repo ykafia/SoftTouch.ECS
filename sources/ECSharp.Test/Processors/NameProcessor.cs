@@ -7,14 +7,9 @@ namespace ECSharp.Processors
     {
         public override void Update()
         {
-            Query1
-            .AsParallel()
-            .ForAll(
-                x => {
-                    for(int i =0; i< x.Length; i++)
-                        x.GetComponentArray<NameComponent>()[i] = new NameComponent{Name = "Lola2"};
-                }
-            );
+            foreach(var x in Query1)
+                for(int i =0; i< x.Length; i++)
+                    x.GetComponentArray<NameComponent>()[i] = new NameComponent{Name = "Lola"};
         }
     }
 }

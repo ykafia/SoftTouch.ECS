@@ -1,14 +1,6 @@
 using ECSharp;
 using ECSharp.Components;
 using BenchmarkDotNet.Running;
+using ECSharp.Benchmark;
 
-namespace ECSharp.Benchmark
-{
-    public class Program
-    {        
-        public static void Main(string[] args)
-        {
-            BenchmarkRunner.Run<BenchAlloc>();
-        }
-    }
-}
+BenchmarkRunner.Run<CreationBench>();

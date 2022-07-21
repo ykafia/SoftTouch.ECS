@@ -62,13 +62,15 @@ namespace ECSharp.Arrays
         }
         public override string StringRepresentation()
         {
-            return string.Join("; ",Elements.Select(x => x.ToString()).ToList());
+            return string.Join("; ",Elements.Select(x => x.ToString()));
         }
 
         public void Add(ComponentStruct<T> c)
         {
             Elements.Add(c.Value);
         }
+
+        
 
         public override void AddComponents(List<ComponentBase> components)
         {
@@ -86,6 +88,29 @@ namespace ECSharp.Arrays
         public override ComponentArrayBase New(ComponentBase c)
         {
             throw new NotImplementedException();
+        }
+
+        public void TransferTo(ComponentArrayStruct<T> other, int index)
+        {
+            var transferred = Elements[index];
+            Elements.RemoveAt(index);
+            other.Add(transferred);
+        }
+
+        public override void TransferTo(ComponentArrayBase other, int index)
+        {
+            if(other is ComponentArrayStruct<T> othera)
+                TransferTo(othera, index);
+            else
+                throw new Exception("Wrong array type");
+        }
+
+        public override ComponentArrayBase New(Type t)
+        {
+            if(typeof(T) == t)
+                return new ComponentArrayStruct<T>();
+            else
+                throw new Exception("Wrong array type");
         }
     }
 }
