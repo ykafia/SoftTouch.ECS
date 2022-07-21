@@ -19,11 +19,21 @@ namespace ECSharp
             get {return Entities[id];}
             set { Entities[id] = value; }
         }
+        public ArchetypeRecord this[Entity e]
+        {
+            get {return Entities[e.Index];}
+            set { Entities[e.Index] = value; }
+        }
+
+        public World()
+        {
+            Archetypes.Add(new(),Archetype.Empty);
+        }
 
         public EntityBuilder CreateEntity()
         {
             var e = new EntityBuilder(new Entity(Entities.Count, this));
-            
+            Archetype.Empty.AddEntity(e.Entity);
             Entities[e.Entity.Index] = new ArchetypeRecord{Entity = e.Entity, Archetype = Archetype.Empty};
             return e;
         }

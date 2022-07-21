@@ -15,10 +15,10 @@ namespace ECSharp.Test
             var world = new World();
             world
                 .CreateEntity()
-                .With(new NameComponent{Name = "Lola"})
-                .Build();
+                .With(new NameComponent { Name = "Lola" })
+                ;
             Assert.IsTrue(world[0].Has<NameComponent>());
-            Assert.AreEqual(world[0].Get<NameComponent>().Name,  "Lola");
+            Assert.AreEqual(world[0].Get<NameComponent>().Name, "Lola");
         }
 
         [TestMethod]
@@ -27,10 +27,9 @@ namespace ECSharp.Test
             var world = new World();
             world
                 .CreateEntity()
-                .With(new NameComponent{Name = "Lola"})
-                .With(new NameComponent{Name = "Jojo"})
-                .Build();
-            
+                .With(new NameComponent { Name = "Lola" })
+                .With(new NameComponent { Name = "Jojo" });
+
             Assert.AreEqual("Jojo", world[0].Get<NameComponent>().Name);
         }
 
@@ -40,9 +39,9 @@ namespace ECSharp.Test
             var world = new World();
             world
                 .CreateEntity()
-                .With(new NameComponent{Name = "Lola"})
-                .With(new HealthComponent{LifePoints = 100})
-                .Build();
+                .With(new NameComponent { Name = "Lola" })
+                .With(new HealthComponent { LifePoints = 100 })
+                ;
             world[0].Remove<NameComponent>();
             Assert.IsFalse(world[0].Has<NameComponent>());
             Assert.IsTrue(world[0].Has<HealthComponent>());
@@ -53,9 +52,9 @@ namespace ECSharp.Test
             var world = new World();
             world
                 .CreateEntity()
-                .With(new HealthComponent{LifePoints = 100})
-                .Build();
-            world[0].Add(new NameComponent{Name = "Lola"});
+                .With(new HealthComponent { LifePoints = 100 })
+                ;
+            world[0].Add(new NameComponent { Name = "Lola" });
             Assert.IsTrue(world[0].Has<NameComponent>());
             Assert.IsTrue(world[0].Has<HealthComponent>());
         }
@@ -64,9 +63,9 @@ namespace ECSharp.Test
         public void TestSpawnRemove10000()
         {
             var world = new World();
-            for(int i = 0; i < 3; i++)
-                world.CreateEntity().With(new NameComponent{Name = "Lola"}).With(new HealthComponent()).Build();
-            for(int i = 0; i < 3; i++)
+            for (int i = 0; i < 3; i++)
+                world.CreateEntity().With(new NameComponent { Name = "Lola" }).With(new HealthComponent());
+            for (int i = 0; i < 3; i++)
                 world[i].Remove<NameComponent>();
         }
 
@@ -77,16 +76,16 @@ namespace ECSharp.Test
             world.Add(new NameProcessor());
             world.Add(new ModelProcessor());
             world.CreateEntity()
-                .With(new NameComponent{Name = "Name"})
-                .Build();
+                .With(new NameComponent { Name = "Name" })
+                ;
             world.CreateEntity()
-                .With(new NameComponent{Name = "Name2"})
-                .With(new HealthComponent{})
+                .With(new NameComponent { Name = "Name2" })
+                .With(new HealthComponent { })
                 .With(new ModelComponent())
-                .Build();
+                ;
             world.Update();
             Assert.AreEqual(world[0].Get<NameComponent>().Name, "Lola2");
-            Assert.AreEqual(world[1].Get<NameComponent>().Name, "Lola2");            
+            Assert.AreEqual(world[1].Get<NameComponent>().Name, "Lola2");
         }
     }
 }

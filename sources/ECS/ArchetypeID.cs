@@ -7,7 +7,7 @@ namespace ECSharp
 {
     public struct ArchetypeID
     {
-        public List<Type>? Types = new();
+        public List<Type> Types = new();
 
         public int Count => Types?.Count ?? 0;
 

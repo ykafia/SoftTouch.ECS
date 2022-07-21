@@ -6,7 +6,7 @@ using ECSharp.Arrays;
 
 namespace ECSharp
 {
-    public class EntityBuilder : IEntity
+    public struct EntityBuilder : IEntity
     {
         public Entity Entity;
         public World World => Entity.World;
@@ -16,18 +16,17 @@ namespace ECSharp
         }
         public EntityBuilder With<T>(in T component) where T : struct
         {
-            World[Entity.Index].Add(component);
+            if(World[Entity].Has<T>())
+                World[Entity].Set(component);
+            else
+                World[Entity.Index].Add(component);
             World.BuildGraph();
             return this;
         }
 
-        public Entity Build()
+        public Entity GetEntity()
         {
-            World.BuildGraph();
             return Entity;
         }
-
-        public override string ToString() => "[" + Entity.Index.ToString() + " : <" + string.Join(",",ComponentTypes.Select(x => x.Name)) +">]";
-
     }
 }
