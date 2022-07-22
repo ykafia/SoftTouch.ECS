@@ -9,8 +9,7 @@ namespace ECSharp
     {
         readonly Q queryEntity = new();
 
-        public IEnumerable<Archetype> Query1 => World.QueryArchetypes(queryEntity.GetQueryType());
-        
+        public IEnumerable<Archetype> Query1 => World.QueryArchetypes(queryEntity.GetQueryType());        
     }
     public partial class Processor<Q1,Q2> : Processor
         where Q1 : IQueryEntity, new()

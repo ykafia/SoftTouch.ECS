@@ -23,6 +23,15 @@ namespace ECSharp
             World.BuildGraph();
             return this;
         }
+        public EntityBuilder With<T>() where T : struct
+        {
+            if(World[Entity].Has<T>())
+                World[Entity].Set(new T());
+            else
+                World[Entity.Index].Add(new T());
+            World.BuildGraph();
+            return this;
+        }
 
         public Entity GetEntity()
         {

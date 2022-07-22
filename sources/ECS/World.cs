@@ -30,9 +30,9 @@ namespace ECSharp
             Archetypes.Add(new(),Archetype.Empty);
         }
 
-        public EntityBuilder CreateEntity()
+        public EntityBuilder CreateEntity(string name = "")
         {
-            var e = new EntityBuilder(new Entity(Entities.Count, this));
+            var e = new EntityBuilder(new Entity(Entities.Count, this, name));
             Archetype.Empty.AddEntity(e.Entity);
             Entities[e.Entity.Index] = new ArchetypeRecord{Entity = e.Entity, Archetype = Archetype.Empty};
             return e;
@@ -50,7 +50,7 @@ namespace ECSharp
             }
         }
 
-        internal Archetype GenerateArchetype(ArchetypeID types, IEnumerable<ComponentArrayBase> components)
+        internal Archetype GenerateArchetype(ArchetypeID types, IEnumerable<ComponentList> components)
         {
             if (!Archetypes.ContainsKey(types))
             {
@@ -108,6 +108,14 @@ namespace ECSharp
         public void Add(Processor p)
         {
             p.World = this;
+            Processors.Add(p);
+        }
+        public void Add<T>() where T : Processor, new()
+        {
+            var p = new T
+            {
+                World = this
+            };
             Processors.Add(p);
         }
         public void Remove(Processor p) => Processors.Add(p);

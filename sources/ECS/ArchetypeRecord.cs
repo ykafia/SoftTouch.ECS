@@ -35,7 +35,9 @@ namespace ECSharp
             {
                 // Add all components to new archetype
                 foreach(var cmp in arrays)
+                {
                     cmp.Value.TransferTo(newArch.Storage[cmp.Key], ArchetypeIndex);
+                }
                 // Add entity
                 newArch.AddComponent(c,Entity.Index);
                 // Remove Entity from old
@@ -49,7 +51,7 @@ namespace ECSharp
                 var aid = new ArchetypeID(arrays.Keys.Append(typeof(T)));
 
                 var world = Entity.World;
-                var arch = world.GenerateArchetype(aid, arrays.Values.Append(new ComponentArrayStruct<T>()));
+                var arch = world.GenerateArchetype(aid, arrays.Values.Append(new ComponentList<T>()));
                 arch.AddComponent(c, Entity.Index);
                 foreach(var cmp in arrays)
                     cmp.Value.TransferTo(arch.Storage[cmp.Key],ArchetypeIndex);

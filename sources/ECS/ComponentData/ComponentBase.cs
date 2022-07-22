@@ -7,7 +7,7 @@ namespace ECSharp.ComponentData
     {
         public abstract object Get();
         public abstract Type GetComponentType();
-        public abstract ComponentArrayBase ToArray();
-        public abstract ComponentArrayBase EmptyArray();
+        public abstract ComponentList ToArray();
+        public abstract ComponentList EmptyArray();
     }
 }

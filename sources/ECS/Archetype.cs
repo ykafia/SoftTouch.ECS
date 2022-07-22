@@ -10,7 +10,7 @@ namespace ECSharp
     public class Archetype
     {
         public static Archetype Empty = new(new List<ComponentBase>());
-        public Dictionary<Type, ComponentArrayBase> Storage = new();
+        public Dictionary<Type, ComponentList> Storage = new();
         public List<long> EntityID = new();
 
         public ArchetypeID ID = new();
@@ -28,13 +28,13 @@ namespace ECSharp
             ID = new ArchetypeID(components.Select(x => x.GetComponentType()));
         }
 
-        public Archetype(IEnumerable<ComponentArrayBase> componentArrays)
+        public Archetype(IEnumerable<ComponentList> componentArrays)
         {
             foreach(var ca in componentArrays)
             {
-                Storage[ca.GetElementType()] = ca.New(ca.GetElementType());
+                Storage[ca.ComponentType] = ca.New();
             };
-            ID = new ArchetypeID(componentArrays.Select(x => x.GetElementType()));
+            ID = new ArchetypeID(componentArrays.Select(x => x.ComponentType));
             
         }
 
@@ -46,17 +46,21 @@ namespace ECSharp
 
         public void SetValue<T>(int index, in T component) where T : struct
         {
-            ((ComponentArrayStruct<T>)Storage[typeof(T)])[index] = component;
+            ((ComponentList<T>)Storage[typeof(T)])[index] = component;
         }
 
-        public ComponentArrayStruct<T> GetComponentArray<T>() where T : struct
+        public ComponentList<T> GetComponentArray<T>() where T : struct
         {
-            return (ComponentArrayStruct<T>)Storage[typeof(T)];
+            return (ComponentList<T>)Storage[typeof(T)];
+        }
+        public void GetEntityComponent<T>(int i, out T c) where T : struct
+        {
+            c = ((ComponentList<T>)Storage[typeof(T)])[i];
         }
 
-        public ComponentArrayBase GetArray<T>() => Storage[typeof(T)];
+        public ComponentList GetArray<T>() => Storage[typeof(T)];
 
-        public ComponentArrayBase GetComponentArray(Type t)
+        public ComponentList GetComponentArray(Type t)
         {
             return Storage[t];
         }
@@ -64,7 +68,7 @@ namespace ECSharp
         {
             if(Storage.ContainsKey(typeof(T)))
             {
-                ((ComponentArrayStruct<T>)Storage[typeof(T)]).Add(component);
+                ((ComponentList<T>)Storage[typeof(T)]).Add(component);
                 EntityID.Add(entity);
             }
         }
@@ -75,7 +79,7 @@ namespace ECSharp
         {
             if(Storage.ContainsKey(typeof(T)))
             {
-                ((ComponentArrayStruct<T>)Storage[typeof(T)])[index] = component;
+                ((ComponentList<T>)Storage[typeof(T)])[index] = component;
             }
         }
 
@@ -90,7 +94,7 @@ namespace ECSharp
                 .Append(']')
                 .AppendLine()
                 .Append("Storages : [")
-                .Append(string.Join(";",Storage.Values.Select(x => x.StringRepresentation())))
+                .Append(string.Join(";",Storage.Values.Select(x => x.ToString())))
                 .Append(']');
             return result.ToString();
         }
