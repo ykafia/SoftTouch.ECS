@@ -16,13 +16,13 @@ public struct NameComponent
 {
     public string Name;
 }
-public class ModelComponent
+public struct ModelComponent
 {
     public byte[] Buffer;
 }
 ```
 
-As you can see, components are either structs or objects of type `Component`.
+As you can see, components are just structs.
 
 Then we create a processor for `NameComponent` :
 
@@ -69,13 +69,11 @@ And finally the code to create our world :
 var world = new World();
 
 world.CreateEntity()
-    .With(new NameComponent{Name = "Name"})
-    .Build();
+    .With(new NameComponent{Name = "Name"});
 world.CreateEntity()
     .With(new NameComponent{Name = "Name2"})
     .With(new HealthComponent{})
-    .With(new ModelComponent())
-    .Build();
+    .With(new ModelComponent());
 
 world.Add(new NameProcessor());
 // After this line of code every NameComponent will be updated by the processor
