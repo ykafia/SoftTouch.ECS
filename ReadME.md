@@ -33,7 +33,7 @@ public class NameProcessor : Processor<QueryEntity<NameComponent>>
     {
         // Query1 returns a list of archetypes containing the types
         // mentionned in the first QueryEntity of the processor's generics
-        GetQuery1()
+        Query1
         .AsParallel()
         .ForAll(
             x => {
@@ -51,7 +51,7 @@ public class ModelProcessor : Processor<QueryEntity<ModelComponent>>
     {
         // Query1 returns a list of archetypes containing the types
         // mentionned in the first QueryEntity of the processor's generics
-        GetQuery1()
+        Query1
         .AsParallel()
         .ForAll(
             x => {
