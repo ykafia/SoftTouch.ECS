@@ -1,8 +1,6 @@
 ﻿open ECSharp.FSharp
 open ECSharp
 
-// For more information see https://aka.ms/fsharp-console-apps
-
 type NameComponent = 
     struct
         val Name : string
@@ -11,15 +9,18 @@ type NameComponent =
 
 let w = new World()
 
-let martha = NameComponent("Martha")
-
 w 
 |> World.CreateEntity
 |> Entity.WithValue (NameComponent "Martha")
 |> ignore
 
+
+let updaterFunc (archs : seq<Archetype>) = 
+    ()
+
+
 w
-|> Processor.Add (Processor.Create (fun _ -> () ))
+|> Processor.Add (Processor.Create updaterFunc)
 
 w 
 |> World.GetEntity 0 
