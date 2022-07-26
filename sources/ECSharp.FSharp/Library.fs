@@ -19,3 +19,9 @@ module Entity =
         arch.Get<'T>()
     let Has<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType> (arch : ArchetypeRecord) =
         arch.Get<'T>()
+
+module Processor =
+    let Create<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :>System.ValueType> (updater : list<Archetype> -> unit) : Processor<QueryEntity<'T>> =
+        new Processor<QueryEntity<'T>>()
+
+    
