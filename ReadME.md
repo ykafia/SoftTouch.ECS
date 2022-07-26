@@ -7,7 +7,6 @@ This project is a prototype for a lightweight ECS implementation with archetypal
 ```fsharp
 open ECSharp.FSharp
 open ECSharp
-open System.Runtime.CompilerServices
 
 type NameComponent = 
     struct
