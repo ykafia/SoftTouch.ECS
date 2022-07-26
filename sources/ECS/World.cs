@@ -12,7 +12,11 @@ namespace ECSharp
 
         public Dictionary<ArchetypeID, Archetype> Archetypes = new(new ArchetypeIDComparer());
 
-        public List<Processor> Processors { get; set; } = new();
+        public List<ProcessorBase> Processors { get; set; } = new();
+
+        public bool IsRunning {get; private set;}
+
+        public long FrameCount {get; private set;} = 0;
 
         public ArchetypeRecord this[long id]
         {
@@ -105,12 +109,12 @@ namespace ECSharp
                 .Select(arch => arch.Value);
         }
 
-        public void Add(Processor p)
+        public void Add(ProcessorBase p)
         {
             p.World = this;
             Processors.Add(p);
         }
-        public void Add<T>() where T : Processor, new()
+        public void Add<T>() where T : ProcessorBase, new()
         {
             var p = new T
             {
@@ -118,15 +122,29 @@ namespace ECSharp
             };
             Processors.Add(p);
         }
-        public void Remove(Processor p) => Processors.Add(p);
+        public void Remove(Processor p) => Processors.Remove(p);
         
-
+        public void Start()
+        {
+            foreach(ProcessorAsync pa in Processors.Where(p => p is ProcessorAsync))
+                pa.Execute();
+        }
         public void Update()
         {
-            Processors
-                .ForEach(
-                    x => x.Update()
-                );
+            foreach(Processor p in Processors.Where(p => p is Processor))
+                p.Update();
+            FrameCount += 1;
+        }
+
+        public void Run()
+        {
+            IsRunning = true;
+            Start();
+            while(IsRunning && FrameCount < 17)
+            {
+                Update();
+            }
+            IsRunning = false;
         }
 
 

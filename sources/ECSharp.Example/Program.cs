@@ -7,13 +7,21 @@ using ECSharp.Example;
 
 var world = new World();
 
-for (int i = 0; i < 10000; i++)
-    world
-    .CreateEntity()
-    .With(new HealthComponent{LifePoints = 100});
+
+world
+.CreateEntity()
+.With(new NameComponent{Name = "Bonobo"})
+.With(new HealthComponent{LifePoints = 100});
+world
+.CreateEntity()
+.With(new NameComponent{Name = "Bonobo2"})
+.With(new HealthComponent{LifePoints = 100});
 
 world.Add<HealthProcessor>();
+world.Add<NameProcessor>();
+world.Add<ChangeName>();
 
-world.Update();
+world.Run();
 
-Console.WriteLine("Hello, World!");
+Console.WriteLine("Final name is " + world[0].Get<NameComponent>().Name);
+Console.WriteLine("Final name is " + world[1].Get<NameComponent>().Name);

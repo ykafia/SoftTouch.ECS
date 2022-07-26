@@ -1,8 +1,7 @@
 namespace ECSharp
 {
-    public abstract class Processor
+    public abstract class Processor : ProcessorBase
     {
-        public World? World {get;set;}
         public virtual void Update(){}
     }
     public partial class Processor<Q> : Processor where Q : IQueryEntity, new()
