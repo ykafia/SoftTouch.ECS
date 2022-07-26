@@ -9,13 +9,13 @@ var world = new World();
 
 
 world
-.CreateEntity()
-.With(new NameComponent{Name = "Bonobo"})
-.With(new HealthComponent{LifePoints = 100});
+    .CreateEntity()
+    .With(new NameComponent{Name = "Bonobo"})
+    .With(new HealthComponent{LifePoints = 100});
 world
-.CreateEntity()
-.With(new NameComponent{Name = "Bonobo2"})
-.With(new HealthComponent{LifePoints = 100});
+    .CreateEntity()
+    .With(new NameComponent{Name = "Bonobo2"})
+    .With(new HealthComponent{LifePoints = 100});
 
 world.Add<HealthProcessor>();
 world.Add<NameProcessor>();
