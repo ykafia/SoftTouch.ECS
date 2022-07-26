@@ -18,6 +18,8 @@ w
 |> Entity.WithValue (NameComponent "Martha")
 |> ignore
 
+w
+|> Processor.Add (Processor.Create (fun _ -> () ))
 
 w 
 |> World.GetEntity 0 
