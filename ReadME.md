@@ -21,7 +21,11 @@ w
 |> Entity.WithValue (NameComponent "Martha")
 |> ignore
 
-printfn "Hello %s" (w |> World.GetEntity 0 |> Entity.Get<NameComponent>).Name
+w 
+|> World.GetEntity 0 
+|> Entity.Get<NameComponent>
+|> fun x -> x.Name
+|> printfn "Hello %s"
 
 ```
 
