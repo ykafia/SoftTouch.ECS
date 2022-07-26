@@ -15,7 +15,7 @@ let martha = NameComponent("Martha")
 
 w 
 |> World.CreateEntity
-|> Entity.WithValue<NameComponent> (NameComponent "Martha")
+|> Entity.WithValue (NameComponent "Martha")
 |> ignore
 
 printfn "Hello %s" (w |> World.GetEntity 0 |> Entity.Get<NameComponent>).Name
