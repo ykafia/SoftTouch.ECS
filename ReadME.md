@@ -2,7 +2,32 @@
 
 This project is a prototype for a lightweight ECS implementation with archetypal storage, heavily inspired by FLECS. It performs relatively well but there is room for improvement.
 
-## Example
+## FSharp example
+
+```fsharp
+open ECSharp.FSharp
+open ECSharp
+open System.Runtime.CompilerServices
+
+type NameComponent = 
+    struct
+        val Name : string
+        new (n : string) = {Name = n}
+    end
+
+let w = new World()
+
+w 
+|> World.CreateEntity
+|> Entity.WithValue<NameComponent> (NameComponent "Martha")
+|> ignore
+
+printfn "Hello %s" (w |> World.GetEntity 0 |> Entity.Get<NameComponent>).Name
+
+```
+
+
+## Example C#
 
 Let's create a name and health component :
 
