@@ -1,6 +1,6 @@
-﻿open ECSharp.FSharp
+﻿open ECSharp
+open ECSharp.FSharp
 open ECSharp.FSharp.ProcessorTypes
-open ECSharp
 
 [<Struct>]
 type NameComponent = 

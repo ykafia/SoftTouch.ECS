@@ -8,9 +8,10 @@ The F# api is a work in progress, it doesn't cover all the C# one but it is desi
 
 
 ```fsharp
+open ECSharp
 open ECSharp.FSharp
 open ECSharp.FSharp.ProcessorTypes
-open ECSharp
+
 
 [<Struct>]
 type NameComponent = 
