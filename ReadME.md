@@ -4,27 +4,38 @@ This project is a prototype for a lightweight ECS implementation with archetypal
 
 ## FSharp example
 
+The F# api is a work in progress, it doesn't cover all the C# one but it is designed to be very friendly to functional programming thanks to some dark type magic here and there.
+
+
 ```fsharp
 open ECSharp.FSharp
+open ECSharp.FSharp.ProcessorTypes
 open ECSharp
 
+[<Struct>]
 type NameComponent = 
-    struct
-        val Name : string
-        new (n : string) = {Name = n}
-    end
+    val Name : string
+    new (n : string) = {Name = n}
+    
 
-let w = new World()
+let world = new World()
 
-w 
+world 
 |> World.CreateEntity
 |> Entity.WithValue (NameComponent "Martha")
 |> ignore
 
-w
-|> Processor.Add (Processor.Create (fun _ -> () ))
 
-w 
+let nameSystem (ents : Entities<NameComponent>) = 
+    Entity.Set (NameComponent "John Doe") ents[0]
+
+
+world
+|> Processor.Add nameSystem
+
+world.Update()
+
+world 
 |> World.GetEntity 0 
 |> Entity.Get<NameComponent>
 |> fun x -> x.Name

@@ -1,28 +1,31 @@
 ﻿open ECSharp.FSharp
+open ECSharp.FSharp.ProcessorTypes
 open ECSharp
 
+[<Struct>]
 type NameComponent = 
-    struct
-        val Name : string
-        new (n : string) = {Name = n}
-    end
+    val Name : string
+    new (n : string) = {Name = n}
+    
 
-let w = new World()
+let world = new World()
 
-w 
+world 
 |> World.CreateEntity
 |> Entity.WithValue (NameComponent "Martha")
 |> ignore
 
 
-let updaterFunc (archs : seq<Archetype>) = 
-    ()
+let nameSystem (ents : Entities<NameComponent>) = 
+    Entity.Set (NameComponent "John Doe") ents[0]
 
 
-w
-|> Processor.Add (Processor.Create updaterFunc)
+world
+|> Processor.Add nameSystem
 
-w 
+world.Update()
+
+world 
 |> World.GetEntity 0 
 |> Entity.Get<NameComponent>
 |> fun x -> x.Name
