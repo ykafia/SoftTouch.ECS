@@ -12,7 +12,7 @@ namespace ECSharp.Example
             foreach (var arch in Query1)
                 for (int i = 0; i < arch.Length; i++)
                 {
-                    arch.GetComponentArray<HealthComponent>().Span[i].LifePoints = 150;
+                    // arch.GetComponentArray<HealthComponent>()[i].LifePoints = 150;
                 }
         }
     }
