@@ -5,7 +5,7 @@ using ECSharp.Events;
 
 namespace ECSharp.Example
 {
-    public class NameProcessor : ProcessorAsync<QueryEntity<NameComponent>>
+    public class NameProcessor : ProcessorAsync<Query<NameComponent>>
     {
         public static EventKey<(string, long)> NewNameEvent = new EventKey<(string, long)>(eventName: "New Name");
         EventReceiver<(string, long)> NewNameReceiver = new EventReceiver<(string, long)>(NewNameEvent);
@@ -20,17 +20,17 @@ namespace ECSharp.Example
         }
     }
 
-    public class ChangeName : Processor<QueryEntity<NameComponent>>
+    public class ChangeName : Processor<Query<NameComponent>>
     {
         public static EventKey<(string, long)> NewNameEvent = new EventKey<(string, long)>(eventName: "New Name");
         EventReceiver<(string, long)> NewNameReceiver = new EventReceiver<(string, long)>(NewNameEvent);
+
         public override void Update()
         {
             if(World.FrameCount % 15 == 0)
             {
                 NameProcessor.NewNameEvent.Broadcast(("NameNumber" + World.FrameCount, 0));
             }
-
         }
     }
     

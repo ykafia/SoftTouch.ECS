@@ -26,8 +26,16 @@ namespace ECSharp
         public bool Has<T>()
             => Archetype.Storage.ContainsKey(typeof(T));
 
-
         public void Add<T>(in T c) where T : struct
+        {
+            Entity.World.AddArchetypeUpdate(new ComponentAdd<T>(c, this));
+        }
+        public void Remove<T>() where T : struct
+        {
+            Entity.World.AddArchetypeUpdate(new ComponentRemove<T>(this));
+        }
+
+        internal void AddComponent<T>(in T c) where T : struct
         {
             var arrays = Archetype.Storage;
             
@@ -60,7 +68,7 @@ namespace ECSharp
                 world.BuildGraph();
             }
         }
-        public void Remove<T>() where T : struct
+        internal void RemoveComponent<T>() where T : struct
         {
             var arrays = Archetype.Storage;
             if(Archetype.Edges.Remove.TryGetValue(typeof(T), out var newArch))

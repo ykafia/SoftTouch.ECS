@@ -43,13 +43,11 @@ namespace ECSharp
         public IEnumerable<Type> TypeIntersect(Archetype t) => this.ID.Intersect(t.ID);
         public IEnumerable<Type> TypeExcept(Archetype t) => this.ID.Except(t.ID);
 
-
-        public void SetValue<T>(int index, in T component) where T : struct
+        public Span<T> GetComponentSpan<T>() where T : struct
         {
-            ((ComponentList<T>)Storage[typeof(T)])[index] = component;
+            return ((ComponentList<T>)Storage[typeof(T)]).AsSpan();
         }
-
-        public ComponentList<T> GetComponentArray<T>() where T : struct
+        internal ComponentList<T> GetComponentArray<T>() where T : struct
         {
             return (ComponentList<T>)Storage[typeof(T)];
         }
@@ -58,17 +56,11 @@ namespace ECSharp
             c = ((ComponentList<T>)Storage[typeof(T)])[i];
         }
 
-        public ComponentList GetArray<T>() => Storage[typeof(T)];
-
-        public ComponentList GetComponentArray(Type t)
-        {
-            return Storage[t];
-        }
         public void AddComponent<T>(in T component, long entity) where T : struct
         {
             if(Storage.ContainsKey(typeof(T)))
             {
-                ((ComponentList<T>)Storage[typeof(T)]).Add(component);
+                GetComponentArray<T>().Add(component);
                 EntityID.Add(entity);
             }
         }
@@ -79,7 +71,7 @@ namespace ECSharp
         {
             if(Storage.ContainsKey(typeof(T)))
             {
-                ((ComponentList<T>)Storage[typeof(T)])[index] = component;
+                GetComponentSpan<T>()[index] = component;
             }
         }
 

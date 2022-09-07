@@ -3,13 +3,12 @@ using System.Linq;
 
 namespace ECSharp.Processors
 {
-    public class NameProcessor : Processor<QueryEntity<NameComponent>>
+    public class NameProcessor : Processor<Query<NameComponent>>
     {
         public override void Update()
         {
-            foreach(var x in Query1)
-                for(int i =0; i< x.Length; i++)
-                    x.GetComponentArray<NameComponent>()[i] = new NameComponent{Name = "Lola"};
+            foreach((var e, var name) in query1)
+                name.Set(new(){Name = "Lola"});
         }
     }
 }

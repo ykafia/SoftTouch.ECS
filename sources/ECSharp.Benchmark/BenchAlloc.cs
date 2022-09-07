@@ -3,44 +3,48 @@ using BenchmarkDotNet;
 using BenchmarkDotNet.Attributes;
 using ECSharp.Components;
 using System.Linq;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+
 namespace ECSharp.Benchmark
 {
     [MemoryDiagnoser]
     [SimpleJob(launchCount: 3, warmupCount: 10, targetCount: 15)]
     public class BenchAlloc
     {
-        TransformComponent[] structs;
-        TransformTRSComponent[] classes;
+        List<TransformComponent> structs;
+        List<TransformTRSComponent> classes;
 
-        static int Size = 100;
-        
+        static int Size = 1000;
+
         public BenchAlloc()
         {
-            structs = new TransformComponent[Size];
-            classes = new TransformTRSComponent[Size].Select( x=>
-                new TransformTRSComponent{ 
-                    Position = System.Numerics.Vector3.One, 
+            structs = new List<TransformComponent>(Size);
+            classes = new List<TransformTRSComponent>(Size).Select(_ =>
+                new TransformTRSComponent
+                {
+                    Position = System.Numerics.Vector3.One,
                     Rotation = System.Numerics.Quaternion.Identity,
                     Scale = System.Numerics.Vector3.One
-                    }).ToArray();
+                }).ToList();
         }
         [Benchmark]
         public void StructComponent()
         {
-            for(int i = 0; i< structs.Length; i++)
-                UpdateStruct(structs[i]);  
+            for (int i = 0; i < structs.Count; i++)
+                UpdateStruct(structs[i]);
         }
         [Benchmark]
         public void StructRefComponent()
         {
-            for(int i = 0; i< structs.Length; i++)
-                UpdateStruct(ref structs[i]);     
+            for (int i = 0; i < structs.Count; i++)
+                UpdateStruct(ref CollectionsMarshal.AsSpan(structs)[i]);
         }
         [Benchmark]
         public void ClassComponent()
         {
-            for(int i = 0; i< classes.Length; i++)
-                UpdateClass(classes[i]); 
+            for (int i = 0; i < classes.Count; i++)
+                UpdateClass(classes[i]);
         }
 
         public static TransformComponent UpdateStruct(TransformComponent v)
@@ -64,6 +68,6 @@ namespace ECSharp.Benchmark
             v.Rotation *= 2;
             v.Scale += System.Numerics.Vector3.One;
         }
-        
+
     }
 }

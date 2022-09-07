@@ -18,10 +18,7 @@ world
     .With(new HealthComponent{LifePoints = 100});
 
 world.Add<HealthProcessor>();
-world.Add<NameProcessor>();
-world.Add<ChangeName>();
+// world.Add<NameProcessor>();
+// world.Add<ChangeName>();
 
-world.Run();
-
-Console.WriteLine("Final name is " + world[0].Get<NameComponent>().Name);
-Console.WriteLine("Final name is " + world[1].Get<NameComponent>().Name);
+world.Run(5);

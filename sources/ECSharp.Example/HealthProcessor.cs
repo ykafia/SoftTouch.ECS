@@ -4,16 +4,16 @@ using ECSharp;
 
 namespace ECSharp.Example
 {
-    public class HealthProcessor : Processor<QueryEntity<HealthComponent>>
+    public class HealthProcessor : Processor<Query<HealthComponent>>
     {
+        Random rand = new Random();
 
         public override void Update()
         {
-            foreach (var arch in Query1)
-                for (int i = 0; i < arch.Length; i++)
-                {
-                    // arch.GetComponentArray<HealthComponent>()[i].LifePoints = 150;
-                }
+            foreach ((var e, var health) in query1)
+            {
+                
+            }
         }
     }
 }

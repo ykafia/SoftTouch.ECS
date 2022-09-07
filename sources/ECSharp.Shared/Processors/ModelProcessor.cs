@@ -4,20 +4,14 @@ using System.Numerics;
 
 namespace ECSharp.Processors
 {
-    public class ModelProcessor : Processor<QueryEntity<ModelComponent>>
+    public class ModelProcessor : Processor<Query<ModelComponent>>
     {
         public override void Update()
         {
-            Query1
-            .AsParallel()
-            .ForAll(
-                x => {
-                    for(int i =0; i< x.Length; i++)
-                    {
-                        x.GetComponentArray<ModelComponent>()[i].Buffer.Add(Vector3.One);
-                    }
-                }
-            );
+            foreach((var e, var model) in query1)
+            {
+                
+            }
         }
     }
 }

@@ -3,4 +3,4 @@ using ECSharp.Components;
 using BenchmarkDotNet.Running;
 using ECSharp.Benchmark;
 
-BenchmarkRunner.Run<ProcessorBench>();
+BenchmarkRunner.Run<BenchAlloc>();

@@ -7,17 +7,28 @@ namespace ECSharp
 {
     public struct ArchetypeID
     {
+        static int globalId = 0;
+        static int GetNext() => ++globalId;
+
+        public readonly int Id;
+
         public readonly List<Type> Types = new();
 
         public int Count => Types?.Count ?? 0;
-
+        public ArchetypeID(params Type[] types)
+        {
+            Types = types.Distinct().ToList();
+            Id = GetNext();
+        }
         public ArchetypeID(HashSet<Type> types)
         {
-            Types= types.ToList();
+            Types = types.ToList();
+            Id = GetNext();
         }
         public ArchetypeID(IEnumerable<Type> types)
         {
-            Types= types.ToList();
+            Types = types.ToList();
+            Id = GetNext();
         }
 
         public bool IsSupersetOf(ArchetypeID other)
@@ -25,7 +36,7 @@ namespace ECSharp
             return
                 other.Types != null &&
                 this.Types?.Intersect(other.Types).Count() == other.Count;
-                
+
         }
         public bool IsAddedType(ArchetypeID other) => IsSupersetOf(other) && this.Count == other.Count + 1;
         public bool IsSubsetOf(ArchetypeID other)
@@ -38,13 +49,13 @@ namespace ECSharp
 
         public IEnumerable<Type> Except(ArchetypeID other)
         {
-            if(other.Types != null && this.Types != null)
+            if (other.Types != null && this.Types != null)
                 return other.Types.Except(this.Types);
             return new List<Type>();
         }
         public IEnumerable<Type> Intersect(ArchetypeID other)
         {
-            if(other.Types != null && this.Types != null)
+            if (other.Types != null && this.Types != null)
                 return other.Types.Intersect(this.Types);
             return new List<Type>();
         }
@@ -62,6 +73,5 @@ namespace ECSharp
         {
             return Types?.Select(x => x.GetHashCode()).Sum() ?? 0;
         }
-
     }
 }

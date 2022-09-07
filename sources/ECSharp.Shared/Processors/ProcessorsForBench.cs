@@ -3,37 +3,33 @@ using ECSharp.Components;
 
 namespace ECSharp.Processors;
 
-public class Processor1 : Processor<QueryEntity<HealthComponent>>
+public class Processor1 : Processor<Query<HealthComponent>>
 {
+    Random rand = new Random();
     public override void Update()
     {
-        foreach(var arch in Query1)
-            for (int i = 0; i < arch.Length; i++)
-            {
-                arch.GetComponentArray<HealthComponent>()[i] = new HealthComponent{LifePoints = 100, Shield = 100};
-            }
+        foreach((var e, var h) in query1)
+        {
+
+        }
     }
 }
-public class Processor2 : Processor<QueryEntity<HealthComponent>>
+public class Processor2 : Processor<Query<HealthComponent>>
 {
     public override void Update()
     {
-        foreach(var arch in Query1)
-            for (int i = 0; i < arch.Length; i++)
-            {
-                arch.GetEntityComponent<HealthComponent>(i, out var c);
-                c.LifePoints = 100;
-            }
+        foreach((var e, var name) in query1)
+            name.Set(new(){LifePoints = 100});
     }
 }
-public class Processor3 : Processor<QueryEntity<NameComponent, HealthComponent>>
+public class Processor3 : Processor<Query<NameComponent, HealthComponent>>
 {
     public override void Update()
     {
-        foreach(var arch in Query1)
-            for (int i = 0; i < arch.Length; i++)
-            {
-                // arch.GetComponentArray<HealthComponent>().AsSpan()[i].LifePoints = 100;
-            }
+        foreach((var e, var n, var h) in query1)
+        {
+            n.Set(new(){Name = "Lola"});
+            h.Set(new(){LifePoints = 100});
+        }
     }
 }
