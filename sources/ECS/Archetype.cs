@@ -66,7 +66,10 @@ namespace ECSharp
         }
 
         public void RemoveEntity(Entity e) => EntityID.RemoveAt(EntityID.IndexOf(e.Index));
-        
+        public ComponentList<T> GetComponentList<T>() where T : struct
+        {
+            return (ComponentList<T>)Storage[typeof(T)];
+        }
         public void SetComponent<T>(int index, in T component) where T : struct
         {
             if(Storage.ContainsKey(typeof(T)))

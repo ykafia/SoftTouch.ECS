@@ -15,7 +15,7 @@ namespace ECSharp.Example
             while(World.IsRunning)
             {
                 (string name, long id) = await NewNameReceiver.ReceiveAsync();
-                World[id].Set<NameComponent>(new NameComponent{Name = name});
+                World[id].Set(new NameComponent{Name = name});
             }
         }
     }

@@ -17,12 +17,12 @@ namespace ECSharp
             world = w;
         }
     }
-    public class Query<T> : Query, IEnumerable<(ArchetypeRecord,Ref<T>)>
+    public class Query<T> : Query, IEnumerable<(ArchetypeRecord,T)>
         where T : struct
     {
         public Query(World w) : base(w){}
 
-        public IEnumerator<(ArchetypeRecord,Ref<T>)> GetEnumerator()
+        public IEnumerator<(ArchetypeRecord,T)> GetEnumerator()
         {
             var id = new ArchetypeID(typeof(T));
             foreach(var arch in world.Archetypes.Values)
@@ -31,7 +31,7 @@ namespace ECSharp
                     for(int i = 0; i<arch.Length; i++)
                         yield return (
                             world.Entities[arch.EntityID[i]],
-                            new Ref<T>(arch.GetComponentArray<T>(), world[arch.EntityID[i]])
+                            world.Entities[arch.EntityID[i]].Get<T>()
                         );
             }
         }
@@ -40,13 +40,13 @@ namespace ECSharp
             return (IEnumerator) GetEnumerator();
         }
     }
-    public class Query<T1,T2> : Query<T1>, IEnumerable<(ArchetypeRecord,Ref<T1>,Ref<T2>)>
+    public class Query<T1,T2> : Query<T1>, IEnumerable<(ArchetypeRecord,T1,T2)>
         where T1 : struct
         where T2 : struct
     {
         public Query(World w) : base(w){}
 
-        new public IEnumerator<(ArchetypeRecord,Ref<T1>,Ref<T2>)> GetEnumerator()
+        new public IEnumerator<(ArchetypeRecord,T1,T2)> GetEnumerator()
         {
             var id = new ArchetypeID(typeof(T1),typeof(T2));
             foreach(var arch in world.Archetypes.Values)
@@ -55,8 +55,9 @@ namespace ECSharp
                     for(int i = 0; i<arch.Length; i++)
                         yield return (
                             world.Entities[arch.EntityID[i]],
-                            new Ref<T1>(arch.GetComponentArray<T1>(), world[arch.EntityID[i]]),
-                            new Ref<T2>(arch.GetComponentArray<T2>(), world[arch.EntityID[i]])
+                            world.Entities[arch.EntityID[i]].Get<T1>(),
+                            world.Entities[arch.EntityID[i]].Get<T2>()
+                            
                         );
             }
         }
@@ -65,14 +66,14 @@ namespace ECSharp
             return (IEnumerator) GetEnumerator();
         }
     }
-    public class Query<T1,T2,T3> : Query<T1,T2>, IEnumerable<(ArchetypeRecord,Ref<T1>,Ref<T2>,Ref<T3>)>
+    public class Query<T1,T2,T3> : Query<T1,T2>, IEnumerable<(ArchetypeRecord,T1,T2,T3)>
         where T1 : struct
         where T2 : struct
         where T3 : struct
     {
         public Query(World w) : base(w){}
 
-        new public IEnumerator<(ArchetypeRecord,Ref<T1>,Ref<T2>,Ref<T3>)> GetEnumerator()
+        new public IEnumerator<(ArchetypeRecord,T1,T2,T3)> GetEnumerator()
         {
             var id = new ArchetypeID(typeof(T1),typeof(T2),typeof(T3));
             foreach(var arch in world.Archetypes.Values)
@@ -81,9 +82,9 @@ namespace ECSharp
                     for(int i = 0; i<arch.Length; i++)
                         yield return (
                             world.Entities[arch.EntityID[i]],
-                            new Ref<T1>(arch.GetComponentArray<T1>(), world[arch.EntityID[i]]),
-                            new Ref<T2>(arch.GetComponentArray<T2>(), world[arch.EntityID[i]]),
-                            new Ref<T3>(arch.GetComponentArray<T3>(), world[arch.EntityID[i]])
+                            world.Entities[arch.EntityID[i]].Get<T1>(),
+                            world.Entities[arch.EntityID[i]].Get<T2>(),
+                            world.Entities[arch.EntityID[i]].Get<T3>()
                         );
             }
         }
@@ -92,7 +93,7 @@ namespace ECSharp
             return (IEnumerator) GetEnumerator();
         }
     }
-    public class Query<T1,T2,T3,T4> : Query<T1,T2,T3>, IEnumerable<(ArchetypeRecord,Ref<T1>,Ref<T2>,Ref<T3>,Ref<T4>)>
+    public class Query<T1,T2,T3,T4> : Query<T1,T2,T3>, IEnumerable<(ArchetypeRecord,T1,T2,T3,T4)>
         where T1 : struct
         where T2 : struct
         where T3 : struct
@@ -100,7 +101,7 @@ namespace ECSharp
     {
         public Query(World w) : base(w){}
 
-        new public IEnumerator<(ArchetypeRecord,Ref<T1>,Ref<T2>,Ref<T3>,Ref<T4>)> GetEnumerator()
+        new public IEnumerator<(ArchetypeRecord,T1,T2,T3,T4)> GetEnumerator()
         {
             var id = new ArchetypeID(typeof(T1),typeof(T2),typeof(T3),typeof(T4));
             foreach(var arch in world.Archetypes.Values)
@@ -109,10 +110,10 @@ namespace ECSharp
                     for(int i = 0; i<arch.Length; i++)
                         yield return (
                             world.Entities[arch.EntityID[i]],
-                            new Ref<T1>(arch.GetComponentArray<T1>(), world[arch.EntityID[i]]),
-                            new Ref<T2>(arch.GetComponentArray<T2>(), world[arch.EntityID[i]]),
-                            new Ref<T3>(arch.GetComponentArray<T3>(), world[arch.EntityID[i]]),
-                            new Ref<T4>(arch.GetComponentArray<T4>(), world[arch.EntityID[i]])
+                            world.Entities[arch.EntityID[i]].Get<T1>(),
+                            world.Entities[arch.EntityID[i]].Get<T2>(),
+                            world.Entities[arch.EntityID[i]].Get<T3>(),
+                            world.Entities[arch.EntityID[i]].Get<T4>()
                         );
             }
         }
@@ -121,7 +122,7 @@ namespace ECSharp
             return (IEnumerator) GetEnumerator();
         }
     }
-    public class Query<T1,T2,T3,T4,T5> : Query<T1,T2,T3,T4>, IEnumerable<(ArchetypeRecord,Ref<T1>,Ref<T2>,Ref<T3>,Ref<T4>,Ref<T5>)>
+    public class Query<T1,T2,T3,T4,T5> : Query<T1,T2,T3,T4>, IEnumerable<(ArchetypeRecord,T1,T2,T3,T4,T5)>
         where T1 : struct
         where T2 : struct
         where T3 : struct
@@ -130,7 +131,7 @@ namespace ECSharp
     {
         public Query(World w) : base(w){}
 
-        new public IEnumerator<(ArchetypeRecord,Ref<T1>,Ref<T2>,Ref<T3>,Ref<T4>,Ref<T5>)> GetEnumerator()
+        new public IEnumerator<(ArchetypeRecord,T1,T2,T3,T4,T5)> GetEnumerator()
         {
             var id = new ArchetypeID(typeof(T1),typeof(T2),typeof(T3),typeof(T4),typeof(T5));
             foreach(var arch in world.Archetypes.Values)
@@ -139,11 +140,11 @@ namespace ECSharp
                     for(int i = 0; i<arch.Length; i++)
                         yield return (
                             world.Entities[arch.EntityID[i]],
-                            new Ref<T1>(arch.GetComponentArray<T1>(), world[arch.EntityID[i]]),
-                            new Ref<T2>(arch.GetComponentArray<T2>(), world[arch.EntityID[i]]),
-                            new Ref<T3>(arch.GetComponentArray<T3>(), world[arch.EntityID[i]]),
-                            new Ref<T4>(arch.GetComponentArray<T4>(), world[arch.EntityID[i]]),
-                            new Ref<T5>(arch.GetComponentArray<T5>(), world[arch.EntityID[i]])
+                            world.Entities[arch.EntityID[i]].Get<T1>(),
+                            world.Entities[arch.EntityID[i]].Get<T2>(),
+                            world.Entities[arch.EntityID[i]].Get<T3>(),
+                            world.Entities[arch.EntityID[i]].Get<T4>(),
+                            world.Entities[arch.EntityID[i]].Get<T5>()
                         );
             }
         }
@@ -152,7 +153,7 @@ namespace ECSharp
             return (IEnumerator) GetEnumerator();
         }
     }
-    public class Query<T1,T2,T3,T4,T5,T6> : Query<T1,T2,T3,T4,T6>, IEnumerable<(ArchetypeRecord,Ref<T1>,Ref<T2>,Ref<T3>,Ref<T4>,Ref<T5>,Ref<T6>)>
+    public class Query<T1,T2,T3,T4,T5,T6> : Query<T1,T2,T3,T4,T6>, IEnumerable<(ArchetypeRecord,T1,T2,T3,T4,T5,T6)>
         where T1 : struct
         where T2 : struct
         where T3 : struct
@@ -162,7 +163,7 @@ namespace ECSharp
     {
         public Query(World w) : base(w){}
 
-        new public IEnumerator<(ArchetypeRecord,Ref<T1>,Ref<T2>,Ref<T3>,Ref<T4>,Ref<T5>,Ref<T6>)> GetEnumerator()
+        new public IEnumerator<(ArchetypeRecord,T1,T2,T3,T4,T5,T6)> GetEnumerator()
         {
             var id = new ArchetypeID(typeof(T1),typeof(T2),typeof(T3),typeof(T4),typeof(T5), typeof(T6));
             foreach(var arch in world.Archetypes.Values)
@@ -171,12 +172,12 @@ namespace ECSharp
                     for(int i = 0; i<arch.Length; i++)
                         yield return (
                             world.Entities[arch.EntityID[i]],
-                            new Ref<T1>(arch.GetComponentArray<T1>(), world[arch.EntityID[i]]),
-                            new Ref<T2>(arch.GetComponentArray<T2>(), world[arch.EntityID[i]]),
-                            new Ref<T3>(arch.GetComponentArray<T3>(), world[arch.EntityID[i]]),
-                            new Ref<T4>(arch.GetComponentArray<T4>(), world[arch.EntityID[i]]),
-                            new Ref<T5>(arch.GetComponentArray<T5>(), world[arch.EntityID[i]]),
-                            new Ref<T6>(arch.GetComponentArray<T6>(), world[arch.EntityID[i]])
+                            world.Entities[arch.EntityID[i]].Get<T1>(),
+                            world.Entities[arch.EntityID[i]].Get<T2>(),
+                            world.Entities[arch.EntityID[i]].Get<T3>(),
+                            world.Entities[arch.EntityID[i]].Get<T4>(),
+                            world.Entities[arch.EntityID[i]].Get<T5>(),
+                            world.Entities[arch.EntityID[i]].Get<T6>()
                         );
             }
         }

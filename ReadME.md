@@ -6,7 +6,6 @@ This project is a prototype for a lightweight ECS implementation with archetypal
 
 The F# api is a work in progress, it doesn't cover all the C# one but it is designed to be very friendly to functional programming thanks to some dark type magic here and there.
 
-
 ```fsharp
 open ECSharp
 open ECSharp.FSharp
@@ -27,8 +26,9 @@ world
 |> ignore
 
 
-let nameSystem (ents : Entities<NameComponent>) = 
-    Entity.Set (NameComponent "John Doe") ents[0]
+let nameSystem (query : seq<ArchetypeRecord * NameComponent>) = 
+    for (e, n) in query do 
+        e.Set(NameComponent("Lola"));
 
 
 world
@@ -44,8 +44,7 @@ world
 
 ```
 
-
-## Example C#
+## Example C #
 
 Let's create a name and health component :
 
@@ -70,38 +69,26 @@ As you can see, components are just structs.
 Then we create a processor for `NameComponent` :
 
 ```csharp
-public class NameProcessor : Processor<QueryEntity<NameComponent>>
+public class NameProcessor : Processor<Query<NameComponent>>
 {
     public override void Update()
     {
-        // Query1 returns a list of archetypes containing the types
-        // mentionned in the first QueryEntity of the processor's generics
-        Query1
-        .AsParallel()
-        .ForAll(
-            x => {
-                for(int i = 0; i< x.Length; i++)
-                    x.GetComponentArrayStruct<NameComponent>()[i] = 
-                        new NameComponent{Name = "Lola2"};
-            }
-        );
+        // query1 returns a list of entities with a copy of each components queried
+        foreach((var e, var name) in query1)
+        {
+            e.Set(new NameComponent{Name = "Lola"});
+        }
     }
 }
 
-public class ModelProcessor : Processor<QueryEntity<ModelComponent>>
+public class ModelProcessor : Processor<Query<HealthComponent,ModelComponent>>
 {
     public override void Update()
     {
-        // Query1 returns a list of archetypes containing the types
-        // mentionned in the first QueryEntity of the processor's generics
-        Query1
-        .AsParallel()
-        .ForAll(
-            x => {
-                for(int i = 0; i< x.Length; i++)
-                    x.GetComponentArray<ModelComponent>()[i].Buffer[5] = 1;
-            }
-        );
+        foreach((var e, var health, var model) in query1)
+        {
+            // Do something with model
+        }
     }
 }
 ```

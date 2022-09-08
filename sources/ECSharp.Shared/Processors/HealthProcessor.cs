@@ -9,7 +9,8 @@ namespace ECSharp.Processors
         {
             foreach((var e, var health) in query1)
             {
-                health.Set(new HealthComponent{LifePoints = 157});
+                // e.Get<HealthComponent>()health.Set(new HealthComponent{LifePoints = 157});
+                e.Set(health with {LifePoints = 125});
             }
         }
     }

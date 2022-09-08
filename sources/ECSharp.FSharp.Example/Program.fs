@@ -16,8 +16,9 @@ world
 |> ignore
 
 
-let nameSystem (ents : Entities<NameComponent>) = 
-    Entity.Set (NameComponent "John Doe") ents[0]
+let nameSystem (query : seq<ArchetypeRecord * NameComponent>) = 
+    for (e, n) in query do 
+        e.Set(NameComponent("Lola"));
 
 
 world
