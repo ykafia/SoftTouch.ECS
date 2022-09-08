@@ -44,7 +44,7 @@ world
 
 ```
 
-## Example C #
+## Example C#
 
 Let's create a name and health component :
 
