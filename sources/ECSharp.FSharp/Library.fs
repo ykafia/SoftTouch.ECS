@@ -18,7 +18,7 @@ module ProcessorTypes =
         (updater1 : seq<ArchetypeRecord * 'T> -> unit) =
         inherit Processor<Query<'T>>()
 
-        member this.Query1 = new Query(this.World) :?> Query<'T>
+        member this.Query1 = Query<'T>().With(this.World) :?> Query<'T> 
 
         override this.Update() = 
             updater1 (Seq.cast<ArchetypeRecord * 'T> this.Query1)
@@ -29,7 +29,7 @@ module ProcessorTypes =
         (updater1 : seq<ArchetypeRecord * 'T1 *'T2> -> unit) =
         inherit Processor<Query<'T1, 'T2>>()
 
-        member this.Query1 = new Query(this.World) :?> Query<'T1,'T2>
+        member this.Query1 = new Query<'T1,'T2>()
 
         override this.Update() = 
             updater1 (Seq.cast<ArchetypeRecord * 'T1 * 'T2> this.Query1)

@@ -39,11 +39,11 @@ namespace ECSharp
         {
         }
 
-        public override Query With(World w)
+        public override Query<T> With(World w)
         {
             world = w;
             id = new(typeof(T));
-            return this;
+            return (Query<T>)this;
         }
 
         public IEnumerator<(ArchetypeRecord, T)> GetEnumerator()
@@ -70,7 +70,7 @@ namespace ECSharp
         where T2 : struct
     {
 
-        public override Query With(World w)
+        public override Query<T1, T2> With(World w)
         {
             world = w;
             id = new ArchetypeID(typeof(T1), typeof(T2));
@@ -103,7 +103,7 @@ namespace ECSharp
         where T2 : struct
         where T3 : struct
     {
-        public override Query With(World w)
+        public override Query<T1, T2, T3> With(World w)
         {
             world = w;
             id = new ArchetypeID(typeof(T1), typeof(T2), typeof(T3));
@@ -135,7 +135,7 @@ namespace ECSharp
         where T3 : struct
         where T4 : struct
     {
-        public override Query With(World w)
+        public override Query<T1, T2, T3, T4> With(World w)
         {
             world = w;
             id = new ArchetypeID(typeof(T1), typeof(T2), typeof(T3), typeof(T4));
@@ -169,7 +169,7 @@ namespace ECSharp
         where T4 : struct
         where T5 : struct
     {
-        public override Query With(World w)
+        public override Query<T1, T2, T3, T4, T5> With(World w)
         {
             world = w;
             id = new ArchetypeID(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5));
@@ -205,7 +205,7 @@ namespace ECSharp
         where T5 : struct
         where T6 : struct
     {
-        public override Query With(World w)
+        public override Query<T1, T2, T3, T4, T5, T6> With(World w)
         {
             world = w;
             id = new ArchetypeID(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6));
