@@ -73,5 +73,15 @@ namespace ECSharp
         {
             return Types?.Select(x => x.GetHashCode()).Sum() ?? 0;
         }
+
+        public static bool operator ==(ArchetypeID left, ArchetypeID right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(ArchetypeID left, ArchetypeID right)
+        {
+            return !(left == right);
+        }
     }
 }
