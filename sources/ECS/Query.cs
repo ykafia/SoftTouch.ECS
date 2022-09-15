@@ -16,11 +16,18 @@ namespace ECSharp
         {
             world = w;
         }
+
+        protected ArchetypeID id;
+        public IEnumerable<Archetype> QueriedArchetypes => world.Archetypes.Values.Where(x=> x.ID.IsSupersetOf(id));
+
     }
     public class Query<T> : Query, IEnumerable<(ArchetypeRecord,T)>
         where T : struct
     {
-        public Query(World w) : base(w){}
+        public Query(World w) : base(w)
+        {
+            id = new ArchetypeID(typeof(T));
+        }
 
         public IEnumerator<(ArchetypeRecord,T)> GetEnumerator()
         {
@@ -37,19 +44,21 @@ namespace ECSharp
         }
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return (IEnumerator) GetEnumerator();
+            return GetEnumerator();
         }
     }
     public class Query<T1,T2> : Query<T1>, IEnumerable<(ArchetypeRecord,T1,T2)>
         where T1 : struct
         where T2 : struct
     {
-        public Query(World w) : base(w){}
+        public Query(World w) : base(w)
+        {
+            id = new ArchetypeID(typeof(T1),typeof(T2));
+        }
 
         new public IEnumerator<(ArchetypeRecord,T1,T2)> GetEnumerator()
         {
-            var id = new ArchetypeID(typeof(T1),typeof(T2));
-            foreach(var arch in world.Archetypes.Values)
+            foreach(var arch in QueriedArchetypes)
             {
                 if(arch.ID.IsSupersetOf(id))
                     for(int i = 0; i<arch.Length; i++)
@@ -63,7 +72,7 @@ namespace ECSharp
         }
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return (IEnumerator) GetEnumerator();
+            return GetEnumerator();
         }
     }
     public class Query<T1,T2,T3> : Query<T1,T2>, IEnumerable<(ArchetypeRecord,T1,T2,T3)>
@@ -71,12 +80,14 @@ namespace ECSharp
         where T2 : struct
         where T3 : struct
     {
-        public Query(World w) : base(w){}
+        public Query(World w) : base(w)
+        {
+            id = new(typeof(T1),typeof(T2),typeof(T3));
+        }
 
         new public IEnumerator<(ArchetypeRecord,T1,T2,T3)> GetEnumerator()
         {
-            var id = new ArchetypeID(typeof(T1),typeof(T2),typeof(T3));
-            foreach(var arch in world.Archetypes.Values)
+            foreach(var arch in QueriedArchetypes)
             {
                 if(arch.ID.IsSupersetOf(id))
                     for(int i = 0; i<arch.Length; i++)
@@ -90,7 +101,7 @@ namespace ECSharp
         }
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return (IEnumerator) GetEnumerator();
+            return GetEnumerator();
         }
     }
     public class Query<T1,T2,T3,T4> : Query<T1,T2,T3>, IEnumerable<(ArchetypeRecord,T1,T2,T3,T4)>
@@ -99,12 +110,14 @@ namespace ECSharp
         where T3 : struct
         where T4 : struct
     {
-        public Query(World w) : base(w){}
+        public Query(World w) : base(w)
+        {
+            id = new(typeof(T1),typeof(T2),typeof(T3), typeof(T4));
+        }
 
         new public IEnumerator<(ArchetypeRecord,T1,T2,T3,T4)> GetEnumerator()
         {
-            var id = new ArchetypeID(typeof(T1),typeof(T2),typeof(T3),typeof(T4));
-            foreach(var arch in world.Archetypes.Values)
+            foreach(var arch in QueriedArchetypes)
             {
                 if(arch.ID.IsSupersetOf(id))
                     for(int i = 0; i<arch.Length; i++)
@@ -119,7 +132,7 @@ namespace ECSharp
         }
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return (IEnumerator) GetEnumerator();
+            return GetEnumerator();
         }
     }
     public class Query<T1,T2,T3,T4,T5> : Query<T1,T2,T3,T4>, IEnumerable<(ArchetypeRecord,T1,T2,T3,T4,T5)>
@@ -129,12 +142,14 @@ namespace ECSharp
         where T4 : struct
         where T5 : struct
     {
-        public Query(World w) : base(w){}
+        public Query(World w) : base(w)
+        {
+            id = new(typeof(T1),typeof(T2),typeof(T3), typeof(T4), typeof(T5));
+        }
 
         new public IEnumerator<(ArchetypeRecord,T1,T2,T3,T4,T5)> GetEnumerator()
         {
-            var id = new ArchetypeID(typeof(T1),typeof(T2),typeof(T3),typeof(T4),typeof(T5));
-            foreach(var arch in world.Archetypes.Values)
+            foreach(var arch in QueriedArchetypes)
             {
                 if(arch.ID.IsSupersetOf(id))
                     for(int i = 0; i<arch.Length; i++)
@@ -150,7 +165,7 @@ namespace ECSharp
         }
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return (IEnumerator) GetEnumerator();
+            return GetEnumerator();
         }
     }
     public class Query<T1,T2,T3,T4,T5,T6> : Query<T1,T2,T3,T4,T6>, IEnumerable<(ArchetypeRecord,T1,T2,T3,T4,T5,T6)>
@@ -161,12 +176,15 @@ namespace ECSharp
         where T5 : struct
         where T6 : struct
     {
-        public Query(World w) : base(w){}
+        public Query(World w) : base(w)
+        {
+            id = new(typeof(T1),typeof(T2),typeof(T3), typeof(T4),typeof(T5), typeof(T6));
+        }
 
         new public IEnumerator<(ArchetypeRecord,T1,T2,T3,T4,T5,T6)> GetEnumerator()
         {
-            var id = new ArchetypeID(typeof(T1),typeof(T2),typeof(T3),typeof(T4),typeof(T5), typeof(T6));
-            foreach(var arch in world.Archetypes.Values)
+            
+            foreach(var arch in QueriedArchetypes)
             {
                 if(arch.ID.IsSupersetOf(id))
                     for(int i = 0; i<arch.Length; i++)
@@ -183,7 +201,7 @@ namespace ECSharp
         }
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return (IEnumerator) GetEnumerator();
+            return GetEnumerator();
         }
     }
 }
