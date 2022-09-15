@@ -34,14 +34,14 @@ namespace ECSharp
 
         public World()
         {
-            Archetypes.Add(new(), Archetype.Empty);
+            Archetypes.Add(new(), Archetype.CreateEmpty(this));
         }
 
         public EntityBuilder CreateEntity(string name = "")
         {
             var e = new EntityBuilder(new Entity(Entities.Count, this, name));
-            Archetype.Empty.AddEntity(e.Entity);
-            Entities[e.Entity.Index] = new ArchetypeRecord { Entity = e.Entity, Archetype = Archetype.Empty };
+            Archetype.CreateEmpty(this).AddEntity(e.Entity);
+            Entities[e.Entity.Index] = new ArchetypeRecord { Entity = e.Entity, Archetype = Archetype.CreateEmpty(this) };
             return e;
         }
 
@@ -61,7 +61,7 @@ namespace ECSharp
         {
             if (!Archetypes.ContainsKey(types))
             {
-                Archetypes.Add(types, new Archetype(components));
+                Archetypes.Add(types, new Archetype(components,this));
                 return Archetypes[types];
             }
             else
@@ -71,7 +71,7 @@ namespace ECSharp
         {
             if (!Archetypes.ContainsKey(types))
             {
-                Archetypes.Add(types, new Archetype(components));
+                Archetypes.Add(types, new Archetype(components,this));
                 return Archetypes[types];
             }
             else
@@ -138,13 +138,16 @@ namespace ECSharp
 
         public void Start()
         {
-            foreach (ProcessorAsync pa in Processors.Where(p => p is ProcessorAsync))
+            foreach (ProcessorAsync pa in Processors.OfType<ProcessorAsync>())
                 pa.Execute();
         }
         public void Update()
         {
-            foreach (Processor p in Processors.Where(p => p is Processor))
-                p.Update();
+            for (int i = 0; i < Processors.Count; i++)
+            {
+                if(Processors[i] is Processor processor)
+                    processor.Update();
+            }
             UpdateQueue.ExecuteUpdates();
             FrameCount += 1;
         }
@@ -152,6 +155,7 @@ namespace ECSharp
         public void Run(int framesToRun = 0)
         {
             IsRunning = true;
+            // UpdateQueue.ExecuteUpdates();
             Start();
             while (IsRunning)
             {

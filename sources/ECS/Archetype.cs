@@ -9,7 +9,9 @@ namespace ECSharp
 {
     public class Archetype
     {
-        public static Archetype Empty = new(new List<ComponentBase>());
+        public static Archetype CreateEmpty(World w) => new(new List<ComponentBase>(),w);
+
+        readonly World world;
         public Dictionary<Type, ComponentList> Storage = new();
         public List<long> EntityID = new();
 
@@ -19,23 +21,30 @@ namespace ECSharp
 
         public int Length => EntityID.Count;
 
-        public Archetype(IEnumerable<ComponentBase> components)
+        public Archetype(IEnumerable<ComponentBase> components, World w)
         {
             foreach(var c in components)
             {
                 Storage[c.GetComponentType()] = c.EmptyArray();
             }
             ID = new ArchetypeID(components.Select(x => x.GetComponentType()));
+            world = w;
         }
 
-        public Archetype(IEnumerable<ComponentList> componentArrays)
+        public Archetype(IEnumerable<ComponentList> componentArrays, World w)
         {
             foreach(var ca in componentArrays)
             {
                 Storage[ca.ComponentType] = ca.New();
             };
             ID = new ArchetypeID(componentArrays.Select(x => x.ComponentType));
+            world = w;
             
+        }
+
+        public ArchetypeRecord this[int i]
+        {
+            get => world[EntityID[i]];
         }
 
         public bool IsSupersetOf(Archetype t) => this.ID.IsSupersetOf(t.ID);
@@ -65,7 +74,11 @@ namespace ECSharp
             }
         }
 
-        public void RemoveEntity(Entity e) => EntityID.RemoveAt(EntityID.IndexOf(e.Index));
+        public void RemoveEntity(Entity e)
+        {
+            if(EntityID.Count > 0) 
+                EntityID.RemoveAt(EntityID.IndexOf(e.Index));
+        }
         public ComponentList<T> GetComponentList<T>() where T : struct
         {
             return (ComponentList<T>)Storage[typeof(T)];

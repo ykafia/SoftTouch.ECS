@@ -5,13 +5,13 @@ public abstract class ProcessorAsync : ProcessorBase
 {
     public virtual async Task Execute(){}
 }
-public partial class ProcessorAsync<Q> : ProcessorAsync where Q : Query
+public partial class ProcessorAsync<Q> : ProcessorAsync where Q : Query, new()
 {
     readonly Q query1;
 
     public ProcessorAsync()
     {
-        query1 = (Q) new Query(World);
+        query1 = (Q) new Q().With(World);
     }
 
     // public IEnumerable<Archetype> Query1 => World.QueryArchetypes(queryEntity.GetQueryType());
