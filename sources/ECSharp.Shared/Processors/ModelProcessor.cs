@@ -8,10 +8,10 @@ namespace ECSharp.Processors
     {
         public override void Update()
         {
-            foreach((var e, var model) in query1)
-            {
+            // foreach((var e, var model) in query1)
+            // {
                 
-            }
+            // }
         }
     }
 }

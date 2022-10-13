@@ -2,12 +2,27 @@ namespace ECSharp
 {
     public abstract class Processor : ProcessorBase
     {
+        public delegate void UpdateDelegate<T1>(ref T1 arg1)
+            where T1 : struct;
+        public delegate void UpdateDelegate<T1, T2>(T1 arg1, ref T2 arg2)
+            where T1 : struct 
+            where T2 : struct;
+        public delegate void UpdateDelegate<T1, T2, T3>(ref T1 arg1, ref T2 arg2, ref T3 arg3)
+            where T1 : struct 
+            where T2 : struct
+            where T3 : struct;
+        public delegate void UpdateDelegate<T1, T2, T3, T4>(ref T1 arg1, ref T2 arg2, ref T3 arg3, ref T4 arg4)
+            where T1 : struct 
+            where T2 : struct
+            where T3 : struct
+            where T4 : struct;
+
         public virtual void Update() { }
     }
+
     public partial class Processor<Q> : Processor where Q : Query, new()
     {
         protected readonly Q query1;
-
         public Processor()
         {
             query1 = (Q)new Q().With(World);

@@ -56,13 +56,14 @@ namespace ECSharp
             }
             else
             {
-                var aid = new ArchetypeID(arrays.Keys.Append(typeof(T)));
+                var aid = new ArchetypeID(arrays.Keys.Append(typeof(T)).ToHashSet());
 
                 var world = Entity.World;
                 var arch = world.GenerateArchetype(aid, arrays.Values.Append(new ComponentList<T>()));
                 arch.AddComponent(c, Entity.Index);
                 foreach(var cmp in arrays)
                     cmp.Value.TransferTo(arch.Storage[cmp.Key],ArchetypeIndex);
+                
                 Archetype.RemoveEntity(Entity);
                 Archetype = arch;
                 world.BuildGraph();
@@ -85,7 +86,7 @@ namespace ECSharp
             }
             else
             {
-                var aid = new ArchetypeID(arrays.Select(c => c.Key).Where(ty => ty != typeof(T)));
+                var aid = new ArchetypeID(arrays.Select(c => c.Key).Where(ty => ty != typeof(T)).ToHashSet());
 
                 var world = Entity.World;
                 var arch = world.GenerateArchetype(aid, arrays.Where(c => c.Key != typeof(T)).Select(x => x.Value));

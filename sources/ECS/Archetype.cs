@@ -14,6 +14,7 @@ namespace ECSharp
         readonly World world;
         public Dictionary<Type, ComponentList> Storage = new();
         public List<long> EntityID = new();
+        public bool HasEntities => EntityID.Count > 0;
 
         public ArchetypeID ID = new();
 
@@ -27,7 +28,7 @@ namespace ECSharp
             {
                 Storage[c.GetComponentType()] = c.EmptyArray();
             }
-            ID = new ArchetypeID(components.Select(x => x.GetComponentType()));
+            ID = new ArchetypeID(components.Select(x => x.GetComponentType()).ToHashSet());
             world = w;
         }
 
@@ -37,7 +38,7 @@ namespace ECSharp
             {
                 Storage[ca.ComponentType] = ca.New();
             };
-            ID = new ArchetypeID(componentArrays.Select(x => x.ComponentType));
+            ID = new ArchetypeID(componentArrays.Select(x => x.ComponentType).ToHashSet());
             world = w;
             
         }
@@ -47,8 +48,8 @@ namespace ECSharp
             get => world[EntityID[i]];
         }
 
-        public bool IsSupersetOf(Archetype t) => this.ID.IsSupersetOf(t.ID);
-        public bool IsSubsetOf(Archetype t) => this.ID.IsSubsetOf(t.ID);
+        public bool IsStrictSupersetOf(Archetype t) => ID.IsStrictSupersetOf(t.ID);
+        public bool IsStrictSubsetOf(Archetype t) => ID.IsStrictSubsetOf(t.ID);
         public IEnumerable<Type> TypeIntersect(Archetype t) => this.ID.Intersect(t.ID);
         public IEnumerable<Type> TypeExcept(Archetype t) => this.ID.Except(t.ID);
 
@@ -107,14 +108,7 @@ namespace ECSharp
             return result.ToString();
         }
 
-        public override bool Equals(object? obj)
-        {
-            return obj is Archetype archetype &&
-                //    EqualityComparer<Dictionary<Type, IComponentArray>>.Default.Equals(Storage, archetype.Storage);
-                   EqualityComparer<ArchetypeID>.Default.Equals(ID, archetype.ID);
-                //    EqualityComparer<List<IComponentArray>>.Default.Equals(Components, archetype.Components) &&
-                //    Length == archetype.Length;
-        }
+        
 
         public override int GetHashCode()
         {

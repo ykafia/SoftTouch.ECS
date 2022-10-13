@@ -10,7 +10,7 @@ namespace ECSharp.Example
 
         public override void Update()
         {
-            foreach ((var e, var health) in query1)
+            foreach(var e in query1.QueriedArchetypes)
             {
                 
             }

@@ -5,73 +5,75 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ECSharp
 {
-    public struct ArchetypeID
+    public struct ArchetypeID : IComparable
     {
         static int globalId = 0;
         static int GetNext() => ++globalId;
 
         public readonly int Id;
 
-        public readonly List<Type> Types = new();
+        public readonly HashSet<Type> Types = new();
 
         public int Count => Types?.Count ?? 0;
         public ArchetypeID(params Type[] types)
         {
-            Types = types.Distinct().ToList();
+            Types = types.Distinct().ToHashSet();
             Id = GetNext();
         }
         public ArchetypeID(HashSet<Type> types)
         {
-            Types = types.ToList();
+            Types = types;
             Id = GetNext();
         }
-        public ArchetypeID(IEnumerable<Type> types)
-        {
-            Types = types.ToList();
-            Id = GetNext();
-        }
+        // public ArchetypeID(IEnumerable<Type> types)
+        // {
+        //     Types = types.ToHashSet();
+        //     Id = GetNext();
+        // }
 
-        public bool IsSupersetOf(ArchetypeID other)
+        public bool IsStrictSupersetOf(ArchetypeID other)
         {
-            return
-                other.Types != null &&
-                this.Types?.Intersect(other.Types).Count() == other.Count;
-
+            return Types.IsSupersetOf(other.Types) && !Types.IsSubsetOf(other.Types);
         }
-        public bool IsAddedType(ArchetypeID other) => IsSupersetOf(other) && this.Count == other.Count + 1;
-        public bool IsSubsetOf(ArchetypeID other)
+        public bool IsAddedType(ArchetypeID other) => IsStrictSupersetOf(other) && Count == other.Count + 1;
+        public bool IsStrictSubsetOf(ArchetypeID other)
         {
-            return
-                other.Types != null &&
-                this.Types?.Intersect(other.Types).Count() == this.Count;
+            return Types.IsSubsetOf(other.Types) && !Types.IsSupersetOf(other.Types);
         }
-        public bool IsRemovedType(ArchetypeID other) => IsSubsetOf(other) && this.Count == other.Count - 1;
+        public bool IsRemovedType(ArchetypeID other) => IsStrictSubsetOf(other) && Count == other.Count - 1;
 
         public IEnumerable<Type> Except(ArchetypeID other)
         {
-            if (other.Types != null && this.Types != null)
-                return other.Types.Except(this.Types);
-            return new List<Type>();
+            if (other.Types != null && Types != null)
+                return other.Types.Except(Types);
+            return Enumerable.Empty<Type>();
         }
         public IEnumerable<Type> Intersect(ArchetypeID other)
         {
-            if (other.Types != null && this.Types != null)
-                return other.Types.Intersect(this.Types);
-            return new List<Type>();
+            if (other.Types != null && Types != null)
+                return other.Types.Intersect(Types);
+            return Enumerable.Empty<Type>();
         }
 
-        public override bool Equals([NotNullWhen(true)] object? obj)
+        public override bool Equals(object? obj)
         {
-            return obj is ArchetypeID id &&
-                id.Types != null &&
-                this.Types != null &&
-                id.Types.Count == this.Types.Count &&
-                id.Types.Intersect(this.Types).Count() == this.Count;
+            return obj is ArchetypeID iD &&
+                   Id == iD.Id &&
+                   EqualityComparer<HashSet<Type>>.Default.Equals(Types, iD.Types) &&
+                   Count == iD.Count;
         }
 
         public override int GetHashCode()
         {
-            return Types?.Select(x => x.GetHashCode()).Sum() ?? 0;
+            return HashCode.Combine(Id, Types, Count);
+        }
+
+        public int CompareTo(object? obj)
+        {
+            if(obj is ArchetypeID aid)
+                return aid.Id.CompareTo(Id);
+            else 
+                throw new NotImplementedException();
         }
 
         public static bool operator ==(ArchetypeID left, ArchetypeID right)

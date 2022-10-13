@@ -7,8 +7,8 @@ namespace ECSharp.Processors
     {
         public override void Update()
         {
-            foreach((var e, var name) in query1)
-                e.Set(name with {Name = "Lola"});
+            // foreach((var e, var name) in query1)
+            //     e.Set(name with {Name = "Lola"});
         }
     }
 }

@@ -12,7 +12,7 @@ namespace ECSharp
     {
         public Dictionary<long, ArchetypeRecord> Entities = new();
 
-        public SortedList<ArchetypeID, Archetype> Archetypes = new(new ArchetypeIDComparer());
+        public SortedList<ArchetypeID, Archetype> Archetypes = new();
         public List<ProcessorBase> Processors { get; set; } = new();
 
         public bool IsRunning { get; private set; }
@@ -66,6 +66,7 @@ namespace ECSharp
             }
             else
                 return Archetypes[types];
+            
         }
         internal Archetype GenerateArchetype(ArchetypeID types, List<ComponentBase> components)
         {
@@ -101,17 +102,18 @@ namespace ECSharp
 
         public IEnumerable<Archetype> QueryArchetypes(ArchetypeID types)
         {
-            // return Archetypes
-            //     .Where(arch => arch.Value.ID.IsSupersetOf(types))
-            //     .Select(arch => arch.Value)
-            //     .AsSpan();
-            throw new NotImplementedException();
+            return Archetypes
+                .Where(arch => arch.Value.ID.IsStrictSupersetOf(types))
+                .Select(arch => arch.Value)
+                .Append(Archetypes[types]);
         }
         public IEnumerable<Archetype> QueryArchetypes(params Type[] types)
         {
+            var id = new ArchetypeID(types.ToHashSet());
             return Archetypes
-                .Where(arch => arch.Value.ID.IsSupersetOf(new ArchetypeID(types.ToHashSet())))
-                .Select(arch => arch.Value);
+                .Where(arch => arch.Value.ID.IsStrictSupersetOf(id))
+                .Select(arch => arch.Value)
+                .Append(Archetypes[id]);
         }
 
         public void Add(ProcessorBase p)
@@ -165,28 +167,5 @@ namespace ECSharp
             }
             IsRunning = false;
         }
-
-
-        internal class ArchetypeIDComparer : Comparer<ArchetypeID>
-        {
-            public override int Compare(ArchetypeID x, ArchetypeID y)
-            {
-                if (x.Id.CompareTo(y.Id) != 0)
-                {
-                    return x.Count.CompareTo(y.Count);
-                }
-                else if (x.Count.CompareTo(y.Count) != 0)
-                {
-                    return x.Count.CompareTo(y.Count);
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-        }
-        // public void Add(Entity entity) => Entities.Add(entity,new ArchetypeRecord{Archetype = new Archetype(entity.Archetype)});
-        // public void Remove(Entity entity) => Entities.Remove(entity);
-
     }
 }
