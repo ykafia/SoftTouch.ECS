@@ -8,7 +8,7 @@ using ECSharp.ComponentData;
 
 namespace ECSharp
 {
-    public class World
+    public sealed class World
     {
         public Dictionary<long, ArchetypeRecord> Entities = new();
 
@@ -47,7 +47,7 @@ namespace ECSharp
 
         public ArchetypeRecord GetOrCreateRecord(ArchetypeID types, EntityBuilder e)
         {
-            if (Archetypes.TryGetValue(types, out Archetype? a) && e.Entity != null)
+            if (Archetypes.TryGetValue(types, out Archetype? a))
             {
                 return new ArchetypeRecord { Entity = e.Entity, Archetype = a };
             }
@@ -102,18 +102,21 @@ namespace ECSharp
 
         public IEnumerable<Archetype> QueryArchetypes(ArchetypeID types)
         {
-            return Archetypes
-                .Where(arch => arch.Value.ID.IsStrictSupersetOf(types))
-                .Select(arch => arch.Value)
-                .Append(Archetypes[types]);
+            foreach(var arch in Archetypes.Values)
+            {
+                if(arch.ID.IsSupersetOf(types))
+                    yield return arch;
+            }
+            // return Archetypes
+            //     .Where(arch => arch.Value.ID.IsSupersetOf(types))
+            //     .Select(arch => arch.Value);
         }
         public IEnumerable<Archetype> QueryArchetypes(params Type[] types)
         {
             var id = new ArchetypeID(types.ToHashSet());
             return Archetypes
-                .Where(arch => arch.Value.ID.IsStrictSupersetOf(id))
-                .Select(arch => arch.Value)
-                .Append(Archetypes[id]);
+                .Where(arch => arch.Value.ID.IsSupersetOf(id))
+                .Select(arch => arch.Value);
         }
 
         public void Add(ProcessorBase p)

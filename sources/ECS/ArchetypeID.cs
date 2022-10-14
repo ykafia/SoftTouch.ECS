@@ -35,6 +35,10 @@ namespace ECSharp
         {
             return Types.IsSupersetOf(other.Types) && !Types.IsSubsetOf(other.Types);
         }
+        public bool IsSupersetOf(ArchetypeID other)
+        {
+            return Types.IsSupersetOf(other.Types);
+        }
         public bool IsAddedType(ArchetypeID other) => IsStrictSupersetOf(other) && Count == other.Count + 1;
         public bool IsStrictSubsetOf(ArchetypeID other)
         {

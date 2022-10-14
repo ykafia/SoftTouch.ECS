@@ -16,7 +16,9 @@ namespace ECSharp.Benchmark
         public World W2 = new();
         public World W3 = new();
 
-        static int Size = 10000;
+        ArchetypeID aid = new(typeof(HealthComponent));
+
+        static int Size = 32;
 
         public IterBench()
         {
@@ -51,11 +53,15 @@ namespace ECSharp.Benchmark
                     .With<HealthComponent>();
             }
         }
-
+        [Benchmark]
+        public void DoNothing()
+        {
+            
+        }
         [Benchmark]
         public void IterForeach()
         {
-            foreach(var a in W1.QueryArchetypes(typeof(HealthComponent)))
+            foreach(var a in W1.QueryArchetypes(aid))
             {
                 var x = 0;
                 // if(a.HasEntities)
@@ -66,7 +72,7 @@ namespace ECSharp.Benchmark
         [Benchmark]
         public void IterForEachToList()
         {
-            var l = W1.QueryArchetypes(typeof(HealthComponent)).ToList();
+            var l = W1.QueryArchetypes(aid).ToList();
             foreach(Archetype a in l)
             {
                 var x = 0;
@@ -78,7 +84,7 @@ namespace ECSharp.Benchmark
         [Benchmark]
         public void IterForToList()
         {
-            var l = W1.QueryArchetypes(typeof(HealthComponent)).ToList();
+            var l = W1.QueryArchetypes(aid).ToList();
             for(int i = 0; i < l.Count; i ++)
             {
                 var x = 0;

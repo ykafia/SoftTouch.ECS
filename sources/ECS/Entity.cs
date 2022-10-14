@@ -7,7 +7,7 @@ namespace ECSharp
 {
     public interface IEntity { }
 
-    public class Entity
+    public struct Entity
     {
         public long Index { get; set; }
         public string Name { get; set; }
@@ -17,7 +17,7 @@ namespace ECSharp
         {
             Index = index;
             World = w;
-            Name = "";
+            Name = name;
         }
     }
 

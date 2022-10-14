@@ -26,8 +26,8 @@ world
 |> ignore
 
 
-let nameSystem (query : seq<ArchetypeRecord * NameComponent>) = 
-    for (e, n) in query do 
+let nameSystem (query : QueryEntity<NameComponent,HealthComponent>) = 
+    for e in query do 
         e.Set(NameComponent("Lola"));
 
 

@@ -5,24 +5,22 @@
 
 module ProcessorTypes =
     let x = 0;
-//     type ComponentArrayInfo<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :>System.ValueType> = 
-//         {Arch : Archetype;  Array : ComponentList<'T>}
+    // type ComponentArrayInfo<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :>System.ValueType> = 
+    //     {Arch : Archetype;  Array : ComponentList<'T>}
 
     
 
-//     // [<AbstractClass>]
-//     // type internal FSProcessor() =
-//     //     inherit Processor()
+    // [<AbstractClass>]
+    // type internal FProcessor() =
+    //     inherit Processor()
     
-//     // type internal FSProcessor1<'T when 
-//     //     'T : struct and 'T : (new: unit -> 'T) and 'T :>System.ValueType>
-//     //     (updater1 : seq<Archetype> -> unit) =
-//     //     inherit Processor<Query<'T>>()
+    // type internal FProcessor1<'T when 
+    //     'T : struct and 'T : (new: unit -> 'T) and 'T :>System.ValueType>
+    //     (updater1 : EntityQuery<'T> -> unit) =
+    //     inherit Processor<Query<'T>>()
 
-//     //     member this.Query1 = Query<'T>().With(this.World) :?> Query<'T> 
-
-//     //     override this.Update() = 
-//     //         updater1 (Seq.cast<Archetype> this.Query1.QueriedArchetypes)
+    //     override this.Update() = 
+    //         updater1 (EntityQuery<'T>)
         
 //     //     type internal FSProcessor1<'T1, 'T2 when 
 //     //     'T1 : struct and 'T1 : (new: unit -> 'T1) and 'T1 :>System.ValueType and
