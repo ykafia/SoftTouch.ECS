@@ -14,12 +14,17 @@ namespace ECSharp
         {
             Entity = e;
         }
+        public EntityBuilder WithBundle<T>(in T bundle) where T : struct, IBundle
+        {
+            bundle.AddBundle(this);
+            return this;
+        }
         public EntityBuilder With<T>(in T component) where T : struct
         {
             if(World[Entity].Has<T>())
                 World[Entity].Set(component);
             else
-                World[Entity.Index].AddComponent(component);
+                World[Entity.Index].Add(component);
             World.BuildGraph();
             return this;
         }
@@ -28,7 +33,7 @@ namespace ECSharp
             if(World[Entity].Has<T>())
                 World[Entity].Set(new T());
             else
-                World[Entity.Index].AddComponent(new T());
+                World[Entity.Index].Add(new T());
             World.BuildGraph();
             return this;
         }

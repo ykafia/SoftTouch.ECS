@@ -10,7 +10,7 @@ public class ComponentAdd<T> : ComponentUpdate where T : struct
 {
     public T Value {get;set;}
 
-    public ComponentAdd(T val, ArchetypeRecord e)
+    public ComponentAdd(in T val, ArchetypeRecord e)
     {
         Value = val;
         EntityRecord = e;

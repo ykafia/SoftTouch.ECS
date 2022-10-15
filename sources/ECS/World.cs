@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using ECSharp.Arrays;
@@ -10,10 +11,13 @@ namespace ECSharp
 {
     public sealed class World
     {
+        public Dictionary<Type, object> Resources = new();
         public Dictionary<long, ArchetypeRecord> Entities = new();
 
         public SortedList<ArchetypeID, Archetype> Archetypes = new();
-        public List<ProcessorBase> Processors { get; set; } = new();
+        public List<Processor> StartupProcessors { get; set; } = new();
+        public List<Processor> Processors { get; set; } = new();
+        public List<ProcessorAsync> AsyncProcessors { get; set; } = new();
 
         public bool IsRunning { get; private set; }
 
@@ -35,6 +39,16 @@ namespace ECSharp
         public World()
         {
             Archetypes.Add(new(), Archetype.CreateEmpty(this));
+            Resources.Add(typeof(WorldTimer), new WorldTimer()); 
+        }
+
+        public T GetResource<T>() where T : class
+        {
+            return (T)Resources[typeof(T)];
+        }
+        public void SetResource<T>(T res) where T : class
+        {
+            Resources[typeof(T)] = res;
         }
 
         public EntityBuilder CreateEntity(string name = "")
@@ -119,18 +133,27 @@ namespace ECSharp
                 .Select(arch => arch.Value);
         }
 
-        public void Add(ProcessorBase p)
+        public void Add(Processor p)
         {
             p.World = this;
             Processors.Add(p);
         }
-        public void Add<T>() where T : ProcessorBase, new()
+        
+        public void Add<T>() where T : Processor, new()
         {
             var p = new T
             {
                 World = this
             };
             Processors.Add(p);
+        }
+        public void AddStartup<T>() where T : Processor, new()
+        {
+            var p = new T
+            {
+                World = this
+            };
+            StartupProcessors.Add(p);
         }
         public void Remove(Processor p) => Processors.Remove(p);
 
@@ -141,17 +164,22 @@ namespace ECSharp
         }
 
 
+        public void StartAsync()
+        {
+            foreach (ProcessorAsync pa in AsyncProcessors)
+                pa.Execute();
+        }
         public void Start()
         {
-            foreach (ProcessorAsync pa in Processors.OfType<ProcessorAsync>())
-                pa.Execute();
+            foreach(Processor pa in StartupProcessors)
+                pa.Update();
+            UpdateQueue.ExecuteUpdates();
         }
         public void Update()
         {
-            for (int i = 0; i < Processors.Count; i++)
+            foreach(var processor in Processors)
             {
-                if(Processors[i] is Processor processor)
-                    processor.Update();
+                processor.Update();
             }
             UpdateQueue.ExecuteUpdates();
             FrameCount += 1;
@@ -161,13 +189,18 @@ namespace ECSharp
         {
             IsRunning = true;
             // UpdateQueue.ExecuteUpdates();
+            var watch = new Stopwatch();
             Start();
             while (IsRunning)
             {
+                watch.Start();
                 Update();
                 if (framesToRun != 0 && FrameCount >= framesToRun)
                     IsRunning = false;
+                watch.Stop();
+                GetResource<WorldTimer>().Update(watch.Elapsed);
             }
+            watch.Stop();
             IsRunning = false;
         }
     }

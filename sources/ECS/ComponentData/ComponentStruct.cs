@@ -9,7 +9,7 @@ namespace ECSharp.ComponentData
 
         public ComponentStruct(T cmp)
         {
-            this.Value = cmp;
+            Value = cmp;
         }
 
         public override object Get()
