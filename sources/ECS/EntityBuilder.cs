@@ -19,7 +19,7 @@ namespace ECSharp
             if(World[Entity].Has<T>())
                 World[Entity].Set(component);
             else
-                World[Entity.Index].Add(component);
+                World[Entity.Index].AddComponent(component);
             World.BuildGraph();
             return this;
         }
