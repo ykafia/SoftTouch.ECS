@@ -2,32 +2,37 @@
 open ECSharp.FSharp
 open ECSharp.FSharp.ProcessorTypes
 
-// [<Struct>]
-// type NameComponent = 
-//     val Name : string
-//     new (n : string) = {Name = n}
+[<Struct>]
+type NameComponent = 
+    val mutable Name : string
+    new (n : string) = {Name = n}
     
 
-// let world = new World()
+let world = new World()
 
-// world 
-// |> World.CreateEntity
-// |> Entity.WithValue (NameComponent "Martha")
-// |> ignore
-
-
-// let nameSystem (query : seq<ArchetypeRecord * NameComponent>) = 
-//     for (e, n) in query do 
-//         e.Set(NameComponent("Lola"));
+world 
+|> World.CreateEntity
+|> Entity.WithValue (NameComponent "Martha")
+|> ignore
 
 
-// world
-// |> Processor.Add nameSystem
+let nameSystem (a : World) (name : ref<NameComponent>) : unit =
+    printfn "%A" name.Value.Name
+    name.Value <- NameComponent("Jotaro Kujo")
+    printfn "Changed to %A" name.Value.Name
 
-// world.Update()
 
-// world 
-// |> World.GetEntity 0 
-// |> Entity.Get<NameComponent>
-// |> fun x -> x.Name
-// |> printfn "Hello %s"
+
+world
+|> Processor.Add nameSystem
+
+for x in world.Processors
+    do printfn "%A" x
+
+world.Run(2)
+
+world 
+|> World.GetEntity 0 
+|> Entity.Get<NameComponent>
+|> fun x -> x.Name
+|> printfn "Hello %s"

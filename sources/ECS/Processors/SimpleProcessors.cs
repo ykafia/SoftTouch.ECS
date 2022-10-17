@@ -1,28 +1,38 @@
 namespace ECSharp;
 
+public delegate void SimpleUpdate<T1>(World w, ref T1 arg1)
+    where T1 : struct;
+public delegate void SimpleUpdate<T1, T2>(World w, ref T1 arg1, ref T2 arg2)
+    where T1 : struct
+    where T2 : struct;
+public delegate void SimpleUpdate<T1, T2, T3>(World w, ref T1 arg1, ref T2 arg2, ref T3 arg3)
+    where T1 : struct
+    where T2 : struct
+    where T3 : struct;
+public delegate void SimpleUpdate<T1, T2, T3, T4>(World w, ref T1 arg1, ref T2 arg2, ref T3 arg3, ref T4 arg4)
+    where T1 : struct
+    where T2 : struct
+    where T3 : struct
+    where T4 : struct;
+
 public abstract class SimpleProcessor : Processor
 {
-    public delegate void UpdateDelegate<T1>(World w, ref T1 arg1)
-            where T1 : struct;
-    public delegate void UpdateDelegate<T1, T2>(World w, ref T1 arg1, ref T2 arg2)
-        where T1 : struct
-        where T2 : struct;
-    public delegate void UpdateDelegate<T1, T2, T3>(World w, ref T1 arg1, ref T2 arg2, ref T3 arg3)
-        where T1 : struct
-        where T2 : struct
-        where T3 : struct;
-    public delegate void UpdateDelegate<T1, T2, T3, T4>(World w, ref T1 arg1, ref T2 arg2, ref T3 arg3, ref T4 arg4)
-        where T1 : struct
-        where T2 : struct
-        where T3 : struct
-        where T4 : struct;
+    public SimpleProcessor()
+    {
+
+    }
 }
 public sealed class SimpleProcessor<T> : SimpleProcessor
     where T : struct
 {
     readonly ArchetypeID aid = new(typeof(T));
-    public UpdateDelegate<T>? Updater;
+    public SimpleUpdate<T>? Updater;
 
+    public SimpleProcessor(SimpleUpdate<T> updater)
+    {
+        Updater = updater;
+    }
+    
     public override void Update()
     {
         if (Updater != null)
@@ -44,7 +54,12 @@ public sealed class SimpleProcessor<T1, T2> : SimpleProcessor
     where T2 : struct
 {
     readonly ArchetypeID aid = new(typeof(T1), typeof(T2));
-    public UpdateDelegate<T1, T2>? Updater;
+    public SimpleUpdate<T1, T2>? Updater;
+
+    public SimpleProcessor(SimpleUpdate<T1, T2> updater)
+    {
+        Updater = updater;
+    }
 
     public override void Update()
     {
@@ -68,7 +83,7 @@ public sealed class SimpleProcessor<T1, T2, T3> : SimpleProcessor
     where T3 : struct
 {
     readonly ArchetypeID aid = new(typeof(T1), typeof(T2), typeof(T3));
-    public UpdateDelegate<T1, T2, T3>? Updater;
+    public SimpleUpdate<T1, T2, T3>? Updater;
 
     public override void Update()
     {
@@ -95,7 +110,7 @@ public sealed class SimpleProcessor<T1, T2, T3, T4> : SimpleProcessor
     where T4 : struct
 {
     readonly ArchetypeID aid = new(typeof(T1), typeof(T2), typeof(T3), typeof(T4));
-    public UpdateDelegate<T1, T2, T3, T4>? Updater;
+    public SimpleUpdate<T1, T2, T3, T4>? Updater;
 
     public override void Update()
     {
