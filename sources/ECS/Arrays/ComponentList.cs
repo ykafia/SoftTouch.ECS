@@ -20,6 +20,7 @@ public interface ComponentList
 public class ComponentList<T> : List<T>, ComponentList where T : struct
 {
     public Span<T> AsSpan() => CollectionsMarshal.AsSpan(this);
+    public List<T> AsList() => this;
     public Type ComponentType => typeof(T);
 
     public T Get(int i)

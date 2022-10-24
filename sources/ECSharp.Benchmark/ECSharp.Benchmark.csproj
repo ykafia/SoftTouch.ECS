@@ -14,6 +14,7 @@
 
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Apparatus.AOT.Reflection" Version="1.0.0" />
     <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
     <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.12.1" />
   </ItemGroup>
