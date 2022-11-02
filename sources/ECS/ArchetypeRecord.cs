@@ -23,6 +23,17 @@ namespace ECSharp
         
         public T Get<T>() where T : struct
             => Archetype.GetComponentArray<T>()[ArchetypeIndex];
+        public (T,U) Get<T,U>() 
+            where T : struct
+            where U : struct
+            => (Archetype.GetComponentSpan<T>()[ArchetypeIndex],Archetype.GetComponentSpan<U>()[ArchetypeIndex]);
+        public (T,U,V) Get<T,U,V>() 
+            where T : struct
+            where U : struct
+            where V : struct
+            => (Archetype.GetComponentSpan<T>()[ArchetypeIndex],
+                Archetype.GetComponentSpan<U>()[ArchetypeIndex],
+                Archetype.GetComponentSpan<V>()[ArchetypeIndex]);
         public bool Has<T>()
             => Archetype.Storage.ContainsKey(typeof(T));
 
