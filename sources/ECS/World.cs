@@ -12,7 +12,7 @@ namespace ECSharp
     public sealed class World
     {
         public Dictionary<Type, object> Resources = new();
-        public Dictionary<long, ArchetypeRecord> Entities = new();
+        public SortedList<long, ArchetypeRecord> Entities = new();
 
         public SortedList<ArchetypeID, Archetype> Archetypes = new();
         public List<Processor> StartupProcessors { get; set; } = new();
