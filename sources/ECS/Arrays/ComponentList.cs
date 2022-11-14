@@ -9,12 +9,12 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-public interface ComponentList
+public interface ComponentList : IList
 {
-    public abstract Type ComponentType {get;}
-    public abstract ComponentList New();
-    public abstract void TransferTo(ComponentList l, int i);
-
+    public Type ComponentType {get;}
+    public ComponentList New();
+    public void TransferTo(ComponentList l, int i);
+    public ComponentList Clone();
 }
 
 public class ComponentList<T> : List<T>, ComponentList where T : struct
@@ -41,5 +41,10 @@ public class ComponentList<T> : List<T>, ComponentList where T : struct
     {
         ((ComponentList<T>)l).Add(this[i]);
         RemoveAt(i);
+    }
+
+    public ComponentList Clone()
+    {
+        return (ComponentList)new List<T>(this);
     }
 }
