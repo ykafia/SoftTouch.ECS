@@ -32,6 +32,9 @@ public sealed class SimpleProcessor<T> : SimpleProcessor
     {
         Updater = updater;
     }
+
+    public static implicit operator SimpleProcessor<T>(SimpleUpdate<T> updateFunction) => new(updateFunction);
+
     
     public override void Update()
     {
@@ -61,6 +64,8 @@ public sealed class SimpleProcessor<T1, T2> : SimpleProcessor
         Updater = updater;
     }
 
+    public static implicit operator SimpleProcessor<T1,T2>(SimpleUpdate<T1,T2> updateFunction) => new(updateFunction);
+
     public override void Update()
     {
         if (Updater != null)
@@ -84,6 +89,14 @@ public sealed class SimpleProcessor<T1, T2, T3> : SimpleProcessor
 {
     readonly ArchetypeID aid = new(typeof(T1), typeof(T2), typeof(T3));
     public SimpleUpdate<T1, T2, T3>? Updater;
+
+    public SimpleProcessor(SimpleUpdate<T1, T2, T3> updater)
+    {
+        Updater = updater;
+    }
+
+    public static implicit operator SimpleProcessor<T1,T2,T3>(SimpleUpdate<T1,T2,T3> updateFunction) => new(updateFunction);
+
 
     public override void Update()
     {
@@ -111,6 +124,13 @@ public sealed class SimpleProcessor<T1, T2, T3, T4> : SimpleProcessor
 {
     readonly ArchetypeID aid = new(typeof(T1), typeof(T2), typeof(T3), typeof(T4));
     public SimpleUpdate<T1, T2, T3, T4>? Updater;
+
+    public SimpleProcessor(SimpleUpdate<T1, T2, T3, T4> updater)
+    {
+        Updater = updater;
+    }
+    public static implicit operator SimpleProcessor<T1,T2,T3,T4>(SimpleUpdate<T1,T2,T3,T4> updateFunction) => new(updateFunction);
+
 
     public override void Update()
     {

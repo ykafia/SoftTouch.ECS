@@ -2,6 +2,7 @@ namespace ECSharp;
 
 public abstract class ProcessorBase
 {
+    public Schedule Schedule { get; set; }
     public World World { get; set; }
 }
 

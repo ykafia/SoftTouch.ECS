@@ -9,16 +9,15 @@ using ECSharp.ComponentData;
 
 namespace ECSharp
 {
-    public sealed class World
+    public class World
     {
         public Dictionary<Type, object> Resources = new();
         public SortedList<long, ArchetypeRecord> Entities = new();
 
         public SortedList<ArchetypeID, Archetype> Archetypes = new();
         public List<Processor> StartupProcessors { get; set; } = new();
-        public List<Processor> Processors { get; set; } = new();
-        public List<ProcessorAsync> AsyncProcessors { get; set; } = new();
-
+        public ProcessorPool Processors { get; set; } = new();
+        
         public bool IsRunning { get; private set; }
 
         public long FrameCount { get; private set; } = 0;
@@ -138,22 +137,18 @@ namespace ECSharp
             p.World = this;
             Processors.Add(p);
         }
-        
         public void Add<T>() where T : Processor, new()
         {
-            var p = new T
-            {
-                World = this
-            };
-            Processors.Add(p);
+            Processors.Add(new T(){World = this});
+        }
+        public void AddStartup(Processor processor)
+        {
+            processor.World = this;
+            StartupProcessors.Add(processor);
         }
         public void AddStartup<T>() where T : Processor, new()
         {
-            var p = new T
-            {
-                World = this
-            };
-            StartupProcessors.Add(p);
+            StartupProcessors.Add(new T(){World = this});
         }
         public void Remove(Processor p) => Processors.Remove(p);
 
@@ -163,12 +158,6 @@ namespace ECSharp
             UpdateQueue.Enqueue(update);
         }
 
-
-        public void StartAsync()
-        {
-            foreach (ProcessorAsync pa in AsyncProcessors)
-                pa.Execute();
-        }
         public void Start()
         {
             foreach(Processor pa in StartupProcessors)
@@ -177,10 +166,7 @@ namespace ECSharp
         }
         public void Update()
         {
-            foreach(var processor in Processors)
-            {
-                processor.Update();
-            }
+            Processors.Execute();
             UpdateQueue.ExecuteUpdates();
             FrameCount += 1;
         }
