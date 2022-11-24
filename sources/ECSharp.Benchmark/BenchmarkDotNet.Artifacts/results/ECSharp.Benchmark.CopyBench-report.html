@@ -2,7 +2,7 @@
 <html lang='en'>
 <head>
 <meta charset='utf-8' />
-<title>ECSharp.Benchmark.CopyBench-20221019-222448</title>
+<title>ECSharp.Benchmark.CopyBench-20221124-143718</title>
 
 <style type="text/css">
 	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
@@ -15,19 +15,18 @@
 <pre><code>
 BenchmarkDotNet=v0.12.1, OS=Windows 10.0.22621
 AMD Ryzen 5 3500U with Radeon Vega Mobile Gfx, 1 CPU, 8 logical and 4 physical cores
-.NET Core SDK=6.0.400
-  [Host]     : .NET Core 6.0.10 (CoreCLR 6.0.1022.47605, CoreFX 6.0.1022.47605), X64 RyuJIT
-  Job-UUOJII : .NET Core 6.0.10 (CoreCLR 6.0.1022.47605, CoreFX 6.0.1022.47605), X64 RyuJIT
+.NET Core SDK=7.0.100
+  [Host]     : .NET Core 7.0.0 (CoreCLR 7.0.22.51805, CoreFX 7.0.22.51805), X64 RyuJIT
+  Job-JVZJDM : .NET Core 7.0.0 (CoreCLR 7.0.22.51805, CoreFX 7.0.22.51805), X64 RyuJIT
 </code></pre>
 <pre><code>IterationCount=15  LaunchCount=3  WarmupCount=10  
 </code></pre>
 
 <table>
-<thead><tr><th>Method</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Median</th><th>Gen 0</th><th>Gen 1</th><th>Gen 2</th><th>Allocated</th>
+<thead><tr><th>    Method</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Gen 0</th><th>Gen 1</th><th>Gen 2</th><th>Allocated</th>
 </tr>
-</thead><tbody><tr><td>CopyToList</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
-</tr><tr><td>CopyRange</td><td>117.9 ns</td><td>39.91 ns</td><td>71.97 ns</td><td>77.97 ns</td><td>-</td><td>-</td><td>-</td><td>-</td>
-</tr><tr><td>CopySpan</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</thead><tbody><tr><td>CopyRangeObjects</td><td>1.804 &mu;s</td><td>0.0626 &mu;s</td><td>0.1096 &mu;s</td><td>0.0572</td><td>0.0267</td><td>-</td><td>368 B</td>
+</tr><tr><td>CopyRangeStructs</td><td>NA</td><td>NA</td><td>NA</td><td>-</td><td>-</td><td>-</td><td>-</td>
 </tr></tbody></table>
 </body>
 </html>
