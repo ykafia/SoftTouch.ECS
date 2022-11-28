@@ -14,13 +14,11 @@ namespace ECSharp
         public Dictionary<Type, object> Resources = new();
         public SortedList<long, ArchetypeRecord> Entities = new();
 
-        public SortedList<ArchetypeID, Archetype> Archetypes = new();
+        public ArchetypeList Archetypes = new();
         public List<Processor> StartupProcessors { get; set; } = new();
         public ProcessorPool Processors { get; set; } = new();
-        
-        public bool IsRunning { get; private set; }
 
-        public long FrameCount { get; private set; } = 0;
+        public bool IsRunning { get; private set; }
 
         UpdateQueue UpdateQueue = new();
 
@@ -38,7 +36,7 @@ namespace ECSharp
         public World()
         {
             Archetypes.Add(new(), Archetype.CreateEmpty(this));
-            Resources.Add(typeof(WorldTimer), new WorldTimer()); 
+            Resources.Add(typeof(WorldTimer), new WorldTimer());
         }
 
         public T GetResource<T>() where T : class
@@ -74,18 +72,18 @@ namespace ECSharp
         {
             if (!Archetypes.ContainsKey(types))
             {
-                Archetypes.Add(types, new Archetype(components,this));
+                Archetypes.Add(types, new Archetype(components, this));
                 return Archetypes[types];
             }
             else
                 return Archetypes[types];
-            
+
         }
         internal Archetype GenerateArchetype(ArchetypeID types, List<ComponentBase> components)
         {
             if (!Archetypes.ContainsKey(types))
             {
-                Archetypes.Add(types, new Archetype(components,this));
+                Archetypes.Add(types, new Archetype(components, this));
                 return Archetypes[types];
             }
             else
@@ -115,9 +113,9 @@ namespace ECSharp
 
         public IEnumerable<Archetype> QueryArchetypes(ArchetypeID types)
         {
-            foreach(var arch in Archetypes.Values)
+            foreach (var arch in Archetypes.Values)
             {
-                if(arch.ID.IsSupersetOf(types))
+                if (arch.ID.IsSupersetOf(types))
                     yield return arch;
             }
             // return Archetypes
@@ -139,7 +137,7 @@ namespace ECSharp
         }
         public void Add<T>() where T : Processor, new()
         {
-            Processors.Add(new T(){World = this});
+            Processors.Add(new T() { World = this });
         }
         public void AddStartup(Processor processor)
         {
@@ -148,7 +146,7 @@ namespace ECSharp
         }
         public void AddStartup<T>() where T : Processor, new()
         {
-            StartupProcessors.Add(new T(){World = this});
+            StartupProcessors.Add(new T() { World = this });
         }
         public void Remove(Processor p) => Processors.Remove(p);
 
@@ -160,34 +158,33 @@ namespace ECSharp
 
         public void Start()
         {
-            foreach(Processor pa in StartupProcessors)
+            foreach (Processor pa in StartupProcessors)
                 pa.Update();
             UpdateQueue.ExecuteUpdates();
         }
-        public void Update()
+        public virtual void Update()
         {
             Processors.Execute();
             UpdateQueue.ExecuteUpdates();
-            FrameCount += 1;
         }
 
-        public void Run(int framesToRun = 0)
-        {
-            IsRunning = true;
-            // UpdateQueue.ExecuteUpdates();
-            var watch = new Stopwatch();
-            Start();
-            while (IsRunning)
-            {
-                watch.Start();
-                Update();
-                if (framesToRun != 0 && FrameCount >= framesToRun)
-                    IsRunning = false;
-                watch.Stop();
-                GetResource<WorldTimer>().Update(watch.Elapsed);
-            }
-            watch.Stop();
-            IsRunning = false;
-        }
+        // public void Run(int framesToRun = 0)
+        // {
+        //     IsRunning = true;
+        //     // UpdateQueue.ExecuteUpdates();
+        //     var watch = new Stopwatch();
+        //     Start();
+        //     while (IsRunning)
+        //     {
+        //         watch.Start();
+        //         Update();
+        //         if (framesToRun != 0 && FrameCount >= framesToRun)
+        //             IsRunning = false;
+        //         watch.Stop();
+        //         GetResource<WorldTimer>().Update(watch.Elapsed);
+        //     }
+        //     watch.Stop();
+        //     IsRunning = false;
+        // }
     }
 }
