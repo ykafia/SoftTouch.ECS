@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SoftTouch.ECS.FSharp\SoftTouch.ECS.FSharp.fsproj" />
+    <ProjectReference Include="..\SoftTouch.ECS\SoftTouch.ECS.csproj" />
+  </ItemGroup>
+
+</Project>

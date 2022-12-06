@@ -1,4 +1,4 @@
-# ECSharp
+# SoftTouch.ECS
 
 This project is a prototype for a lightweight ECS implementation with archetypal storage, heavily inspired by FLECS. It performs relatively well but there is room for improvement.
 
@@ -7,9 +7,9 @@ This project is a prototype for a lightweight ECS implementation with archetypal
 The F# api is a work in progress, it doesn't cover all the C# one but it is designed to be very friendly to functional programming thanks to some dark type magic here and there.
 
 ```fsharp
-open ECSharp
-open ECSharp.FSharp
-open ECSharp.FSharp.ProcessorTypes
+open SoftTouch.ECS
+open SoftTouch.ECS.FSharp
+open SoftTouch.ECS.FSharp.ProcessorTypes
 
 
 [<Struct>]
