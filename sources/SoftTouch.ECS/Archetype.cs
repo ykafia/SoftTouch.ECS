@@ -13,7 +13,7 @@ namespace SoftTouch.ECS
 
         readonly World world;
         public Dictionary<Type, ComponentList> Storage = new();
-        public List<long> EntityID = new();
+        public Dictionary<long,int> EntityID = new();
         public bool HasEntities => EntityID.Count > 0;
 
         public ArchetypeID ID = new();
@@ -70,15 +70,16 @@ namespace SoftTouch.ECS
         {
             if(Storage.ContainsKey(typeof(T)))
             {
-                GetComponentArray<T>().Add(component);
-                EntityID.Add(entity);
+                var array = GetComponentArray<T>();
+                array.Add(component);
+                EntityID.Add(entity,array.Count);
             }
         }
 
         public void RemoveEntity(Entity e)
         {
             if(EntityID.Count > 0) 
-                EntityID.RemoveAt(EntityID.IndexOf(e.Index));
+                EntityID.Remove(e.Index);
         }
         public ComponentList<T> GetComponentList<T>() where T : struct
         {
@@ -92,7 +93,7 @@ namespace SoftTouch.ECS
             }
         }
 
-        internal void AddEntity(Entity entity) => EntityID.Add(entity.Index);
+        internal void AddEntity(Entity entity) => EntityID.Add(entity.Index, Length);
 
         public override string ToString()
         {

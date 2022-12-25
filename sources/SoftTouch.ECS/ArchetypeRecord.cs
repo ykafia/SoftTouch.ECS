@@ -10,7 +10,7 @@ namespace SoftTouch.ECS
         public Entity Entity;
         public Archetype Archetype;
 
-        public int ArchetypeIndex => Archetype.EntityID.IndexOf(Entity.Index);
+        public int ArchetypeIndex => Archetype.EntityID[Entity.Index];
         public int Index => (int)Entity.Index;
 
         public override string ToString()
