@@ -50,6 +50,8 @@ namespace SoftTouch.ECS
 
         public bool IsStrictSupersetOf(Archetype t) => ID.IsStrictSupersetOf(t.ID);
         public bool IsStrictSupersetOf(params Type[] types) => ID.IsStrictSupersetOf(new(types));
+        public bool IsSupersetOf(Archetype t) => ID.IsSupersetOf(t.ID);
+        public bool IsSupersetOf(params Type[] types) => ID.IsSupersetOf(new(types));
         public bool IsStrictSubsetOf(Archetype t) => ID.IsStrictSubsetOf(t.ID);
         public bool IsStrictSubsetOf(params Type[] types) => ID.IsStrictSubsetOf(new(types));
 
@@ -75,7 +77,7 @@ namespace SoftTouch.ECS
             {
                 var array = GetComponentArray<T>();
                 array.Add(component);
-                EntityID.Add(entity,array.Count);
+                EntityID.Add(entity,array.Count - 1);
             }
         }
 

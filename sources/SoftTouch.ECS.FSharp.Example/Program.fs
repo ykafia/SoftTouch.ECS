@@ -6,6 +6,7 @@ open SoftTouch.ECS.FSharp.ProcessorTypes
 type NameComponent = 
     val mutable Name : string
     new (n : string) = {Name = n}
+    override this.ToString() = $"{this.Name}"
     
 
 let world = new World()
@@ -16,20 +17,20 @@ world
 |> ignore
 
 
-let nameSystem (a : World) (name : ref<NameComponent>) : unit =
-    printfn "%A" name.Value.Name
-    name.Value <- NameComponent("Jotaro Kujo")
-    printfn "Changed to %A" name.Value.Name
+let nameSystem (entities1 : Query<NameComponent>) : unit =
+    let mutable name = entities1[0].Component1
+    printfn "%A" name
+    name.Name <- "Jotaro Kujo"
+    let v = entities1[0].Component1
+    printfn "Changed to %A" v.Name
 
 
 
 world
 |> Processor.Add nameSystem
 
-for x in world.Processors
-    do printfn "%A" x
-
-world.Run(2)
+world.Start()
+world.Update()
 
 world 
 |> World.GetEntity 0 

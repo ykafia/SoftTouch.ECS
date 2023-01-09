@@ -33,6 +33,13 @@ world.CreateEntity()
 world.CreateEntity()
     .With<NameComponent>()
     .With<HealthComponent>();
+
+world.Add<HealthProcessor>();
+world.Start();
+world.Update();
+
+Console.WriteLine(world[0].Get<HealthComponent>());
+Console.WriteLine(world[1].Get<HealthComponent>());
 // world.CreateEntity()
 //     .With<NameComponent>()
 //     .With<HealthComponent>()

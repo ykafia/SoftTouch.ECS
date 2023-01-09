@@ -36,25 +36,25 @@ namespace SoftTouch.ECS.Test
         [TestMethod]
         public void TestEnumerable()
         {
-            w.Run(100);
+            w.Update();
         }
 
         [TestMethod]
         public void TestArchetype()
         {
-            wq.Run(100);
+            wq.Update();
         }
         
         [TestMethod]
         public void TestEnumerableRo()
         {
-            wro.Run(100);
+            wro.Update();
         }
         
         [TestMethod]
         public void TestArchetypeRo()
         {
-            wqro.Run(100);
+            wqro.Update();
         }
         
     }

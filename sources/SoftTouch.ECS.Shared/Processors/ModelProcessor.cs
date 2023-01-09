@@ -6,6 +6,10 @@ namespace SoftTouch.ECS.Processors
 {
     public class ModelProcessor : Processor<Query<ModelComponent>>
     {
+        public ModelProcessor(World world)
+        {
+        }
+
         public override void Update()
         {
             // foreach((var e, var model) in query1)

@@ -2,6 +2,8 @@ using SoftTouch.ECS.Components;
 using SoftTouch.ECS.Processors;
 using SoftTouch.ECS;
 using BenchmarkDotNet.Attributes;
+using System;
+using System.Linq;
 
 namespace SoftTouch.ECS.Benchmark;
 
@@ -44,36 +46,42 @@ public class BenchReadOnly
     [Benchmark]
     public void BenchEnumerable()
     {
-        w.Run(100);
+        for(int i = 0; i < 100; i++)
+            w.Update();
     }
 
     [Benchmark]
     public void BenchArchetype()
     {
-        wq.Run(100);
+        for(int i = 0; i < 100; i++)
+            wq.Update();
     }
 
     [Benchmark]
     public void BenchEnumerableRo()
     {
-        wro.Run(100);
+        for(int i = 0; i < 100; i++)
+            wro.Update();
     }
 
     [Benchmark]
     public void BenchArchetypeRo()
     {
-        wqro.Run(100);
+        for(int i = 0; i < 100; i++)
+            wqro.Update();
     }
     [Benchmark]
     public void BenchArchetypeSpan()
     {
-        wqs.Run(100);
+        for(int i = 0; i < 100; i++)
+            wqs.Update();
     }
 
     [Benchmark]
     public void BenchArchetypeRoSpan()
     {
-        wqros.Run(100);
+        for(int i = 0; i < 100; i++)
+            wqros.Update();
     }
 
 }

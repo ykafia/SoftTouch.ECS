@@ -132,12 +132,11 @@ namespace SoftTouch.ECS
 
         public void Add(Processor p)
         {
-            p.World = this;
-            Processors.Add(p);
+            Processors.Add(p.With(this));
         }
         public void Add<T>() where T : Processor, new()
         {
-            Processors.Add(new T() { World = this });
+            Processors.Add(new T().With(this));
         }
         public void AddStartup(Processor processor)
         {

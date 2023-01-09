@@ -2,27 +2,40 @@ namespace SoftTouch.ECS
 {
     public abstract class Processor : ProcessorBase
     {
+        public Processor() { }
+
+        public abstract Processor With(World world);
         public virtual void Update() { }
+
     }
 
     public partial class Processor<Q> : Processor where Q : Query, new()
     {
-        protected readonly Q entities1;
-        public Processor()
+        protected Q Entities1 { get; private set; }
+        
+        public Processor(){}
+
+        public override Processor With(World world)
         {
-            entities1 = (Q)new Q().With(World);
+            World = world;
+            Entities1 = (Q)new Q().With(World);
+            return this;
         }
     }
-    public partial class Processor<Q1, Q2> : Processor<Q1>
+    public partial class Processor<Q1, Q2> : Processor
         where Q1 : Query, new()
         where Q2 : Query, new()
 
     {
-        protected readonly Q2 entities2;
+        protected Q1 Entities1 {get;private set;}
+        protected Q2 Entities2 {get;private set;}
 
-        public Processor() : base()
+        public override Processor With(World world)
         {
-            entities2 = (Q2)new Q2().With(World);
+            World = world;
+            Entities1 = (Q1)new Q1().With(World);
+            Entities2 = (Q2)new Q2().With(World);
+            return this;
         }
 
     }
@@ -32,11 +45,17 @@ namespace SoftTouch.ECS
         where Q3 : Query, new()
 
     {
-        protected readonly Q3 entities3;
+        protected Q1 Entities1 {get;private set;}
+        protected Q2 Entities2 {get;private set;}
+        protected Q3 Entities3 {get;private set;}
 
-        public Processor() : base()
+        public override Processor With(World world)
         {
-            entities3 = (Q3)new Q3().With(World);
+            World = world;
+            Entities1 = (Q1)new Q1().With(World);
+            Entities2 = (Q2)new Q2().With(World);
+            Entities3 = (Q3)new Q3().With(World);
+            return this;
         }
     }
     public partial class Processor<Q1, Q2, Q3, Q4> : Processor<Q1, Q2, Q3>
@@ -45,11 +64,19 @@ namespace SoftTouch.ECS
         where Q3 : Query, new()
         where Q4 : Query, new()
     {
-        protected readonly Q4 entities4;
+        protected Q1 Entities1 {get;private set;}
+        protected Q2 Entities2 {get;private set;}
+        protected Q3 Entities3 {get;private set;}
+        protected Q4 Entities4 {get;private set;}
 
-        public Processor() : base()
+        public override Processor With(World world)
         {
-            entities4 = (Q4)new Q4().With(World);
+            World = world;
+            Entities1 = (Q1)new Q1().With(World);
+            Entities2 = (Q2)new Q2().With(World);
+            Entities3 = (Q3)new Q3().With(World);
+            Entities4 = (Q4)new Q4().With(World);
+            return this;
         }
     }
 }

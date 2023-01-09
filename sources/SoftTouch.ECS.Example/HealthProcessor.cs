@@ -10,9 +10,9 @@ namespace SoftTouch.ECS.Example
 
         public override void Update()
         {
-            foreach(var e in query1.QueriedArchetypes)
+            for(int i = 0; i < Entities1.Length; i++)
             {
-                
+                Entities1[i].Component1.LifePoints = 247;
             }
         }
     }

@@ -7,69 +7,48 @@ open System
 open System.Runtime.CompilerServices
 
 module ProcessorTypes =
+
+    type FProcessor<'Q1 when 'Q1 :> Query and 'Q1 : (new: unit -> 'Q1)>
+        (updater : 'Q1 -> unit) =
+        inherit Processor<'Q1>()
+        override this.Update() = 
+            updater this.Entities1
     
-    type UpdaterDel<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType> 
-        = delegate of World * byref<'T> -> unit
-    type UpdaterDel<'T1, 'T2 when 'T1 : struct and 'T1 : (new: unit -> 'T1) and 'T1 :> System.ValueType
-                    and 'T2 : struct and 'T2 : (new: unit -> 'T2) and 'T2 :> System.ValueType
-                    > 
-        = delegate of World * byref<'T1> * byref<'T2> -> unit
-    type SimpleFProcessor<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType> 
-        (updater : UpdaterDel<'T>) =
-        inherit Processor()
-        member this.Updater = updater
-        member this.aid = new ArchetypeID(typeof<'T>)
-        override this.Update() =
-            for arch in this.World.QueryArchetypes(this.aid)
-                do
-                for i in 0..arch.Length
-                    do 
-                    this.Updater.Invoke(this.World, &arch.GetComponentSpan<'T>().[i])
-        
-    type SimpleFProcessor<
-            'T1,'T2 when 'T1 : struct and 'T1 : (new: unit -> 'T1) and 'T1 :> System.ValueType
-                     and 'T2 : struct and 'T2 : (new: unit -> 'T2) and 'T2 :> System.ValueType> 
-        (updater : UpdaterDel<'T1,'T2>) =
-        inherit Processor()
-        let Updater = updater
-
-        let aid = new ArchetypeID(typeof<'T1>,typeof<'T2>)
-        override this.Update() =
-            for arch in this.World.QueryArchetypes(aid)
-                do
-                for i in 0..arch.Length
-                    do 
-                        Updater.Invoke(this.World, &arch.GetComponentSpan<'T1>().[i],&arch.GetComponentSpan<'T2>().[i])
-        
-    let createSimple<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType> 
-        (updateFunction : World -> ref<'T> -> unit) = 
-            let func = new SimpleUpdate<'T>(fun x y -> updateFunction x (ref y))
-            new SimpleProcessor<'T>(func)
+    let createProcessor1<'Q1 when 'Q1 :> Query and 'Q1 : (new: unit -> 'Q1)> 
+        (updater : 'Q1 -> unit) = 
+        FProcessor<'Q1>(updater)
     
-    let createSimple2<'T1, 'T2 when 'T1 : struct and 'T1 : (new: unit -> 'T1) and 'T1 :> System.ValueType
-                                and 'T2 : struct and 'T2 : (new: unit -> 'T2) and 'T2 :> System.ValueType
-                    > 
-        (updateFunction : World * 'T1 * 'T2 -> unit) = 
-            let func = new SimpleUpdate<'T1,'T2>(fun x a1 a2-> updateFunction(x,a1,a2))
-            new SimpleProcessor<'T1,'T2>(func)
-
-    // [<Struct>]
-    // type MyStruct =
-    //     struct
-    //         val a : int
-    //     end
-
-    // let testUpdate (w : World, i : MyStruct) =
-    //     ()
-
-    // let instanciateDelegate<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType> 
-    //     a =
-    //     new SimpleUpdate<'T>(fun x y -> a(x,y)) 
+    type FProcessor<'Q1, 'Q2 when 'Q1 :> Query and 'Q1 : (new: unit -> 'Q1) and 'Q2 :> Query and 'Q2 : (new: unit -> 'Q2)> 
+        (updater : 'Q1 -> 'Q2 -> unit) =
+        inherit Processor<'Q1,'Q2>()
+        override this.Update() = 
+            updater this.Entities1 this.Entities2
+    
+    let createProcessor2<'Q1, 'Q2 when 'Q1 :> Query and 'Q1 : (new: unit -> 'Q1) and 'Q2 :> Query and 'Q2 : (new: unit -> 'Q2)> 
+            (updater : 'Q1 -> 'Q2 -> unit) = 
+        FProcessor<'Q1,'Q2>(updater)
+    
+    type FProcessor<'Q1, 'Q2, 'Q3 when 'Q1 :> Query and 'Q1 : (new: unit -> 'Q1) and 'Q2 :> Query and 'Q2 : (new: unit -> 'Q2) and 'Q3 :> Query and 'Q3 : (new: unit -> 'Q3)> 
+        (updater : 'Q1 -> 'Q2 -> 'Q3 -> unit) =
+        inherit Processor<'Q1,'Q2, 'Q3>()
+        override this.Update() = 
+            updater this.Entities1 this.Entities2 this.Entities3
+    
+    let createProcessor3<'Q1, 'Q2, 'Q3 when 'Q1 :> Query and 'Q1 : (new: unit -> 'Q1) and 'Q2 :> Query and 'Q2 : (new: unit -> 'Q2) and 'Q3 :> Query and 'Q3 : (new: unit -> 'Q3)> 
+            (updater : 'Q1 -> 'Q2 -> 'Q3 -> unit) = 
+        FProcessor<'Q1,'Q2, 'Q3>(updater)
+    
+    type FProcessor<'Q1, 'Q2, 'Q3, 'Q4 when 'Q1 :> Query and 'Q1 : (new: unit -> 'Q1) and 'Q2 :> Query and 'Q2 : (new: unit -> 'Q2) and 'Q3 :> Query and 'Q3 : (new: unit -> 'Q3) and 'Q4 :> Query and 'Q4 : (new: unit -> 'Q4)> 
+        (updater : 'Q1 -> 'Q2 -> 'Q3 -> 'Q4 -> unit) =
+        inherit Processor<'Q1,'Q2,'Q3,'Q4>()
+        override this.Update() = 
+            updater this.Entities1 this.Entities2 this.Entities3 this.Entities4
+    
+    let createProcessor4<'Q1, 'Q2, 'Q3, 'Q4 when 'Q1 :> Query and 'Q1 : (new: unit -> 'Q1) and 'Q2 :> Query and 'Q2 : (new: unit -> 'Q2) and 'Q3 :> Query and 'Q3 : (new: unit -> 'Q3) and 'Q4 :> Query and 'Q4 : (new: unit -> 'Q4)> 
+            (updater : 'Q1 -> 'Q2 -> 'Q3 -> 'Q4 -> unit) = 
+        FProcessor<'Q1,'Q2,'Q3,'Q4>(updater)
 
     
-    // let simp = 
-    //     createSimple testUpdate
-
 
 
 
@@ -98,14 +77,13 @@ module Processor =
 
     open ProcessorTypes
 
-    let Add<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :>System.ValueType> 
-        (updater : World -> ref<'T> -> unit) (world : World) =
-        world.Add(createSimple updater)
+    let Add<'Q1 when 'Q1 :> Query and 'Q1 : (new: unit -> 'Q1)>
+        (updater : 'Q1 -> unit) (world : World) =
+        world.Add(createProcessor1 updater)
     
-    let Add2<'T1, 'T2 when 'T1 : struct and 'T1 : (new: unit -> 'T1) and 'T1 :>System.ValueType
-            and 'T2 : struct and 'T2 : (new: unit -> 'T2) and 'T2 :>System.ValueType> 
-            (updater : World * 'T1 * 'T2 -> unit) (world : World) =
-        world.Add(createSimple2 updater)
+    let Add2<'Q1, 'Q2 when 'Q1 :> Query and 'Q1 : (new: unit -> 'Q1) and 'Q2 :> Query and 'Q2 : (new: unit -> 'Q2)> 
+        (updater : 'Q1 -> 'Q2 -> unit) (world : World) =
+        world.Add(createProcessor2 updater)
 
 
 module Archetype =

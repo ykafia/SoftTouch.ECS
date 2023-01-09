@@ -10,6 +10,10 @@ namespace SoftTouch.ECS.Components
             LifePoints = lp;
             Shield = sh;
         }
+        public override string ToString()
+        {
+            return $"[{LifePoints},{Shield}]";
+        }
 
     }
     

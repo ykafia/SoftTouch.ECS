@@ -17,10 +17,6 @@ public delegate void SimpleUpdate<T1, T2, T3, T4>(World w, ref T1 arg1, ref T2 a
 
 public abstract class SimpleProcessor : Processor
 {
-    public SimpleProcessor()
-    {
-
-    }
 }
 public sealed class SimpleProcessor<T> : SimpleProcessor
     where T : struct
@@ -35,7 +31,7 @@ public sealed class SimpleProcessor<T> : SimpleProcessor
 
     public static implicit operator SimpleProcessor<T>(SimpleUpdate<T> updateFunction) => new(updateFunction);
 
-    
+
     public override void Update()
     {
         if (Updater != null)
@@ -49,6 +45,12 @@ public sealed class SimpleProcessor<T> : SimpleProcessor
                 }
             }
         }
+    }
+
+    public override Processor With(World world)
+    {
+        World = world;
+        return this;
     }
 }
 
@@ -64,7 +66,7 @@ public sealed class SimpleProcessor<T1, T2> : SimpleProcessor
         Updater = updater;
     }
 
-    public static implicit operator SimpleProcessor<T1,T2>(SimpleUpdate<T1,T2> updateFunction) => new(updateFunction);
+    public static implicit operator SimpleProcessor<T1, T2>(SimpleUpdate<T1, T2> updateFunction) => new(updateFunction);
 
     public override void Update()
     {
@@ -81,6 +83,11 @@ public sealed class SimpleProcessor<T1, T2> : SimpleProcessor
             }
         }
     }
+    public override Processor With(World world)
+    {
+        World = world;
+        return this;
+    }
 }
 public sealed class SimpleProcessor<T1, T2, T3> : SimpleProcessor
     where T1 : struct
@@ -95,7 +102,7 @@ public sealed class SimpleProcessor<T1, T2, T3> : SimpleProcessor
         Updater = updater;
     }
 
-    public static implicit operator SimpleProcessor<T1,T2,T3>(SimpleUpdate<T1,T2,T3> updateFunction) => new(updateFunction);
+    public static implicit operator SimpleProcessor<T1, T2, T3>(SimpleUpdate<T1, T2, T3> updateFunction) => new(updateFunction);
 
 
     public override void Update()
@@ -114,6 +121,11 @@ public sealed class SimpleProcessor<T1, T2, T3> : SimpleProcessor
             }
         }
     }
+    public override Processor With(World world)
+    {
+        World = world;
+        return this;
+    }
 }
 
 public sealed class SimpleProcessor<T1, T2, T3, T4> : SimpleProcessor
@@ -129,7 +141,7 @@ public sealed class SimpleProcessor<T1, T2, T3, T4> : SimpleProcessor
     {
         Updater = updater;
     }
-    public static implicit operator SimpleProcessor<T1,T2,T3,T4>(SimpleUpdate<T1,T2,T3,T4> updateFunction) => new(updateFunction);
+    public static implicit operator SimpleProcessor<T1, T2, T3, T4>(SimpleUpdate<T1, T2, T3, T4> updateFunction) => new(updateFunction);
 
 
     public override void Update()
@@ -148,5 +160,10 @@ public sealed class SimpleProcessor<T1, T2, T3, T4> : SimpleProcessor
                 }
             }
         }
+    }
+    public override Processor With(World world)
+    {
+        World = world;
+        return this;
     }
 }
