@@ -4,7 +4,11 @@ namespace SoftTouch.ECS
     {
         public Processor() { }
 
-        public abstract Processor With(World world);
+        public virtual Processor With(World world)
+        {
+            World = world;
+            return this;
+        }
         public virtual void Update() { }
 
     }

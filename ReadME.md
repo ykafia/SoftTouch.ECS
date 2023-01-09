@@ -68,28 +68,27 @@ public struct ModelComponent
 
 As you can see, components are just structs.
 
-Then we create a processor for `NameComponent` :
+Then we create a processor for `NameComponent` and `HealthComponent` :
 
 ```csharp
-public class NameProcessor : Processor<Query<NameComponent>>
-{
-    public override void Update()
-    {
-        // query1 returns a list of entities with a copy of each components queried
-        foreach((var e, var name) in query1)
-        {
-            e.Set(new NameComponent{Name = "Lola"});
-        }
-    }
-}
 
-public class ModelProcessor : Processor<Query<HealthComponent,ModelComponent>>
+// Processors can have many Query generic types. 
+// With many Query types you can query entities following different constraints.
+public class MyProcessor : Processor<Query<NameComponent,HealthComponent>>
 {
     public override void Update()
     {
-        foreach((var e, var health, var model) in query1)
+        // Entities1 returns a ref struct Components<T> 
+        // containing ref values of components queried 
+        // in Query<NameComponent>
+        
+        for(int i = 0; i < Entities1.Length; i++)
         {
-            // Do something with model
+            var e = Entities1[i];
+            var name = e.Component1;
+            var health = e.Component2;
+            name.Name = "Martha";
+            health.LifePoints = 200;
         }
     }
 }
@@ -107,7 +106,7 @@ world.CreateEntity()
     .With(new HealthComponent{})
     .With(new ModelComponent());
 
-world.Add(new NameProcessor());
+world.Add<MyProcessor>();
 // After this line of code every NameComponent will be updated by the processor
 world.Update();
 
