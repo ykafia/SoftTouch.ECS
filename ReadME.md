@@ -11,11 +11,11 @@ open SoftTouch.ECS
 open SoftTouch.ECS.FSharp
 open SoftTouch.ECS.FSharp.ProcessorTypes
 
-
 [<Struct>]
 type NameComponent = 
-    val Name : string
+    val mutable Name : string
     new (n : string) = {Name = n}
+    override this.ToString() = $"{this.Name}"
     
 
 let world = new World()
@@ -26,17 +26,19 @@ world
 |> ignore
 
 
-let nameSystem (query : QueryEntity<NameComponent,HealthComponent>) = 
-    for e in query do 
-        e.Set(NameComponent("Lola"));
+let nameSystem (entities1 : Query<NameComponent>) : unit =
+    let mutable name = entities1[0].Component1
+    printfn "%A" name
+    name.Name <- "Jotaro Kujo"
+    let v = entities1[0].Component1
+    printfn "Changed to %A" v.Name
+
 
 
 world
 |> Processor.Add nameSystem
-
-world.Update()
-
-world 
+|> World.Start
+|> World.Update
 |> World.GetEntity 0 
 |> Entity.Get<NameComponent>
 |> fun x -> x.Name

@@ -58,6 +58,14 @@ module World =
         world.CreateEntity()
     let GetEntity  (index : int64) (world : World)=
         world[index]
+        
+    let Start (world : World) = 
+        world.Start()
+        world
+
+    let Update (world : World) = 
+        world.Update()
+        world
 
 module Entity =
     let With<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType> (builder : EntityBuilder) =
@@ -80,10 +88,12 @@ module Processor =
     let Add<'Q1 when 'Q1 :> Query and 'Q1 : (new: unit -> 'Q1)>
         (updater : 'Q1 -> unit) (world : World) =
         world.Add(createProcessor1 updater)
+        world
     
     let Add2<'Q1, 'Q2 when 'Q1 :> Query and 'Q1 : (new: unit -> 'Q1) and 'Q2 :> Query and 'Q2 : (new: unit -> 'Q2)> 
         (updater : 'Q1 -> 'Q2 -> unit) (world : World) =
         world.Add(createProcessor2 updater)
+        world
 
 
 module Archetype =

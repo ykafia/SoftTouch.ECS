@@ -28,11 +28,8 @@ let nameSystem (entities1 : Query<NameComponent>) : unit =
 
 world
 |> Processor.Add nameSystem
-
-world.Start()
-world.Update()
-
-world 
+|> World.Start
+|> World.Update
 |> World.GetEntity 0 
 |> Entity.Get<NameComponent>
 |> fun x -> x.Name
