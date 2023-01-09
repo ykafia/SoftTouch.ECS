@@ -7,10 +7,10 @@ namespace SoftTouch.ECS
 
     public partial class Processor<Q> : Processor where Q : Query, new()
     {
-        protected readonly Q query1;
+        protected readonly Q entities1;
         public Processor()
         {
-            query1 = (Q)new Q().With(World);
+            entities1 = (Q)new Q().With(World);
         }
     }
     public partial class Processor<Q1, Q2> : Processor<Q1>
@@ -18,11 +18,11 @@ namespace SoftTouch.ECS
         where Q2 : Query, new()
 
     {
-        protected readonly Q2 query2;
+        protected readonly Q2 entities2;
 
         public Processor() : base()
         {
-            query2 = (Q2)new Q2().With(World);
+            entities2 = (Q2)new Q2().With(World);
         }
 
     }
@@ -32,11 +32,11 @@ namespace SoftTouch.ECS
         where Q3 : Query, new()
 
     {
-        protected readonly Q3 query3;
+        protected readonly Q3 entities3;
 
         public Processor() : base()
         {
-            query3 = (Q3)new Q3().With(World);
+            entities3 = (Q3)new Q3().With(World);
         }
     }
     public partial class Processor<Q1, Q2, Q3, Q4> : Processor<Q1, Q2, Q3>
@@ -45,11 +45,11 @@ namespace SoftTouch.ECS
         where Q3 : Query, new()
         where Q4 : Query, new()
     {
-        protected readonly Q4 query4;
+        protected readonly Q4 entities4;
 
         public Processor() : base()
         {
-            query4 = (Q4)new Q4().With(World);
+            entities4 = (Q4)new Q4().With(World);
         }
     }
 }

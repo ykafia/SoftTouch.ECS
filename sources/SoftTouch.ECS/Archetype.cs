@@ -49,7 +49,10 @@ namespace SoftTouch.ECS
         }
 
         public bool IsStrictSupersetOf(Archetype t) => ID.IsStrictSupersetOf(t.ID);
+        public bool IsStrictSupersetOf(params Type[] types) => ID.IsStrictSupersetOf(new(types));
         public bool IsStrictSubsetOf(Archetype t) => ID.IsStrictSubsetOf(t.ID);
+        public bool IsStrictSubsetOf(params Type[] types) => ID.IsStrictSubsetOf(new(types));
+
         public IEnumerable<Type> TypeIntersect(Archetype t) => this.ID.Intersect(t.ID);
         public IEnumerable<Type> TypeExcept(Archetype t) => this.ID.Except(t.ID);
 
