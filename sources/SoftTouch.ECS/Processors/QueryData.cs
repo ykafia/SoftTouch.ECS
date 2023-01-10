@@ -26,6 +26,11 @@ public ref struct Components<T1>
     {
         Component1 = ref component1;
     }
+
+    public void Deconstruct(out T1 component1)
+    {
+        component1 = Component1;
+    }
 }
 public ref struct Components<T1, T2>
     where T1 : struct
@@ -34,10 +39,18 @@ public ref struct Components<T1, T2>
     public ref T1 Component1;
     public ref T2 Component2;
 
+    
+
     public Components(ref T1 component1, ref T2 component2)
     {
         Component1 = ref component1;
         Component2 = ref component2;
+    }
+
+    public void Deconstruct(out T1 component1, out T2 component2)
+    {
+        component1 = Component1;
+        component2 = Component2;
     }
 }
 public ref struct Components<T1, T2, T3>
@@ -54,6 +67,15 @@ public ref struct Components<T1, T2, T3>
         Component1 = ref component1;
         Component2 = ref component2;
         Component3 = ref component3;
+    }
+    public void Deconstruct(
+        out T1 component1, 
+        out T2 component2, 
+        out T3 component3)
+    {
+        component1 = Component1;
+        component2 = Component2;
+        component3 = Component3;
     }
 }
 public ref struct Components<T1, T2, T3, T4>
@@ -73,6 +95,17 @@ public ref struct Components<T1, T2, T3, T4>
         Component2 = ref component2;
         Component3 = ref component3;
         Component4 = ref component4;
+    }
+    public void Deconstruct(
+        out T1 component1, 
+        out T2 component2, 
+        out T3 component3, 
+        out T4 component4)
+    {
+        component1 = Component1;
+        component2 = Component2;
+        component3 = Component3;
+        component4 = Component4;
     }
 }
 public ref struct Components<T1, T2, T3, T4,T5>
@@ -95,6 +128,19 @@ public ref struct Components<T1, T2, T3, T4,T5>
         Component3 = ref component3;
         Component4 = ref component4;
         Component5 = ref component5;
+    }
+    public void Deconstruct(
+        out T1 component1, 
+        out T2 component2, 
+        out T3 component3, 
+        out T4 component4, 
+        out T5 component5)
+    {
+        component1 = Component1;
+        component2 = Component2;
+        component3 = Component3;
+        component4 = Component4;
+        component5 = Component5;
     }
 }
 
@@ -121,5 +167,21 @@ public ref struct Components<T1, T2, T3, T4, T5, T6>
         Component4 = ref component4;
         Component5 = ref component5;
         Component6 = ref component6;
+    }
+
+    public void Deconstruct(
+        out T1 component1, 
+        out T2 component2, 
+        out T3 component3, 
+        out T4 component4, 
+        out T5 component5, 
+        out T6 component6)
+    {
+        component1 = Component1;
+        component2 = Component2;
+        component3 = Component3;
+        component4 = Component4;
+        component5 = Component5;
+        component6 = Component6;
     }
 }

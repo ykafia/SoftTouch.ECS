@@ -31,15 +31,14 @@ var world = new World();
 world.CreateEntity()
     .With<HealthComponent>();
 world.CreateEntity()
-    .With<NameComponent>()
+    .With(new NameComponent(){Name = "Martha"})
     .With<HealthComponent>();
 
-world.Add<HealthProcessor>();
+world.Add<PlayerProcessor>();
 world.Start();
 world.Update();
 
-Console.WriteLine(world[0].Get<HealthComponent>());
-Console.WriteLine(world[1].Get<HealthComponent>());
+Console.WriteLine(world[1].Get<NameComponent>().Name);
 // world.CreateEntity()
 //     .With<NameComponent>()
 //     .With<HealthComponent>()
