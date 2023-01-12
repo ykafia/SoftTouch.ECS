@@ -4,6 +4,7 @@ using BenchmarkDotNet.Attributes;
 using SoftTouch.ECS.Shared.Processors;
 using SoftTouch.ECS.Shared.Components;
 using System.Linq;
+using SoftTouch.ECS.Storage;
 
 namespace SoftTouch.ECS.Benchmark
 {

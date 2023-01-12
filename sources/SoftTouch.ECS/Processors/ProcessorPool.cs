@@ -43,11 +43,14 @@ public class ProcessorPool
         }
     }
 
-    internal void Execute()
+    internal void Execute(bool parallel = true)
     {
         foreach(var pl in processorLists)
         {
-            pl.AsParallel().ForAll(x => x.Update());
+            if (parallel)
+                pl.AsParallel().ForAll(x => x.Update());
+            else
+                foreach (var p in pl) p.Update();
         }
     }
 }

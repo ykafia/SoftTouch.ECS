@@ -1,3 +1,5 @@
+using SoftTouch.ECS.Storage;
+
 namespace SoftTouch.ECS;
 
 public delegate void SimpleUpdate<T1>(World w, ref T1 arg1)

@@ -1,3 +1,5 @@
+using SoftTouch.ECS.Storage;
+
 namespace SoftTouch.ECS;
 
 public abstract class ComponentUpdate

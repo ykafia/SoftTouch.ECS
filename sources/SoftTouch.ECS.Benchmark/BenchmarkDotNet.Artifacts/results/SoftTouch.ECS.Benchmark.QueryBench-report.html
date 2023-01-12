@@ -2,7 +2,7 @@
 <html lang='en'>
 <head>
 <meta charset='utf-8' />
-<title>SoftTouch.ECS.Benchmark.QueryBench-20230110-143245</title>
+<title>SoftTouch.ECS.Benchmark.QueryBench-20230112-133810</title>
 
 <style type="text/css">
 	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
@@ -13,20 +13,20 @@
 </head>
 <body>
 <pre><code>
-BenchmarkDotNet=v0.12.1, OS=Windows 10.0.19044
-Intel Core i5-8265U CPU 1.60GHz (Whiskey Lake), 1 CPU, 8 logical and 4 physical cores
-.NET Core SDK=7.0.100
-  [Host]     : .NET Core 7.0.0 (CoreCLR 7.0.22.51805, CoreFX 7.0.22.51805), X64 RyuJIT
-  Job-TMZFQK : .NET Core 7.0.0 (CoreCLR 7.0.22.51805, CoreFX 7.0.22.51805), X64 RyuJIT
+BenchmarkDotNet=v0.12.1, OS=Windows 10.0.22621
+AMD Ryzen 5 3500U with Radeon Vega Mobile Gfx, 1 CPU, 8 logical and 4 physical cores
+.NET Core SDK=7.0.101
+  [Host]     : .NET Core 7.0.1 (CoreCLR 7.0.122.56804, CoreFX 7.0.122.56804), X64 RyuJIT
+  Job-FFVDUL : .NET Core 7.0.1 (CoreCLR 7.0.122.56804, CoreFX 7.0.122.56804), X64 RyuJIT
 </code></pre>
 <pre><code>IterationCount=15  LaunchCount=3  WarmupCount=10  
 </code></pre>
 
 <table>
-<thead><tr><th>   Method</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Gen 0</th><th>Gen 1</th><th>Gen 2</th><th>Allocated</th>
+<thead><tr><th>   Method</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Median</th><th>Gen 0</th><th>Gen 1</th><th>Gen 2</th><th>Allocated</th>
 </tr>
-</thead><tbody><tr><td>QueryArchetypes</td><td>1.627 &mu;s</td><td>0.1137 &mu;s</td><td>0.2163 &mu;s</td><td>0.2728</td><td>-</td><td>-</td><td>856 B</td>
-</tr><tr><td>QueryComponents</td><td>24.274 &mu;s</td><td>2.6087 &mu;s</td><td>4.8353 &mu;s</td><td>8.1177</td><td>-</td><td>-</td><td>25339 B</td>
+</thead><tbody><tr><td>QueryArchetypes</td><td>1.257 &mu;s</td><td>0.0785 &mu;s</td><td>0.1475 &mu;s</td><td>1.247 &mu;s</td><td>0.1564</td><td>-</td><td>-</td><td>328 B</td>
+</tr><tr><td>QueryComponents</td><td>7.471 &mu;s</td><td>0.2431 &mu;s</td><td>0.4626 &mu;s</td><td>7.280 &mu;s</td><td>2.3499</td><td>-</td><td>-</td><td>4840 B</td>
 </tr></tbody></table>
 </body>
 </html>

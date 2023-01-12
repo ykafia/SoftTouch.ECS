@@ -1,3 +1,3 @@
-namespace SoftTouch.ECS;
+namespace SoftTouch.ECS.Storage;
 
 public class ArchetypeList : SortedList<ArchetypeID, Archetype>{}

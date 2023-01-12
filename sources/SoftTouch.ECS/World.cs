@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using SoftTouch.ECS.Storage;
 using SoftTouch.ECS.Arrays;
 using SoftTouch.ECS.ComponentData;
 
@@ -97,13 +98,13 @@ namespace SoftTouch.ECS
             {
                 foreach (var x in stor
                     .Where(x => x.ID.IsAddedType(arch.ID))
-                    .Select(other => (arch.TypeExcept(other).First(), other)))
+                    .Select(other => { arch.TypeExcept(other, out var types); return (types[0], other);}))
                 {
                     arch.Edges.Add[x.Item1] = x.other;
                 }
                 foreach (var x in stor
                     .Where(x => x.ID.IsRemovedType(arch.ID))
-                    .Select(other => (other.TypeExcept(arch).First(), other))
+                    .Select(other => { arch.TypeExcept(other, out var types); return (types[0], other);})
                 )
                 {
                     arch.Edges.Remove[x.Item1] = x.other;
@@ -115,19 +116,12 @@ namespace SoftTouch.ECS
         {
             foreach (var arch in Archetypes.Values)
             {
-                if (arch.ID.IsSupersetOf(types))
+                if (arch.ID.IsSupersetOf(types.Span))
                     yield return arch;
             }
             // return Archetypes
             //     .Where(arch => arch.Value.ID.IsSupersetOf(types))
             //     .Select(arch => arch.Value);
-        }
-        public IEnumerable<Archetype> QueryArchetypes(params Type[] types)
-        {
-            var id = new ArchetypeID(types.ToHashSet());
-            return Archetypes
-                .Where(arch => arch.Value.ID.IsSupersetOf(id))
-                .Select(arch => arch.Value);
         }
 
         public void Add(Processor p)
@@ -161,9 +155,9 @@ namespace SoftTouch.ECS
                 pa.Update();
             UpdateQueue.ExecuteUpdates();
         }
-        public virtual void Update()
+        public virtual void Update(bool parallel = true)
         {
-            Processors.Execute();
+            Processors.Execute(parallel);
             UpdateQueue.ExecuteUpdates();
         }
 

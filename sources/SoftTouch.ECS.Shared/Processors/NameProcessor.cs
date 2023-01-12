@@ -16,4 +16,29 @@ namespace SoftTouch.ECS.Shared.Processors
             }
         }
     }
+    public class OtherNameProcessor : Processor<Query<NameComponent>>
+    {
+        public override void Update()
+        {
+            foreach (var arch in World.QueryArchetypes(Entities1.ID))
+            {
+                for (int i = 0; i < arch.Length; i++)
+                {
+                    arch.GetComponentSpan<NameComponent>()[i].Name = "Lilicia";
+                }
+            }
+        }
+    }
+    public class IteratorNameProcessor : Processor<Query<NameComponent>>
+    {
+        public override void Update()
+        {
+            var entities = Entities1.CreateIterator();
+            while(entities.Next())
+            {
+                entities.Set<NameComponent>(new NameComponent() {Name = "Jolyne"});
+
+            }
+        }
+    }
 }
