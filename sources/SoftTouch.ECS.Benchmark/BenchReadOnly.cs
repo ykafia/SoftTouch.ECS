@@ -1,5 +1,5 @@
-using SoftTouch.ECS.Components;
-using SoftTouch.ECS.Processors;
+using SoftTouch.ECS.Shared.Components;
+using SoftTouch.ECS.Shared.Processors;
 using SoftTouch.ECS;
 using BenchmarkDotNet.Attributes;
 using System;

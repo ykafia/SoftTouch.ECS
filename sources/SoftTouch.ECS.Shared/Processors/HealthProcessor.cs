@@ -1,13 +1,10 @@
-using SoftTouch.ECS.Components;
+using SoftTouch.ECS.Shared.Components;
 using System.Linq;
 
-namespace SoftTouch.ECS.Processors
+namespace SoftTouch.ECS.Shared.Processors
 {
     public class HealthProcessor : Processor<Query<HealthComponent>>
     {
-        public HealthProcessor(World world)
-        {
-        }
 
         public override void Update()
         {
@@ -20,9 +17,6 @@ namespace SoftTouch.ECS.Processors
     }
     public class HealthProcessorE : Processor<Query<HealthComponent>>
     {
-        public HealthProcessorE(World world)
-        {
-        }
 
         public override void Update()
         {
@@ -35,10 +29,6 @@ namespace SoftTouch.ECS.Processors
     }
     public class HealthProcessorQ : Processor<Query<HealthComponent>>
     {
-        public HealthProcessorQ(World world)
-        {
-        }
-
         public override void Update()
         {
             // foreach (var arch in entities1)
@@ -50,9 +40,6 @@ namespace SoftTouch.ECS.Processors
     }
     public class HealthProcessorRO : Processor<Query<ROHealthComponent>>
     {
-        public HealthProcessorRO(World world)
-        {
-        }
 
         public override void Update()
         {
@@ -64,9 +51,6 @@ namespace SoftTouch.ECS.Processors
     }
     public class HealthProcessorQRO : Processor<Query<ROHealthComponent>>
     {
-        public HealthProcessorQRO(World world)
-        {
-        }
 
         public override void Update()
         {
@@ -79,9 +63,6 @@ namespace SoftTouch.ECS.Processors
     }
     public class HealthProcessorQS : Processor<Query<HealthComponent>>
     {
-        public HealthProcessorQS(World world)
-        {
-        }
 
         public override void Update()
         {
@@ -94,9 +75,6 @@ namespace SoftTouch.ECS.Processors
     }
     public class HealthProcessorQROS : Processor<Query<ROHealthComponent>>
     {
-        public HealthProcessorQROS(World world)
-        {
-        }
 
         public override void Update()
         {

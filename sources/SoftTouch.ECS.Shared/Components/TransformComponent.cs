@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace SoftTouch.ECS.Components
+namespace SoftTouch.ECS.Shared.Components
 {
     public struct TransformComponent
     {

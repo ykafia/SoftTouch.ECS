@@ -1,9 +1,9 @@
 using System;
 using BenchmarkDotNet;
 using BenchmarkDotNet.Attributes;
-using SoftTouch.ECS.Components;
+using SoftTouch.ECS.Shared.Processors;
+using SoftTouch.ECS.Shared.Components;
 using System.Linq;
-using SoftTouch.ECS.Processors;
 using SoftTouch.ECS.Arrays;
 using System.Collections.Generic;
 

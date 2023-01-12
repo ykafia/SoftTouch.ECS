@@ -1,9 +1,9 @@
 ﻿using System;
 using BenchmarkDotNet;
 using BenchmarkDotNet.Attributes;
-using SoftTouch.ECS.Components;
 using System.Linq;
-using SoftTouch.ECS.Processors;
+using SoftTouch.ECS.Shared.Processors;
+using SoftTouch.ECS.Shared.Components;
 
 namespace SoftTouch.ECS.Benchmark
 {
@@ -28,7 +28,7 @@ namespace SoftTouch.ECS.Benchmark
                 W2.CreateEntity()
                     .With<NameComponent>()
                     .With<HealthComponent>();
-                W2.Add<Processor2>();
+                W2.Add(new Processor2());
                 W3.CreateEntity()
                     .With<NameComponent>()
                     .With<HealthComponent>()

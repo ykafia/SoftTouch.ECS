@@ -2,7 +2,7 @@ using System.Numerics;
 using SoftTouch.ECS.ComponentData;
 
 
-namespace SoftTouch.ECS.Components
+namespace SoftTouch.ECS.Shared.Components
 {
     public struct ModelComponent
     {

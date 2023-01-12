@@ -1,18 +1,19 @@
-using SoftTouch.ECS.Components;
+using SoftTouch.ECS.Shared.Components;
 using System.Linq;
 
-namespace SoftTouch.ECS.Processors
+namespace SoftTouch.ECS.Shared.Processors
 {
     public class NameProcessor : Processor<Query<NameComponent>>
     {
-        public NameProcessor(World world)
-        {
-        }
+        public NameProcessor(){}
 
         public override void Update()
         {
-            // foreach((var e, var name) in query1)
-            //     e.Set(name with {Name = "Lola"});
+            var length = Entities1.Length;
+            for(int i = 0; i< length; i++)
+            {
+                Entities1[i].Component1.Name = "Batman";
+            }
         }
     }
 }

@@ -1,48 +1,46 @@
 using System.Runtime.InteropServices;
-using SoftTouch.ECS.Components;
+using SoftTouch.ECS.Shared.Components;
 
-namespace SoftTouch.ECS.Processors;
+namespace SoftTouch.ECS.Shared.Processors;
 
 public class Processor1 : Processor<Query<HealthComponent>>
 {
+    public Processor1() { }
     Random rand = new Random();
-
-    public Processor1(World world)
-    {
-    }
 
     public override void Update()
     {
-        // foreach((var e, var h) in query1)
+        // for (int i = 0; i < Entities1.Length; i++)
         // {
-
+        //     Entities1[i].Component1.LifePoints = 247;
         // }
     }
 }
 public class Processor2 : Processor<Query<HealthComponent>>
 {
-    public Processor2(World world)
-    {
-    }
+    Random rand = new Random();
+
+    public Processor2() { }
 
     public override void Update()
     {
-        // foreach((var e, var health) in query1)
-        //     e.Set(health with {LifePoints = 100});
+        // for (int i = 0; i < Entities1.Length; i++)
+        // {
+        //     Entities1[i].Component1.LifePoints = 247;
+        // }
     }
 }
 public class Processor3 : Processor<Query<NameComponent, HealthComponent>>
 {
-    public Processor3(World world)
-    {
-    }
+    Random rand = new Random();
 
+    public Processor3() { }
+    
     public override void Update()
     {
-        // foreach((var e, var n, var h) in query1)
+        // for (int i = 0; i < Entities1.Length; i++)
         // {
-        //     e.Set(n with {Name = "Lola"});
-        //     e.Set(h with {LifePoints = 100});
+        //     Entities1[i].Component1.LifePoints = 247;
         // }
     }
 }

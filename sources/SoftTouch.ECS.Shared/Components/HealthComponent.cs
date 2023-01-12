@@ -1,5 +1,5 @@
 
-namespace SoftTouch.ECS.Components
+namespace SoftTouch.ECS.Shared.Components
 {
     public struct HealthComponent
     {

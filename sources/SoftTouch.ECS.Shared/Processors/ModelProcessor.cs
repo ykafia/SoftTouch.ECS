@@ -1,8 +1,8 @@
-using SoftTouch.ECS.Components;
+using SoftTouch.ECS.Shared.Components;
 using System.Linq;
 using System.Numerics;
 
-namespace SoftTouch.ECS.Processors
+namespace SoftTouch.ECS.Shared.Processors
 {
     public class ModelProcessor : Processor<Query<ModelComponent>>
     {

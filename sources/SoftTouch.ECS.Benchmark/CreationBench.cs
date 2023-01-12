@@ -1,7 +1,7 @@
 ﻿using System;
 using BenchmarkDotNet;
 using BenchmarkDotNet.Attributes;
-using SoftTouch.ECS.Components;
+using SoftTouch.ECS.Shared.Components;
 using System.Linq;
 namespace SoftTouch.ECS.Benchmark
 {
