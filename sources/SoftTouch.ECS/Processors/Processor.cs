@@ -43,7 +43,7 @@ namespace SoftTouch.ECS
         }
 
     }
-    public partial class Processor<Q1, Q2, Q3> : Processor<Q1, Q2>
+    public partial class Processor<Q1, Q2, Q3> : Processor
         where Q1 : Query, new()
         where Q2 : Query, new()
         where Q3 : Query, new()
@@ -62,7 +62,7 @@ namespace SoftTouch.ECS
             return this;
         }
     }
-    public partial class Processor<Q1, Q2, Q3, Q4> : Processor<Q1, Q2, Q3>
+    public partial class Processor<Q1, Q2, Q3, Q4> : Processor
         where Q1 : Query, new()
         where Q2 : Query, new()
         where Q3 : Query, new()

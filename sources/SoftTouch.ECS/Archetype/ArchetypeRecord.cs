@@ -10,30 +10,25 @@ public class ArchetypeRecord
     public Entity Entity;
     public Archetype Archetype;
 
-    public int ArchetypeIndex => Archetype.EntityID[Entity.Index];
+    
+
+    public int ArchetypeIndex => Archetype.EntityID[Index];
     public int Index => (int)Entity.Index;
 
-    public override string ToString()
+    public ArchetypeRecord(Entity entity, Archetype archetype)
     {
-        return Archetype.ToString();
+        Entity = entity;
+        Archetype = archetype;
     }
+
+    
 
     public void Set<T>(T cmp) where T : struct
         => Archetype.SetComponent(ArchetypeIndex, cmp);
     
     public T Get<T>() where T : struct
         => Archetype.GetComponentArray<T>()[ArchetypeIndex];
-    public (T,U) Get<T,U>() 
-        where T : struct
-        where U : struct
-        => (Archetype.GetComponentSpan<T>()[ArchetypeIndex],Archetype.GetComponentSpan<U>()[ArchetypeIndex]);
-    public (T,U,V) Get<T,U,V>() 
-        where T : struct
-        where U : struct
-        where V : struct
-        => (Archetype.GetComponentSpan<T>()[ArchetypeIndex],
-            Archetype.GetComponentSpan<U>()[ArchetypeIndex],
-            Archetype.GetComponentSpan<V>()[ArchetypeIndex]);
+
     public bool Has<T>()
         => Archetype.Storage.ContainsKey(typeof(T));
 
@@ -109,5 +104,10 @@ public class ArchetypeRecord
             world.BuildGraph();
         }
     }
-    
+
+    public override string ToString()
+    {
+        return Archetype.ToString();
+    }
+
 }

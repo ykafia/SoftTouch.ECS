@@ -61,7 +61,7 @@ public class Query<T> : Query
     }
 
 
-    public QueryIterator<T> CreateIterator() => new QueryIterator<T>(world);
+    public QueryIterator<T> CreateIterator() => new(world);
 
     
 
@@ -93,7 +93,7 @@ public class Query<T1, T2> : Query
     where T2 : struct
 {
 
-    public QueryIterator<T1, T2> CreateIterator() => new QueryIterator<T1, T2>(world);
+    public QueryIterator<T1, T2> CreateIterator() => new(world);
 
     public override Query<T1, T2> With(World w)
     {
@@ -136,7 +136,7 @@ public class Query<T1, T2, T3> : Query
     where T2 : struct
     where T3 : struct
 {
-    public QueryIterator<T1, T2, T3> CreateIterator() => new QueryIterator<T1, T2, T3>(world);
+    public QueryIterator<T1, T2, T3> CreateIterator() => new(world);
 
 
     public override Query<T1, T2, T3> With(World w)
@@ -157,29 +157,6 @@ public class Query<T1, T2, T3> : Query
             );
         }
     }
-
-    // public void Get(int i, out T1 component1, out T2 component2, out T3 component3)
-    // {
-    //     var idx = ComputeIndex(i);
-    //     component1 = idx.Archetype.GetComponentSpan<T1>()[idx.Index];
-    //     component2 = idx.Archetype.GetComponentSpan<T2>()[idx.Index];
-    //     component3 = idx.Archetype.GetComponentSpan<T3>()[idx.Index];
-    // }
-
-    CmpIdx ComputeIndex(int i)
-    {
-        var csum = 0;
-        foreach (var arch in world.Archetypes.Values)
-        {
-            if (arch.IsSupersetOf(ID.Span))
-                csum += arch.Length;
-            if (csum > i)
-            {
-                return new(arch, arch.Length - (csum - i));
-            }
-        }
-        throw new IndexOutOfRangeException();
-    }
 }
 public class Query<T1, T2, T3, T4> : Query
     where T1 : struct
@@ -187,7 +164,7 @@ public class Query<T1, T2, T3, T4> : Query
     where T3 : struct
     where T4 : struct
 {
-    public QueryIterator<T1, T2, T3, T4> CreateIterator() => new QueryIterator<T1, T2, T3, T4>(world);
+    public QueryIterator<T1, T2, T3, T4> CreateIterator() => new(world);
 
 
     public override Query<T1, T2, T3, T4> With(World w)
@@ -209,30 +186,6 @@ public class Query<T1, T2, T3, T4> : Query
             );
         }
     }
-
-    // public void Get(int i, out T1 component1, out T2 component2, out T3 component3, out T4 component4)
-    // {
-    //     var idx = ComputeIndex(i);
-    //     component1 = idx.Archetype.GetComponentSpan<T1>()[idx.Index];
-    //     component2 = idx.Archetype.GetComponentSpan<T2>()[idx.Index];
-    //     component3 = idx.Archetype.GetComponentSpan<T3>()[idx.Index];
-    //     component4 = idx.Archetype.GetComponentSpan<T4>()[idx.Index];
-    // }
-
-    CmpIdx ComputeIndex(int i)
-    {
-        var csum = 0;
-        foreach (var arch in world.Archetypes.Values)
-        {
-            if (arch.IsSupersetOf(ID.Span))
-                csum += arch.Length;
-            if (csum > i)
-            {
-                return new(arch, arch.Length - (csum - i));
-            }
-        }
-        throw new IndexOutOfRangeException();
-    }
 }
 public class Query<T1, T2, T3, T4, T5> : Query
     where T1 : struct
@@ -241,7 +194,7 @@ public class Query<T1, T2, T3, T4, T5> : Query
     where T4 : struct
     where T5 : struct
 {
-    public QueryIterator<T1, T2, T3, T4, T5> CreateIterator() => new QueryIterator<T1, T2, T3, T4, T5>(world);
+    public QueryIterator<T1, T2, T3, T4, T5> CreateIterator() => new(world);
 
     public override Query<T1, T2, T3, T4, T5> With(World w)
     {
@@ -264,21 +217,6 @@ public class Query<T1, T2, T3, T4, T5> : Query
             );
         }
     }
-
-    CmpIdx ComputeIndex(int i)
-    {
-        var csum = 0;
-        foreach (var arch in world.Archetypes.Values)
-        {
-            if (arch.IsSupersetOf(ID.Span))
-                csum += arch.Length;
-            if (csum > i)
-            {
-                return new(arch, arch.Length - (csum - i));
-            }
-        }
-        throw new IndexOutOfRangeException();
-    }
 }
 public class Query<T1, T2, T3, T4, T5, T6> : Query
     where T1 : struct
@@ -288,7 +226,7 @@ public class Query<T1, T2, T3, T4, T5, T6> : Query
     where T5 : struct
     where T6 : struct
 {
-    public QueryIterator<T1, T2, T3, T4, T5, T6> CreateIterator() => new QueryIterator<T1, T2, T3, T4, T5, T6>(world);
+    public QueryIterator<T1, T2, T3, T4, T5, T6> CreateIterator() => new(world);
     
     public override Query<T1, T2, T3, T4, T5, T6> With(World w)
     {
@@ -312,21 +250,4 @@ public class Query<T1, T2, T3, T4, T5, T6> : Query
             );
         }
     }
-
-    CmpIdx ComputeIndex(int i)
-    {
-        var csum = 0;
-        foreach (var arch in world.Archetypes.Values)
-        {
-            if (arch.IsSupersetOf(ID.Span))
-                csum += arch.Length;
-            if (csum > i)
-            {
-                return new(arch, arch.Length - (csum - i));
-            }
-        }
-        throw new IndexOutOfRangeException();
-    }
-
-
 }

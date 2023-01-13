@@ -21,17 +21,15 @@ namespace SoftTouch.ECS
 
         public bool IsRunning { get; private set; }
 
-        UpdateQueue UpdateQueue = new();
+        readonly UpdateQueue UpdateQueue = new();
 
         public ArchetypeRecord this[long id]
         {
             get { return Entities[id]; }
-            set { Entities[id] = value; }
         }
         public ArchetypeRecord this[Entity e]
         {
             get { return Entities[e.Index]; }
-            set { Entities[e.Index] = value; }
         }
 
         public World()
@@ -53,7 +51,7 @@ namespace SoftTouch.ECS
         {
             var e = new EntityBuilder(new Entity(Entities.Count, this, name));
             Archetype.CreateEmpty(this).AddEntity(e.Entity);
-            Entities[e.Entity.Index] = new ArchetypeRecord { Entity = e.Entity, Archetype = Archetype.CreateEmpty(this) };
+            Entities[e.Entity.Index] = new(e.Entity,Archetype.CreateEmpty(this));
             return e;
         }
 
@@ -61,7 +59,7 @@ namespace SoftTouch.ECS
         {
             if (Archetypes.TryGetValue(types, out Archetype? a))
             {
-                return new ArchetypeRecord { Entity = e.Entity, Archetype = a };
+                return new(e.Entity, a);
             }
             else
             {

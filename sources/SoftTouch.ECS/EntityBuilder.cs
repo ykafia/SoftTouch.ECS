@@ -3,10 +3,11 @@ using System.Linq;
 using System.Collections.Generic;
 using SoftTouch.ECS.ComponentData;
 using SoftTouch.ECS.Arrays;
+using SoftTouch.ECS.Storage;
 
 namespace SoftTouch.ECS
 {
-    public struct EntityBuilder : IEntity
+    public class EntityBuilder
     {
         public Entity Entity;
         public World World => Entity.World;
@@ -36,11 +37,6 @@ namespace SoftTouch.ECS
                 World[Entity.Index].Add(new T());
             World.BuildGraph();
             return this;
-        }
-
-        public Entity GetEntity()
-        {
-            return Entity;
         }
     }
 }
