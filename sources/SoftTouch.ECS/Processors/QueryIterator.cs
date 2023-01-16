@@ -21,15 +21,15 @@ public ref struct QueryIterator<T1>
         archetypes = w.Archetypes.Values;
     }
 
-    public ref T Get<T>()
+    public void Get<T>(out T component)
         where T : struct
     {
-        return ref archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex];
+        component = archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex];
     }
     public void Set<T>(in T value)
         where T : struct
     {
-        archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex] = value;
+        archetypes[archetypeIndex].SetComponent(entityIndex, in value);
     }
 
     public void Deconstruct(out T1 component)
@@ -89,15 +89,16 @@ public ref struct QueryIterator<T1, T2>
         archetypes = w.Archetypes.Values;
     }
 
-    public ref T Get<T>()
+    public void Get<T>(out T component)
         where T : struct
     {
-        return ref archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex];
+        component = archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex];
     }
+
     public void Set<T>(in T value)
         where T : struct
     {
-        archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex] = value;
+        archetypes[archetypeIndex].SetComponent(entityIndex, in value);
     }
 
     public void Deconstruct(out T1 component1, out T2 component2)
@@ -159,15 +160,15 @@ public ref struct QueryIterator<T1, T2, T3>
         archetypes = w.Archetypes.Values;
     }
 
-    public ref T Get<T>()
+    public void Get<T>(out T component)
         where T : struct
     {
-        return ref archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex];
+        component = archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex];
     }
     public void Set<T>(in T value)
         where T : struct
     {
-        archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex] = value;
+        archetypes[archetypeIndex].SetComponent(entityIndex, in value);
     }
 
     public void Deconstruct(out T1 component1, out T2 component2, out T3 component3)
@@ -232,15 +233,15 @@ public ref struct QueryIterator<T1, T2, T3, T4>
         archetypes = w.Archetypes.Values;
     }
 
-    public ref T Get<T>()
+    public void Get<T>(out T component)
         where T : struct
     {
-        return ref archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex];
+        component = archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex];
     }
     public void Set<T>(in T value)
         where T : struct
     {
-        archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex] = value;
+        archetypes[archetypeIndex].SetComponent(entityIndex, in value);
     }
 
     public void Deconstruct(
@@ -312,15 +313,15 @@ public ref struct QueryIterator<T1, T2, T3, T4, T5>
         archetypes = w.Archetypes.Values;
     }
 
-    public ref T Get<T>()
+    public void Get<T>(out T component)
         where T : struct
     {
-        return ref archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex];
+        component = archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex];
     }
     public void Set<T>(in T value)
         where T : struct
     {
-        archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex] = value;
+        archetypes[archetypeIndex].SetComponent(entityIndex, in value);
     }
 
     public void Deconstruct(
@@ -394,15 +395,15 @@ public ref struct QueryIterator<T1, T2, T3, T4, T5, T6>
         archetypes = w.Archetypes.Values;
     }
 
-    public ref T Get<T>()
+    public void Get<T>(out T component)
         where T : struct
     {
-        return ref archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex];
+        component = archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex];
     }
     public void Set<T>(in T value)
         where T : struct
     {
-        archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex] = value;
+        archetypes[archetypeIndex].SetComponent(entityIndex, in value);
     }
 
     public void Deconstruct(

@@ -109,27 +109,6 @@ public class Query<T1, T2> : Query
             return new(ref idx.Archetype.GetComponentSpan<T1>()[idx.Index], ref idx.Archetype.GetComponentSpan<T2>()[idx.Index]);
         }
     }
-
-    // public void Get(int i, out T1 component1, out T2 component2)
-    // {
-    //     var idx = ComputeIndex(i);
-    //     component1 = idx.Archetype.GetComponentSpan<T1>()[idx.Index];
-    //     component2 = idx.Archetype.GetComponentSpan<T2>()[idx.Index];
-    // }
-    CmpIdx ComputeIndex(int i)
-    {
-        var csum = 0;
-        foreach (var arch in world.Archetypes.Values)
-        {
-            if (arch.IsSupersetOf(ID.Span))
-                csum += arch.Length;
-            if (csum > i)
-            {
-                return new(arch, arch.Length - (csum - i));
-            }
-        }
-        throw new IndexOutOfRangeException();
-    }
 }
 public class Query<T1, T2, T3> : Query
     where T1 : struct

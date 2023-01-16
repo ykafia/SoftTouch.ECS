@@ -9,6 +9,7 @@ namespace SoftTouch.ECS.Storage;
 
 public partial class Archetype
 {
+    static object myLocker = new object();
     public static Archetype CreateEmpty(World w) => new(new List<ComponentBase>(),w);
 
     readonly World world;
@@ -49,7 +50,7 @@ public partial class Archetype
     }
 
 
-    public Span<T> GetComponentSpan<T>() where T : struct
+    private Span<T> GetComponentSpan<T>() where T : struct
     {
         return ((ComponentList<T>)Storage[typeof(T)]).AsSpan();
     }
@@ -57,12 +58,12 @@ public partial class Archetype
     {
         return (ComponentList<T>)Storage[typeof(T)];
     }
-    public void GetEntityComponent<T>(int i, out T c) where T : struct
+    public void GetComponent<T>(int i, out T c) where T : struct
     {
         c = ((ComponentList<T>)Storage[typeof(T)])[i];
     }
 
-    public void AddComponent<T>(in T component, long entity) where T : struct
+    internal void AddComponent<T>(in T component, long entity) where T : struct
     {
         if(Storage.ContainsKey(typeof(T)))
         {
@@ -83,9 +84,12 @@ public partial class Archetype
     }
     public void SetComponent<T>(int index, in T component) where T : struct
     {
-        if(Storage.ContainsKey(typeof(T)))
+        lock (myLocker)
         {
-            GetComponentSpan<T>()[index] = component;
+            if (Storage.ContainsKey(typeof(T)))
+            {
+                GetComponentSpan<T>()[index] = component;
+            }
         }
     }
 

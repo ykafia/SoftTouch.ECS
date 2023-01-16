@@ -81,20 +81,20 @@ public class QueryBench
     }
 
     [Benchmark]
-    public void QueryArchetypes()
+    public void QueryArchetypesWithLock()
     {
-        for(int i = 0; i<10; i++) 
+        for (int i = 0; i < 10; i++)
             w1.Update(false);
-        
+
     }
     [Benchmark]
-    public void QueryComponents()
+    public void QueryComponentsWithoutLock()
     {
         for (int i = 0; i < 10; i++)
             w2.Update(false);
     }
     [Benchmark]
-    public void QueryIterator()
+    public void QueryIteratorWithLock()
     {
         for (int i = 0; i < 10; i++)
             w3.Update(false);

@@ -24,7 +24,7 @@ namespace SoftTouch.ECS.Shared.Processors
             {
                 for (int i = 0; i < arch.Length; i++)
                 {
-                    arch.GetComponentSpan<NameComponent>()[i].Name = "Lilicia";
+                    arch.SetComponent<NameComponent>(i, new("Lilicia"));
                 }
             }
         }
