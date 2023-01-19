@@ -12,7 +12,7 @@ namespace SoftTouch.ECS.Shared.Processors
             var length = Entities1.Length;
             for(int i = 0; i< length; i++)
             {
-                Entities1[i].Component1.Name = "Batman";
+                //Entities1[i].Component1.Name = "Batman";
             }
         }
     }

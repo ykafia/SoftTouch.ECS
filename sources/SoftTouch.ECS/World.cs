@@ -1,16 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using SoftTouch.ECS.Storage;
 using SoftTouch.ECS.Arrays;
 using SoftTouch.ECS.ComponentData;
+using SoftTouch.ECS.Storage;
 
 namespace SoftTouch.ECS
 {
-    public class World
+    public partial class World
     {
         public Dictionary<Type, object> Resources = new();
         public SortedList<long, ArchetypeRecord> Entities = new();
@@ -112,34 +106,12 @@ namespace SoftTouch.ECS
 
         public IEnumerable<Archetype> QueryArchetypes(ArchetypeID types)
         {
-            foreach (var arch in Archetypes.Values)
+            for (int i = 0; i< Archetypes.Count; i++)
             {
-                if (arch.ID.IsSupersetOf(types.Span))
-                    yield return arch;
+                if (Archetypes.Values[i].ID.IsSupersetOf(types.Span))
+                    yield return Archetypes.Values[i];
             }
-            // return Archetypes
-            //     .Where(arch => arch.Value.ID.IsSupersetOf(types))
-            //     .Select(arch => arch.Value);
         }
-
-        public void Add(Processor p)
-        {
-            Processors.Add(p.With(this));
-        }
-        public void Add<T>() where T : Processor, new()
-        {
-            Processors.Add(new T().With(this));
-        }
-        public void AddStartup(Processor processor)
-        {
-            processor.World = this;
-            StartupProcessors.Add(processor);
-        }
-        public void AddStartup<T>() where T : Processor, new()
-        {
-            StartupProcessors.Add(new T() { World = this });
-        }
-        public void Remove(Processor p) => Processors.Remove(p);
 
 
         public void AddArchetypeUpdate(ComponentUpdate update)
@@ -158,24 +130,5 @@ namespace SoftTouch.ECS
             Processors.Execute(parallel);
             UpdateQueue.ExecuteUpdates();
         }
-
-        // public void Run(int framesToRun = 0)
-        // {
-        //     IsRunning = true;
-        //     // UpdateQueue.ExecuteUpdates();
-        //     var watch = new Stopwatch();
-        //     Start();
-        //     while (IsRunning)
-        //     {
-        //         watch.Start();
-        //         Update();
-        //         if (framesToRun != 0 && FrameCount >= framesToRun)
-        //             IsRunning = false;
-        //         watch.Stop();
-        //         GetResource<WorldTimer>().Update(watch.Elapsed);
-        //     }
-        //     watch.Stop();
-        //     IsRunning = false;
-        // }
     }
 }

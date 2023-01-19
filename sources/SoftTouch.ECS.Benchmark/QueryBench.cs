@@ -3,6 +3,7 @@ using BenchmarkDotNet.Attributes;
 using SoftTouch.ECS;
 using SoftTouch.ECS.Shared.Components;
 using SoftTouch.ECS.Shared.Processors;
+using System;
 
 namespace SoftTouch.ECS.Benchmark;
 
@@ -34,7 +35,7 @@ public class QueryBench
         .With(new NameComponent() { Name = "Martha" })
         .With(new HealthComponent());
 
-        w1.Add<OtherNameProcessor>();
+        w1.AddProcessor<OtherNameProcessor>();
         w1.Start();
 
         w2 = new();
@@ -55,7 +56,7 @@ public class QueryBench
         .With(new NameComponent() { Name = "Martha" })
         .With(new HealthComponent());
 
-        w2.Add<NameProcessor>();
+        w2.AddProcessor<NameProcessor>();
         w2.Start();
 
         w3 = new();
@@ -76,7 +77,16 @@ public class QueryBench
         .With(new NameComponent() { Name = "Martha" })
         .With(new HealthComponent());
 
-        w3.Add<IteratorNameProcessor>();
+        static void UpdateName(Query<NameComponent> q1)
+        {
+            var iter = q1.CreateIterator();
+            while (iter.Next())
+            {
+                iter.Set<NameComponent>(new("Kujo Jolyne"));
+            }
+        }
+
+        w3.AddProcessor((Query<NameComponent> q1) => UpdateName(q1));
         w3.Start();
     }
 

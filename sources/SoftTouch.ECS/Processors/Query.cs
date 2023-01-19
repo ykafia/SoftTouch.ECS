@@ -37,21 +37,6 @@ public abstract class Query
 
     public abstract Query With(World w);
     
-    internal CmpIdx ComputeIndex(int index)
-    {
-        var csum = 0;
-        for (int i = 0; i < world.Archetypes.Values.Count; i++)
-        {
-            if (world.Archetypes.Values[i].IsSupersetOf(ID.Span))
-                csum += world.Archetypes.Values[i].Length;
-            if (csum > index)
-            {
-                return new(world.Archetypes.Values[i], world.Archetypes.Values[i].Length - (csum - index));
-            }
-        }
-        throw new IndexOutOfRangeException();
-    }
-
 }
 public class Query<T> : Query
     where T : struct
@@ -63,21 +48,6 @@ public class Query<T> : Query
 
     public QueryIterator<T> CreateIterator() => new(world);
 
-    
-
-    public Components<T> this[int i]
-    {
-        get
-        {
-            var idx = ComputeIndex(i);
-            return new Components<T>(ref idx.Archetype.GetComponentSpan<T>()[idx.Index]);
-        }
-    }
-    // public void Get(int i, ref T component1)
-    // {
-    //     var idx = ComputeIndex(i);
-    //     component1 = ref idx.Archetype.GetComponentSpan<T>()[idx.Index];
-    // }
 
     public override Query<T> With(World w)
     {
@@ -101,14 +71,6 @@ public class Query<T1, T2> : Query
         ID = new ArchetypeID(typeof(T1), typeof(T2));
         return this;
     }
-    public Components<T1, T2> this[int i]
-    {
-        get
-        {
-            var idx = ComputeIndex(i);
-            return new(ref idx.Archetype.GetComponentSpan<T1>()[idx.Index], ref idx.Archetype.GetComponentSpan<T2>()[idx.Index]);
-        }
-    }
 }
 public class Query<T1, T2, T3> : Query
     where T1 : struct
@@ -123,18 +85,6 @@ public class Query<T1, T2, T3> : Query
         world = w;
         ID = new ArchetypeID(typeof(T1), typeof(T2), typeof(T3));
         return this;
-    }
-    public Components<T1, T2, T3> this[int i]
-    {
-        get
-        {
-            var idx = ComputeIndex(i);
-            return new(
-                ref idx.Archetype.GetComponentSpan<T1>()[idx.Index],
-                ref idx.Archetype.GetComponentSpan<T2>()[idx.Index],
-                ref idx.Archetype.GetComponentSpan<T3>()[idx.Index]
-            );
-        }
     }
 }
 public class Query<T1, T2, T3, T4> : Query
@@ -151,19 +101,6 @@ public class Query<T1, T2, T3, T4> : Query
         world = w;
         ID = new ArchetypeID(typeof(T1), typeof(T2), typeof(T3), typeof(T4));
         return this;
-    }
-    public Components<T1, T2, T3, T4> this[int i]
-    {
-        get
-        {
-            var idx = ComputeIndex(i);
-            return new(
-                ref idx.Archetype.GetComponentSpan<T1>()[idx.Index],
-                ref idx.Archetype.GetComponentSpan<T2>()[idx.Index],
-                ref idx.Archetype.GetComponentSpan<T3>()[idx.Index],
-                ref idx.Archetype.GetComponentSpan<T4>()[idx.Index]
-            );
-        }
     }
 }
 public class Query<T1, T2, T3, T4, T5> : Query
@@ -182,20 +119,6 @@ public class Query<T1, T2, T3, T4, T5> : Query
         return this;
     }
 
-    public Components<T1, T2, T3, T4, T5> this[int i]
-    {
-        get
-        {
-            var idx = ComputeIndex(i);
-            return new(
-                ref idx.Archetype.GetComponentSpan<T1>()[idx.Index],
-                ref idx.Archetype.GetComponentSpan<T2>()[idx.Index],
-                ref idx.Archetype.GetComponentSpan<T3>()[idx.Index],
-                ref idx.Archetype.GetComponentSpan<T4>()[idx.Index],
-                ref idx.Archetype.GetComponentSpan<T5>()[idx.Index]
-            );
-        }
-    }
 }
 public class Query<T1, T2, T3, T4, T5, T6> : Query
     where T1 : struct
@@ -212,21 +135,5 @@ public class Query<T1, T2, T3, T4, T5, T6> : Query
         world = w;
         ID = new ArchetypeID(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6));
         return this;
-    }
-
-    public Components<T1, T2, T3, T4, T5, T6> this[int i]
-    {
-        get
-        {
-            var idx = ComputeIndex(i);
-            return new(
-                ref idx.Archetype.GetComponentSpan<T1>()[idx.Index],
-                ref idx.Archetype.GetComponentSpan<T2>()[idx.Index],
-                ref idx.Archetype.GetComponentSpan<T3>()[idx.Index],
-                ref idx.Archetype.GetComponentSpan<T4>()[idx.Index],
-                ref idx.Archetype.GetComponentSpan<T5>()[idx.Index],
-                ref idx.Archetype.GetComponentSpan<T6>()[idx.Index]
-            );
-        }
     }
 }

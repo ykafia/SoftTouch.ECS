@@ -24,16 +24,16 @@ namespace SoftTouch.ECS.Benchmark
             {
                 W1.CreateEntity()
                     .With<HealthComponent>();
-                W1.Add<Processor1>();
+                W1.AddProcessor<Processor1>();
                 W2.CreateEntity()
                     .With<NameComponent>()
                     .With<HealthComponent>();
-                W2.Add(new Processor2());
+                W2.AddProcessor(new Processor2());
                 W3.CreateEntity()
                     .With<NameComponent>()
                     .With<HealthComponent>()
                     .With<ModelComponent>();
-                W3.Add<Processor3>();
+                W3.AddProcessor<Processor3>();
                 
             }
         }

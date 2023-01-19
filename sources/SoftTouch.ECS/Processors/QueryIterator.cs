@@ -24,7 +24,7 @@ public ref struct QueryIterator<T1>
     public void Get<T>(out T component)
         where T : struct
     {
-        component = archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex];
+        archetypes[archetypeIndex].GetComponent<T>(entityIndex,out component);
     }
     public void Set<T>(in T value)
         where T : struct
@@ -34,7 +34,7 @@ public ref struct QueryIterator<T1>
 
     public void Deconstruct(out T1 component)
     {
-        component = archetypes[archetypeIndex].GetComponentSpan<T1>()[entityIndex];
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component);
     }
 
     public bool Next()
@@ -92,7 +92,7 @@ public ref struct QueryIterator<T1, T2>
     public void Get<T>(out T component)
         where T : struct
     {
-        component = archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex];
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component);
     }
 
     public void Set<T>(in T value)
@@ -103,8 +103,8 @@ public ref struct QueryIterator<T1, T2>
 
     public void Deconstruct(out T1 component1, out T2 component2)
     {
-        component1 = archetypes[archetypeIndex].GetComponentSpan<T1>()[entityIndex];
-        component2 = archetypes[archetypeIndex].GetComponentSpan<T2>()[entityIndex];
+        archetypes[archetypeIndex].GetComponent(entityIndex,out component1);
+        archetypes[archetypeIndex].GetComponent(entityIndex,out component2);
     }
 
     public bool Next()
@@ -163,7 +163,7 @@ public ref struct QueryIterator<T1, T2, T3>
     public void Get<T>(out T component)
         where T : struct
     {
-        component = archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex];
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component);
     }
     public void Set<T>(in T value)
         where T : struct
@@ -173,9 +173,9 @@ public ref struct QueryIterator<T1, T2, T3>
 
     public void Deconstruct(out T1 component1, out T2 component2, out T3 component3)
     {
-        component1 = archetypes[archetypeIndex].GetComponentSpan<T1>()[entityIndex];
-        component2 = archetypes[archetypeIndex].GetComponentSpan<T2>()[entityIndex];
-        component3 = archetypes[archetypeIndex].GetComponentSpan<T3>()[entityIndex];
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component1);
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component2);
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component3);
     }
 
     public bool Next()
@@ -236,7 +236,7 @@ public ref struct QueryIterator<T1, T2, T3, T4>
     public void Get<T>(out T component)
         where T : struct
     {
-        component = archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex];
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component);
     }
     public void Set<T>(in T value)
         where T : struct
@@ -251,10 +251,10 @@ public ref struct QueryIterator<T1, T2, T3, T4>
         out T4 component4
         )
     {
-        component1 = archetypes[archetypeIndex].GetComponentSpan<T1>()[entityIndex];
-        component2 = archetypes[archetypeIndex].GetComponentSpan<T2>()[entityIndex];
-        component3 = archetypes[archetypeIndex].GetComponentSpan<T3>()[entityIndex];
-        component4 = archetypes[archetypeIndex].GetComponentSpan<T4>()[entityIndex];
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component1);
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component2);
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component3);
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component4);
     }
 
     public bool Next()
@@ -316,7 +316,7 @@ public ref struct QueryIterator<T1, T2, T3, T4, T5>
     public void Get<T>(out T component)
         where T : struct
     {
-        component = archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex];
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component);
     }
     public void Set<T>(in T value)
         where T : struct
@@ -332,11 +332,11 @@ public ref struct QueryIterator<T1, T2, T3, T4, T5>
         out T5 component5
         )
     {
-        component1 = archetypes[archetypeIndex].GetComponentSpan<T1>()[entityIndex];
-        component2 = archetypes[archetypeIndex].GetComponentSpan<T2>()[entityIndex];
-        component3 = archetypes[archetypeIndex].GetComponentSpan<T3>()[entityIndex];
-        component4 = archetypes[archetypeIndex].GetComponentSpan<T4>()[entityIndex];
-        component5 = archetypes[archetypeIndex].GetComponentSpan<T5>()[entityIndex];
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component1);
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component2);
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component3);
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component4);
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component5);
     }
 
     public bool Next()
@@ -398,7 +398,7 @@ public ref struct QueryIterator<T1, T2, T3, T4, T5, T6>
     public void Get<T>(out T component)
         where T : struct
     {
-        component = archetypes[archetypeIndex].GetComponentSpan<T>()[entityIndex];
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component);
     }
     public void Set<T>(in T value)
         where T : struct
@@ -415,12 +415,12 @@ public ref struct QueryIterator<T1, T2, T3, T4, T5, T6>
         out T6 component6
         )
     {
-        component1 = archetypes[archetypeIndex].GetComponentSpan<T1>()[entityIndex];
-        component2 = archetypes[archetypeIndex].GetComponentSpan<T2>()[entityIndex];
-        component3 = archetypes[archetypeIndex].GetComponentSpan<T3>()[entityIndex];
-        component4 = archetypes[archetypeIndex].GetComponentSpan<T4>()[entityIndex];
-        component5 = archetypes[archetypeIndex].GetComponentSpan<T5>()[entityIndex];
-        component6 = archetypes[archetypeIndex].GetComponentSpan<T6>()[entityIndex];
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component1);
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component2);
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component3);
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component4);
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component5);
+        archetypes[archetypeIndex].GetComponent(entityIndex, out component6);
     }
 
     public bool Next()
