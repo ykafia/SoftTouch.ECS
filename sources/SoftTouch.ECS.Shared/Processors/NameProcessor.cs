@@ -29,14 +29,15 @@ namespace SoftTouch.ECS.Shared.Processors
             }
         }
     }
-    public class IteratorNameProcessor : Processor<Query<NameComponent>>
+    public class IteratorNameProcessor : Processor<Query<NameComponent, HealthComponent>>
     {
         public override void Update()
         {
             var entities = Entities1.CreateIterator();
             while(entities.Next())
             {
-                entities.Set<NameComponent>(new NameComponent() {Name = "Jolyne"});
+                var (name, health) = entities;
+                entities.Set(new NameComponent() {Name = "Jolyne"});
 
             }
         }
