@@ -37,7 +37,7 @@ public ref struct QueryIterator<T1>
         archetypes[archetypeIndex].GetComponent(entityIndex, out component);
     }
 
-    public bool Next()
+    public bool MoveNext()
     {
         while (archetypeIndex < 0 || !archetypes[archetypeIndex].IsSupersetOf<T1>() || archetypes[archetypeIndex].Length == 0)
             archetypeIndex += 1;

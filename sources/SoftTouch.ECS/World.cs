@@ -7,7 +7,7 @@ namespace SoftTouch.ECS
     public partial class World
     {
         public Dictionary<Type, object> Resources = new();
-        public SortedList<long, ArchetypeRecord> Entities = new();
+        public SortedList<long, Entity> Entities = new();
 
         public ArchetypeList Archetypes = new();
         public List<Processor> StartupProcessors { get; set; } = new();
@@ -15,13 +15,13 @@ namespace SoftTouch.ECS
 
         public bool IsRunning { get; private set; }
 
-        readonly UpdateQueue UpdateQueue = new();
+        public WorldCommands Commands { get; }
 
-        public ArchetypeRecord this[long id]
+        public Entity this[EntityId id]
         {
-            get { return Entities[id]; }
+            get => Entities[id];
         }
-        public ArchetypeRecord this[Entity e]
+        public Entity this[Entity e]
         {
             get { return Entities[e.Index]; }
         }
@@ -30,6 +30,7 @@ namespace SoftTouch.ECS
         {
             Archetypes.Add(new(), Archetype.CreateEmpty(this));
             Resources.Add(typeof(WorldTimer), new WorldTimer());
+            Commands = new(this);
         }
 
         public T GetResource<T>() where T : class
@@ -41,25 +42,25 @@ namespace SoftTouch.ECS
             Resources[typeof(T)] = res;
         }
 
-        public EntityBuilder CreateEntity(string name = "")
-        {
-            var e = new EntityBuilder(new Entity(Entities.Count, this, name));
-            Archetype.CreateEmpty(this).AddEntity(e.Entity);
-            Entities[e.Entity.Index] = new(e.Entity,Archetype.CreateEmpty(this));
-            return e;
-        }
+        //public EntityBuilder Spawn(
+        //{
+        //    var e = new EntityBuilder(new Entity(Entities.Count, this));
+        //    Archetype.CreateEmpty(this).AddEntity(e.Entity);
+        //    Entities[e.Entity.Index] = new(e.Entity,Archetype.CreateEmpty(this));
+        //    return e;
+        //}
 
-        public ArchetypeRecord GetOrCreateRecord(ArchetypeID types, EntityBuilder e)
-        {
-            if (Archetypes.TryGetValue(types, out Archetype? a))
-            {
-                return new(e.Entity, a);
-            }
-            else
-            {
-                throw new NotImplementedException("Cannot generate record");
-            }
-        }
+        //public Entity GetOrCreateRecord(ArchetypeID types, EntityBuilder e)
+        //{
+        //    if (Archetypes.TryGetValue(types, out Archetype? a))
+        //    {
+        //        return new(e.Entity, a);
+        //    }
+        //    else
+        //    {
+        //        throw new NotImplementedException("Cannot generate record");
+        //    }
+        //}
 
         internal Archetype GenerateArchetype(ArchetypeID types, IEnumerable<ComponentList> components)
         {
@@ -116,19 +117,19 @@ namespace SoftTouch.ECS
 
         public void AddArchetypeUpdate(ComponentUpdate update)
         {
-            UpdateQueue.Enqueue(update);
+            Commands.Enqueue(update);
         }
 
         public void Start()
         {
             foreach (Processor pa in StartupProcessors)
                 pa.Update();
-            UpdateQueue.ExecuteUpdates();
+            Commands.ExecuteUpdates();
         }
         public virtual void Update(bool parallel = true)
         {
             Processors.Execute(parallel);
-            UpdateQueue.ExecuteUpdates();
+            Commands.ExecuteUpdates();
         }
     }
 }

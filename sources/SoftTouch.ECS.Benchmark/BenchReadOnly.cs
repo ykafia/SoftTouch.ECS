@@ -27,12 +27,12 @@ public class BenchReadOnly
         wqros = new();
         for (int i = 0; i < 100; i++)
         {
-            w.CreateEntity().With(new HealthComponent(i * 10, i * 11));
-            wro.CreateEntity().With(new ROHealthComponent(i * 10, i * 11));
-            wq.CreateEntity().With(new HealthComponent(i * 10, i * 11));
-            wqro.CreateEntity().With(new ROHealthComponent(i * 10, i * 11));
-            wqs.CreateEntity().With(new HealthComponent(i * 10, i * 11));
-            wqros.CreateEntity().With(new ROHealthComponent(i * 10, i * 11));
+            w.Commands.Spawn(new HealthComponent(i * 10, i * 11));
+            wro.Commands.Spawn(new ROHealthComponent(i * 10, i * 11));
+            wq.Commands.Spawn(new HealthComponent(i * 10, i * 11));
+            wqro.Commands.Spawn(new ROHealthComponent(i * 10, i * 11));
+            wqs.Commands.Spawn(new HealthComponent(i * 10, i * 11));
+            wqros.Commands.Spawn(new ROHealthComponent(i * 10, i * 11));
         }
         w.AddProcessor<HealthProcessorE>();
         wro.AddProcessor<HealthProcessorRO>();

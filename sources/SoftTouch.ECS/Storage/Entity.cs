@@ -1,31 +1,32 @@
+using SoftTouch.ECS.Arrays;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using SoftTouch.ECS.Arrays;
-using SoftTouch.ECS.ComponentData;
 
 namespace SoftTouch.ECS.Storage;
 
-public class ArchetypeRecord
+public struct Entity
 {
-    public Entity Entity;
+    public long Index { get; init; }
+
     public Archetype Archetype;
 
-    
+    public World World => Archetype.World;
 
-    public int ArchetypeIndex => Archetype.EntityID[Index];
-    public int Index => (int)Entity.Index;
+    public int ArchetypeIndex => Archetype.EntityLookup[Index];
 
-    public ArchetypeRecord(Entity entity, Archetype archetype)
+    public Entity(long index, Archetype archetype)
     {
-        Entity = entity;
+        Index = index;
         Archetype = archetype;
     }
 
-    
+
 
     public void Set<T>(T cmp) where T : struct
         => Archetype.SetComponent(ArchetypeIndex, cmp);
-    
+
     public T Get<T>() where T : struct
         => Archetype.GetComponentArray<T>()[ArchetypeIndex];
 
@@ -34,43 +35,44 @@ public class ArchetypeRecord
 
     public void Add<T>(in T c) where T : struct
     {
-        Entity.World.AddArchetypeUpdate(new ComponentAdd<T>(c, this));
+        World.AddArchetypeUpdate(new ComponentAdd<T>(c, this));
     }
     public void Remove<T>() where T : struct
     {
-        Entity.World.AddArchetypeUpdate(new ComponentRemove<T>(this));
+        World.AddArchetypeUpdate(new ComponentRemove<T>(this));
     }
 
     internal void AddComponent<T>(in T c) where T : struct
     {
         var arrays = Archetype.Storage;
-        
-        if(Archetype.Edges.Add.TryGetValue(typeof(T), out var newArch))
+
+        if (Archetype.Edges.Add.TryGetValue(typeof(T), out var newArch))
         {
             // Add all components to new archetype
-            foreach(var cmp in arrays)
+            foreach (var cmp in arrays)
             {
                 cmp.Value.TransferTo(newArch.Storage[cmp.Key], ArchetypeIndex);
             }
             // Add entity
-            newArch.AddComponent(c,Entity.Index);
+            newArch.SetComponent(c, Index);
             // Remove Entity from old
-            Archetype.RemoveEntity(Entity);
+            Archetype.RemoveEntity(Index);
             // Change archetype
             Archetype = newArch;
-            
+
         }
         else
         {
             var aid = new ArchetypeID(arrays.Keys.Append(typeof(T)).ToArray());
 
-            var world = Entity.World;
+            var world = World;
             var arch = world.GenerateArchetype(aid, arrays.Values.Append(new ComponentList<T>()));
-            arch.AddComponent(c, Entity.Index);
-            foreach(var cmp in arrays)
-                cmp.Value.TransferTo(arch.Storage[cmp.Key],ArchetypeIndex);
-            
-            Archetype.RemoveEntity(Entity);
+            arch.SetComponent(c, Index);
+
+            foreach (var (type, cmps) in arrays)
+                cmps.TransferTo(arch.Storage[type], ArchetypeIndex);
+
+            Archetype.RemoveEntity(Index);
             Archetype = arch;
             world.BuildGraph();
         }
@@ -78,15 +80,15 @@ public class ArchetypeRecord
     internal void RemoveComponent<T>() where T : struct
     {
         var arrays = Archetype.Storage;
-        if(Archetype.Edges.Remove.TryGetValue(typeof(T), out var newArch))
+        if (Archetype.Edges.Remove.TryGetValue(typeof(T), out var newArch))
         {
             // Add all components to new archetype
-            foreach(var cmp in arrays.Where(x => x.Key != typeof(T)))
+            foreach (var cmp in arrays.Where(x => x.Key != typeof(T)))
                 cmp.Value.TransferTo(newArch.Storage[cmp.Key], ArchetypeIndex);
             // Add entity
-            newArch.AddEntity(Entity);
+            newArch.AddEntity(Index);
             // Remove Entity from old
-            Archetype.RemoveEntity(Entity);
+            Archetype.RemoveEntity(Index);
             // Change archetype
             Archetype = newArch;
         }
@@ -94,12 +96,12 @@ public class ArchetypeRecord
         {
             var aid = new ArchetypeID(arrays.Select(c => c.Key).Where(ty => ty != typeof(T)).ToArray());
 
-            var world = Entity.World;
+            var world = World;
             var arch = world.GenerateArchetype(aid, arrays.Where(c => c.Key != typeof(T)).Select(x => x.Value));
-            arch.AddEntity(Entity);
-            foreach(var cmp in arrays.Where(x => x.Key != typeof(T)))
+            arch.AddEntity(Index);
+            foreach (var cmp in arrays.Where(x => x.Key != typeof(T)))
                 cmp.Value.TransferTo(arch.Storage[cmp.Key], ArchetypeIndex);
-            Archetype.RemoveEntity(Entity);
+            Archetype.RemoveEntity(Index);
             Archetype = arch;
             world.BuildGraph();
         }

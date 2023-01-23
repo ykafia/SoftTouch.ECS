@@ -22,19 +22,12 @@ namespace SoftTouch.ECS.Benchmark
         {
             for (int i = 0; i < Size; i++)
             {
-                W1.CreateEntity()
-                    .With<HealthComponent>();
+                W1.Commands.Spawn<HealthComponent>();
                 W1.AddProcessor<Processor1>();
-                W2.CreateEntity()
-                    .With<NameComponent>()
-                    .With<HealthComponent>();
+                W2.Commands.Spawn<NameComponent, HealthComponent>();
                 W2.AddProcessor(new Processor2());
-                W3.CreateEntity()
-                    .With<NameComponent>()
-                    .With<HealthComponent>()
-                    .With<ModelComponent>();
+                W3.Commands.Spawn<NameComponent, HealthComponent, ModelComponent>();
                 W3.AddProcessor<Processor3>();
-                
             }
         }
 

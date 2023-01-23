@@ -10,7 +10,7 @@ namespace SoftTouch.ECS
         public void AddProcessor(Processor p)
         {
             Processors.Add(p.With(this));
-        }        
+        }
         public void AddStartupProcessor(Processor processor)
         {
             processor.World = this;
@@ -53,7 +53,6 @@ namespace SoftTouch.ECS
         {
             AddProcessor(new DelegateProcessor<Q1,Q2,Q3,Q4>(func));
         }
-
 
 
         public void RemoveProcessor(Processor p) => Processors.Remove(p);

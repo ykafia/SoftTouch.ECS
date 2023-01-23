@@ -4,19 +4,17 @@ using System.Collections.Generic;
 using SoftTouch.ECS.Arrays;
 using SoftTouch.ECS.Processors;
 using SoftTouch.ECS.Storage;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SoftTouch.ECS;
 
-public interface IQueryEntity
-{
-    ArchetypeID GetQueryType();
-}
 public abstract class Query
 {
     protected World world;
     public ArchetypeID ID;
+    protected WorldCommands Commands => world.Commands;
 
-    public int Length
+    public virtual int Length
     {
         get
         {
@@ -35,9 +33,16 @@ public abstract class Query
     }
 
 
-    public abstract Query With(World w);
-    
+    public virtual Query With(World w)
+    {
+        world = w;
+        return this;
+    }
 }
+
+
+
+
 public class Query<T> : Query
     where T : struct
 {
@@ -46,7 +51,7 @@ public class Query<T> : Query
     }
 
 
-    public QueryIterator<T> CreateIterator() => new(world);
+    public QueryEnumerator<T> GetEnumerator() => new(world);
 
 
     public override Query<T> With(World w)

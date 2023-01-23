@@ -12,16 +12,16 @@ public partial class Archetype
     static object myLocker = new object();
     public static Archetype CreateEmpty(World w) => new(new List<ComponentBase>(),w);
 
-    readonly World world;
+    public World World { get; init; }
     public Dictionary<Type, ComponentList> Storage = new();
-    public Dictionary<long,int> EntityID = new();
-    public bool HasEntities => EntityID.Count > 0;
+    public EntityLookup EntityLookup { get; init; }
+    public bool HasEntities => EntityLookup.Count > 0;
 
     public ArchetypeID ID = new();
 
     public ArchetypeEdges Edges = new();
 
-    public int Length => EntityID.Count;
+    public int Length => EntityLookup.Count;
 
     public Archetype(IEnumerable<ComponentBase> components, World w)
     {
@@ -30,7 +30,8 @@ public partial class Archetype
             Storage[c.GetComponentType()] = c.EmptyArray();
         }
         ID = new ArchetypeID(components.Select(x => x.GetComponentType()).ToArray());
-        world = w;
+        World = w;
+        EntityLookup = new();
     }
 
     public Archetype(IEnumerable<ComponentList> componentArrays, World w)
@@ -40,13 +41,13 @@ public partial class Archetype
             Storage[ca.ComponentType] = ca.New();
         };
         ID = new ArchetypeID(componentArrays.Select(x => x.ComponentType).ToArray());
-        world = w;
-        
+        World = w;
+        EntityLookup = new();
     }
 
-    public ArchetypeRecord this[int i]
+    public Entity this[int i]
     {
-        get => world[EntityID[i]];
+        get => World[EntityLookup[i]];
     }
 
 
@@ -63,20 +64,27 @@ public partial class Archetype
         c = ((ComponentList<T>)Storage[typeof(T)])[i];
     }
 
-    internal void AddComponent<T>(in T component, long entity) where T : struct
+    internal void SetComponent<T>(in T component, long entity) where T : struct
     {
         if(Storage.ContainsKey(typeof(T)))
         {
             var array = GetComponentArray<T>();
-            array.Add(component);
-            EntityID.Add(entity,array.Count - 1);
+            if (EntityLookup.TryGetValue(entity, out var idx))
+            {
+                array[idx] = component;
+            }
+            else
+            {
+                array.Add(component);
+                EntityLookup[entity] = array.Count - 1;
+            }
         }
     }
 
-    public void RemoveEntity(Entity e)
+    public void RemoveEntity(long idx)
     {
-        if(EntityID.Count > 0) 
-            EntityID.Remove(e.Index);
+        if(EntityLookup.Count > 0) 
+            EntityLookup.Remove(idx);
     }
     public ComponentList<T> GetComponentList<T>() where T : struct
     {
@@ -93,7 +101,7 @@ public partial class Archetype
         }
     }
 
-    internal void AddEntity(Entity entity) => EntityID.Add(entity.Index, Length);
+    internal void AddEntity(EntityId idx) => EntityLookup.Add(idx);
 
     public override string ToString()
     {

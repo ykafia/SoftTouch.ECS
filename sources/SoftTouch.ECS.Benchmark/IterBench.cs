@@ -25,33 +25,33 @@ namespace SoftTouch.ECS.Benchmark
         {
             for (int i = 0; i < Size; i++)
             {
-                W1.CreateEntity()
-                    .With<HealthComponent>();
-                W1.CreateEntity()
-                    .With<NameComponent>()
-                    .With<HealthComponent>();
-                W1.CreateEntity()
-                    .With<NameComponent>()
-                    .With<HealthComponent>()
-                    .With<ModelComponent>();
-                W1.CreateEntity()
-                    .With<int>()
-                    .With<HealthComponent>()
-                    .With<uint>();
-                W1.CreateEntity()
-                    .With<int>()
-                    .With<HealthComponent>();
-                W1.CreateEntity()
-                    .With<float>()
-                    .With<HealthComponent>()
-                    .With<uint>();
-                W1.CreateEntity()
-                    .With<float>()
-                    .With<HealthComponent>()
-                    .With<double>();
-                W1.CreateEntity()
-                    .With<float>()
-                    .With<HealthComponent>();
+                W1.Commands.Spawn
+                    <HealthComponent>();
+                W1.Commands.Spawn
+                    <NameComponent,
+                    HealthComponent>();
+                W1.Commands.Spawn
+                    <NameComponent,
+                    HealthComponent,
+                    ModelComponent>();
+                W1.Commands.Spawn
+                    <int,
+                    HealthComponent,
+                    uint>();
+                W1.Commands.Spawn
+                    <int,
+                    HealthComponent>();
+                W1.Commands.Spawn
+                    <float,
+                    HealthComponent,
+                    uint>();
+                W1.Commands.Spawn
+                    <float,
+                    HealthComponent,
+                    double>();
+                W1.Commands.Spawn
+                    <float,
+                    HealthComponent>();
             }
         }
         [Benchmark]

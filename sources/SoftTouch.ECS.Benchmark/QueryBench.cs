@@ -19,70 +19,59 @@ public class QueryBench
     {
         w1 = new();
 
-        w1.CreateEntity()
-        .With(new NameComponent() { Name = "Martha" });
-        w1.CreateEntity()
-        .With(new NameComponent() { Name = "Martha" })
-        .With(new HealthComponent());
-        w1.CreateEntity()
-        .With(new NameComponent() { Name = "Martha" })
-        .With<int>();
-        w1.CreateEntity()
-        .With(new NameComponent() { Name = "Martha" })
-        .With(new HealthComponent())
-        .With((1, 5));
-        w1.CreateEntity()
-        .With(new NameComponent() { Name = "Martha" })
-        .With(new HealthComponent());
+        w1.Commands.Spawn(new NameComponent() { Name = "Martha" }).With<HealthComponent>();
+        w1.Commands.Spawn(new NameComponent() { Name = "Martha" }, new HealthComponent());
+        w1.Commands.Spawn(new NameComponent() { Name = "Martha" },default(int));
+        w1.Commands.Spawn(new NameComponent() { Name = "Martha" }, new HealthComponent(),(1, 5));
+        w1.Commands.Spawn(new NameComponent() { Name = "Martha" },new HealthComponent());
 
         w1.AddProcessor<OtherNameProcessor>();
         w1.Start();
 
         w2 = new();
 
-        w2.CreateEntity()
-        .With(new NameComponent() { Name = "Martha" });
-        w2.CreateEntity()
-        .With(new NameComponent() { Name = "Martha" })
-        .With(new HealthComponent());
-        w2.CreateEntity()
-        .With(new NameComponent() { Name = "Martha" })
-        .With<int>();
-        w2.CreateEntity()
-        .With(new NameComponent() { Name = "Martha" })
-        .With(new HealthComponent())
-        .With((1, 5));
-        w2.CreateEntity()
-        .With(new NameComponent() { Name = "Martha" })
-        .With(new HealthComponent());
+        w2.Commands.Spawn(
+        new NameComponent("Martha"));
+        w2.Commands.Spawn(
+        new NameComponent("Martha" ),
+        new HealthComponent());
+        w2.Commands.Spawn(
+        new NameComponent("Martha"), default(int));
+        w2.Commands.Spawn(
+        new NameComponent("Martha"),
+        new HealthComponent(),
+        (1, 5));
+        w2.Commands.Spawn(
+        new NameComponent("Martha"),
+        new HealthComponent());
 
         w2.AddProcessor<NameProcessor>();
         w2.Start();
 
         w3 = new();
 
-        w3.CreateEntity()
-        .With(new NameComponent() { Name = "Martha" });
-        w3.CreateEntity()
-        .With(new NameComponent() { Name = "Martha" })
-        .With(new HealthComponent());
-        w3.CreateEntity()
-        .With(new NameComponent() { Name = "Martha" })
-        .With<int>();
-        w3.CreateEntity()
-        .With(new NameComponent() { Name = "Martha" })
-        .With(new HealthComponent())
-        .With((1, 5));
-        w3.CreateEntity()
-        .With(new NameComponent() { Name = "Martha" })
-        .With(new HealthComponent());
+        w3.Commands.Spawn(
+        new NameComponent() { Name = "Martha" });
+        w3.Commands.Spawn(
+        new NameComponent() { Name = "Martha" },
+        new HealthComponent());
+        w3.Commands.Spawn(
+        new NameComponent() { Name = "Martha" },
+        default(int));
+        w3.Commands.Spawn(
+        new NameComponent() { Name = "Martha" },
+        new HealthComponent(),
+        (1, 5));
+        w3.Commands.Spawn(
+        new NameComponent() { Name = "Martha" },
+        new HealthComponent());
 
         static void UpdateName(Query<NameComponent> q1)
         {
-            var iter = q1.CreateIterator();
-            while (iter.Next())
+            var iter = q1.GetEnumerator();
+            while (iter.MoveNext())
             {
-                iter.Set<NameComponent>(new("Kujo Jolyne"));
+                iter.Current.Set<NameComponent>(new("Kujo Jolyne"));
             }
         }
 
