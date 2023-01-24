@@ -30,7 +30,7 @@ namespace SoftTouch.ECS.Benchmark
         public void RemoveComponent()
         {
             W2.Commands.Spawn(new NameComponent("Lola"), new HealthComponent());
-            W2[0].Remove<NameComponent>();
+            //W2[0].Remove<NameComponent>();
         }
         
     }

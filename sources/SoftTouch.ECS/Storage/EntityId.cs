@@ -9,13 +9,12 @@ namespace SoftTouch.ECS.Storage;
 
 public readonly struct EntityId
 {
-    readonly long id;
+    readonly int id;
 
-    public EntityId(long id)
+    public EntityId(int id)
     {
         this.id = id;
     }
 
-    public static implicit operator long(EntityId eid) => eid.id;
-    public static implicit operator EntityId(long id) => new(id);
+    public static implicit operator int(EntityId eid) => eid.id;
 }

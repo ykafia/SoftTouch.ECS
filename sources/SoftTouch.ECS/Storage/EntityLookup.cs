@@ -26,25 +26,40 @@ public class EntityLookup
     {
         get { return EntityIndices[e]; }
     }
-    public int this[EntityId e]
+    public int this[in EntityId e]
     {
         get { return ArchetypeIndices[e]; }
         set { ArchetypeIndices[e] = value; EntityIndices[value] = e; }
     }
 
-    public void Add(EntityId e)
+    public void Add(in EntityId e)
     {
         ArchetypeIndices.Add(e, ArchetypeIndices.Count);
         EntityIndices.Add(ArchetypeIndices.Count, e);
     }
-    public void Remove(EntityId e)
+    public void Remove(in EntityId e)
     {
         EntityIndices.Remove(ArchetypeIndices.Count - 1);
         ArchetypeIndices.Remove(e);
     }
 
-    public bool TryGetValue(EntityId id, out int index)
+    public bool TryGetValue(in EntityId id, out int index)
     {
         return ArchetypeIndices.TryGetValue(id, out index);
+    }
+    public int LookUp(int archId)
+    {
+        return EntityIndices[archId];
+    }
+    public void Set(in EntityId id, int value)
+    {
+        ArchetypeIndices[id] = value;
+        EntityIndices.Remove(value);
+        EntityIndices[value] = id;
+    }
+
+    public int GetEntityId(int eIdx)
+    {
+        return EntityIndices[eIdx];
     }
 }

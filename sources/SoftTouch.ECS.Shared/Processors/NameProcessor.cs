@@ -33,11 +33,10 @@ namespace SoftTouch.ECS.Shared.Processors
     {
         public override void Update()
         {
-            var entities = Entities1.CreateIterator();
-            while(entities.Next())
+            foreach(var e in Entities1)
             {
-                var (name, health) = entities;
-                entities.Set(new NameComponent() {Name = "Jolyne"});
+                var (name, health) = e;
+                e.Set(new NameComponent() {Name = "Jolyne"});
 
             }
         }

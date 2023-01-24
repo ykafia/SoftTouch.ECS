@@ -8,24 +8,32 @@ namespace SoftTouch.ECS.Storage;
 
 public struct Entity
 {
-    public long Index { get; init; }
+    EntityId index;
+    public EntityId Index => index;
 
-    public Archetype Archetype;
+    public Archetype Archetype { get; set; }
 
     public World World => Archetype.World;
 
-    public int ArchetypeIndex => Archetype.EntityLookup[Index];
-
-    public Entity(long index, Archetype archetype)
+    public int ArchetypeIndex
     {
-        Index = index;
+        get
+        {
+            //Archetype.EntityLookup.TryGetValue(in index, out var res);
+            return 0;
+        }
+    }
+
+    public Entity(int index, Archetype archetype)
+    {
+        this.index = new(index);
         Archetype = archetype;
     }
 
 
 
-    public void Set<T>(T cmp) where T : struct
-        => Archetype.SetComponent(ArchetypeIndex, cmp);
+    public void Set<T>(in T cmp) where T : struct
+        => Archetype.SetComponent(ArchetypeIndex,in cmp);
 
     public T Get<T>() where T : struct
         => Archetype.GetComponentArray<T>()[ArchetypeIndex];
@@ -35,11 +43,11 @@ public struct Entity
 
     public void Add<T>(in T c) where T : struct
     {
-        World.AddArchetypeUpdate(new ComponentAdd<T>(c, this));
+        World.AddArchetypeUpdate(new ComponentAdd<T>(c, in this));
     }
     public void Remove<T>() where T : struct
     {
-        World.AddArchetypeUpdate(new ComponentRemove<T>(this));
+        World.AddArchetypeUpdate(new ComponentRemove<T>(in this));
     }
 
     internal void AddComponent<T>(in T c) where T : struct
@@ -54,12 +62,11 @@ public struct Entity
                 cmp.Value.TransferTo(newArch.Storage[cmp.Key], ArchetypeIndex);
             }
             // Add entity
-            newArch.SetComponent(c, Index);
+            newArch.SetEntityComponent(in index, c);
             // Remove Entity from old
             Archetype.RemoveEntity(Index);
             // Change archetype
-            Archetype = newArch;
-
+            World.Entities[Index] = this with { Archetype = newArch };
         }
         else
         {
@@ -67,13 +74,13 @@ public struct Entity
 
             var world = World;
             var arch = world.GenerateArchetype(aid, arrays.Values.Append(new ComponentList<T>()));
-            arch.SetComponent(c, Index);
+            arch.SetEntityComponent(in index, c);
 
             foreach (var (type, cmps) in arrays)
                 cmps.TransferTo(arch.Storage[type], ArchetypeIndex);
 
             Archetype.RemoveEntity(Index);
-            Archetype = arch;
+            World.Entities[Index] = this with { Archetype = arch };
             world.BuildGraph();
         }
     }
@@ -90,7 +97,7 @@ public struct Entity
             // Remove Entity from old
             Archetype.RemoveEntity(Index);
             // Change archetype
-            Archetype = newArch;
+            World.Entities[Index] = this with { Archetype = newArch };
         }
         else
         {
@@ -102,7 +109,7 @@ public struct Entity
             foreach (var cmp in arrays.Where(x => x.Key != typeof(T)))
                 cmp.Value.TransferTo(arch.Storage[cmp.Key], ArchetypeIndex);
             Archetype.RemoveEntity(Index);
-            Archetype = arch;
+            World.Entities[Index] = this with { Archetype = arch };
             world.BuildGraph();
         }
     }

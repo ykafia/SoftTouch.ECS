@@ -61,14 +61,14 @@ public class Query<T> : Query
         return (Query<T>)this;
     }
 
-    
+
 }
 public class Query<T1, T2> : Query
     where T1 : struct
     where T2 : struct
 {
 
-    public QueryIterator<T1, T2> CreateIterator() => new(world);
+    public QueryEnumerator<T1, T2> GetEnumerator() => new(world);
 
     public override Query<T1, T2> With(World w)
     {
@@ -82,7 +82,7 @@ public class Query<T1, T2, T3> : Query
     where T2 : struct
     where T3 : struct
 {
-    public QueryIterator<T1, T2, T3> CreateIterator() => new(world);
+    public QueryEnumerator<T1, T2, T3> GetEnumerator() => new(world);
 
 
     public override Query<T1, T2, T3> With(World w)
@@ -98,7 +98,7 @@ public class Query<T1, T2, T3, T4> : Query
     where T3 : struct
     where T4 : struct
 {
-    public QueryIterator<T1, T2, T3, T4> CreateIterator() => new(world);
+    public QueryEnumerator<T1, T2, T3, T4> GetEnumerator() => new(world);
 
 
     public override Query<T1, T2, T3, T4> With(World w)
@@ -115,7 +115,7 @@ public class Query<T1, T2, T3, T4, T5> : Query
     where T4 : struct
     where T5 : struct
 {
-    public QueryIterator<T1, T2, T3, T4, T5> CreateIterator() => new(world);
+    public QueryEnumerator<T1, T2, T3, T4, T5> GetEnumerator() => new(world);
 
     public override Query<T1, T2, T3, T4, T5> With(World w)
     {
@@ -133,8 +133,8 @@ public class Query<T1, T2, T3, T4, T5, T6> : Query
     where T5 : struct
     where T6 : struct
 {
-    public QueryIterator<T1, T2, T3, T4, T5, T6> CreateIterator() => new(world);
-    
+    public QueryEnumerator<T1, T2, T3, T4, T5, T6> GetEnumerator() => new(world);
+
     public override Query<T1, T2, T3, T4, T5, T6> With(World w)
     {
         world = w;

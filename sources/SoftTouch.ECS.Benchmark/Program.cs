@@ -2,4 +2,4 @@ using SoftTouch.ECS;
 using BenchmarkDotNet.Running;
 using SoftTouch.ECS.Benchmark;
 
-BenchmarkRunner.Run<QueryBench>();
+BenchmarkRunner.Run<ForEachBench>();

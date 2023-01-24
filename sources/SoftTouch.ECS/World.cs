@@ -7,7 +7,7 @@ namespace SoftTouch.ECS
     public partial class World
     {
         public Dictionary<Type, object> Resources = new();
-        public SortedList<long, Entity> Entities = new();
+        public List<Entity> Entities = new();
 
         public ArchetypeList Archetypes = new();
         public List<Processor> StartupProcessors { get; set; } = new();
@@ -17,13 +17,9 @@ namespace SoftTouch.ECS
 
         public WorldCommands Commands { get; }
 
-        public Entity this[EntityId id]
+        public Entity this[int id]
         {
-            get => Entities[id];
-        }
-        public Entity this[Entity e]
-        {
-            get { return Entities[e.Index]; }
+            get => Entities[new EntityId(id)];
         }
 
         public World()

@@ -9,8 +9,8 @@ namespace SoftTouch.ECS.Storage;
 
 public partial class Archetype
 {
-    static object myLocker = new object();
-    public static Archetype CreateEmpty(World w) => new(new List<ComponentBase>(),w);
+    object myLocker = new object();
+    public static Archetype CreateEmpty(World w) => new(new List<ComponentBase>(), w);
 
     public World World { get; init; }
     public Dictionary<Type, ComponentList> Storage = new();
@@ -25,7 +25,7 @@ public partial class Archetype
 
     public Archetype(IEnumerable<ComponentBase> components, World w)
     {
-        foreach(var c in components)
+        foreach (var c in components)
         {
             Storage[c.GetComponentType()] = c.EmptyArray();
         }
@@ -36,7 +36,7 @@ public partial class Archetype
 
     public Archetype(IEnumerable<ComponentList> componentArrays, World w)
     {
-        foreach(var ca in componentArrays)
+        foreach (var ca in componentArrays)
         {
             Storage[ca.ComponentType] = ca.New();
         };
@@ -45,9 +45,13 @@ public partial class Archetype
         EntityLookup = new();
     }
 
-    public Entity this[int i]
+    public int this[EntityId i]
     {
-        get => World[EntityLookup[i]];
+        get
+        {
+            EntityLookup.TryGetValue(in i, out var res);
+            return res;
+        }
     }
 
 
@@ -64,9 +68,9 @@ public partial class Archetype
         c = ((ComponentList<T>)Storage[typeof(T)])[i];
     }
 
-    internal void SetComponent<T>(in T component, long entity) where T : struct
+    internal void SetEntityComponent<T>(in EntityId entity, in T component) where T : struct
     {
-        if(Storage.ContainsKey(typeof(T)))
+        lock (myLocker)
         {
             var array = GetComponentArray<T>();
             if (EntityLookup.TryGetValue(entity, out var idx))
@@ -76,14 +80,14 @@ public partial class Archetype
             else
             {
                 array.Add(component);
-                EntityLookup[entity] = array.Count - 1;
+                EntityLookup.Set(World[entity].Index, array.Count - 1);
             }
         }
     }
 
-    public void RemoveEntity(long idx)
+    public void RemoveEntity(EntityId idx)
     {
-        if(EntityLookup.Count > 0) 
+        if (EntityLookup.Count > 0)
             EntityLookup.Remove(idx);
     }
     public ComponentList<T> GetComponentList<T>() where T : struct
@@ -94,10 +98,7 @@ public partial class Archetype
     {
         lock (myLocker)
         {
-            if (Storage.ContainsKey(typeof(T)))
-            {
-                GetComponentSpan<T>()[index] = component;
-            }
+            GetComponentList<T>()[index] = component;
         }
     }
 
@@ -105,14 +106,14 @@ public partial class Archetype
 
     public override string ToString()
     {
-        var result = 
+        var result =
         new StringBuilder()
             .Append("Type : [")
-            .Append(string.Join(";", Storage.Keys.Select(x => x.Name)??new List<string>()))
+            .Append(string.Join(";", Storage.Keys.Select(x => x.Name) ?? new List<string>()))
             .Append(']')
             .AppendLine()
             .Append("Storages : [")
-            .Append(string.Join(";",Storage.Values.Select(x => x.ToString())))
+            .Append(string.Join(";", Storage.Values.Select(x => x.ToString())))
             .Append(']');
         return result.ToString();
     }
