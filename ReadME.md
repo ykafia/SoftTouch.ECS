@@ -64,8 +64,6 @@ public struct Transform
 }
 ```
 
-Or 
-
 #### Systems/Processors
 
 In this library, the S in ECS has been renamed to `Processor`, this was a choice influenced by Stride's naming convention and also because I personally feel System is very vague for what this implementation is really.
