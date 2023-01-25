@@ -5,6 +5,8 @@ open SoftTouch.ECS.Arrays
 open FSharp.Core
 open System
 open System.Runtime.CompilerServices
+open SoftTouch.ECS.Storage
+open SoftTouch.ECS.Processors
 
 module ProcessorTypes =
 
@@ -54,9 +56,9 @@ module ProcessorTypes =
 
 
 module World =
-    let CreateEntity (world : World) =
-        world.CreateEntity()
-    let GetEntity  (index : int64) (world : World)=
+    let Spawn (world : World) : EntityCommands =
+        world.Commands.Spawn()
+    let GetEntity  (index : int32) (world : World)=
         world[index]
         
     let Start (world : World) = 
@@ -67,19 +69,30 @@ module World =
         world.Update()
         world
 
-module Entity =
-    let With<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType> (builder : EntityBuilder) =
+
+module EntityCommands = 
+    let With<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType> (builder : EntityCommands) =
         builder.With<'T>()
     
-    let WithValue<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType> (c : 'T) (builder : EntityBuilder) =
+    let WithValue<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType> (c : 'T) (builder : EntityCommands) =
         builder.With(&c)
+
+module RefEntity =
     
-    let Get<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType> (arch : ArchetypeRecord) =
-        arch.Get<'T>()
-    let Set<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType> (cmp : 'T) (arch : ArchetypeRecord) =
-        arch.Set<'T>(cmp)
-    let Has<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType> (arch : ArchetypeRecord) =
-        arch.Get<'T>()
+    let inline Get<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType> (e : RefEntity<'T>) =
+        e.Get<'T>()
+    let inline  Set<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType> (cmp : 'T ) (e : RefEntity<'T>) =
+        e.Set<'T>(&cmp)
+    
+
+module Entity =
+    
+    let Get<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType> (e : Entity) =
+        e.Get<'T>()
+    let Set<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType> (cmp : 'T) (e : Entity) =
+        e.Set<'T>(&cmp)
+    let Has<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType> (e : Entity) =
+        e.Get<'T>()
 
 module Processor =
 
@@ -87,19 +100,19 @@ module Processor =
 
     let Add<'Q1 when 'Q1 :> Query and 'Q1 : (new: unit -> 'Q1)>
         (updater : 'Q1 -> unit) (world : World) =
-        world.Add(createProcessor1 updater)
+        world.AddProcessor(createProcessor1 updater)
         world
     
     let Add2<'Q1, 'Q2 when 'Q1 :> Query and 'Q1 : (new: unit -> 'Q1) and 'Q2 :> Query and 'Q2 : (new: unit -> 'Q2)> 
         (updater : 'Q1 -> 'Q2 -> unit) (world : World) =
-        world.Add(createProcessor2 updater)
+        world.AddProcessor(createProcessor2 updater)
         world
 
 
 module Archetype =
 
     let GetArray<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :>System.ValueType> (arch : Archetype) = 
-        arch.GetComponentSpan<'T>()
+        arch.GetComponentList<'T>()
     
     let SetComponent<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :>System.ValueType> (index : int) (comp : 'T) (arch : Archetype) = 
         arch.SetComponent(index,&comp)

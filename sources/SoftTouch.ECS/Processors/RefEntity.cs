@@ -21,7 +21,7 @@ public ref struct RefEntity<T1>
     public void Set<T>(in T component) where T : struct
         => world[id].Set(in component);
 
-    public void Get<T>() where T : struct
+    public T Get<T>() where T : struct
         => world[id].Get<T>();
 
     public void Deconstruct(out T1 comp1)
@@ -46,7 +46,7 @@ public ref struct RefEntity<T1, T2>
     public void Set<T>(in T component) where T : struct
         => world[id].Set(in component);
 
-    public void Get<T>() where T : struct
+    public T Get<T>() where T : struct
         => world[id].Get<T>();
 
     public void Deconstruct(
@@ -76,7 +76,7 @@ public ref struct RefEntity<T1, T2, T3>
     public void Set<T>(in T component) where T : struct
         => world[id].Set(in component);
 
-    public void Get<T>() where T : struct
+    public T Get<T>() where T : struct
         => world[id].Get<T>();
 
     public void Deconstruct(
@@ -109,7 +109,7 @@ public ref struct RefEntity<T1, T2, T3, T4>
     public void Set<T>(in T component) where T : struct
         => world[id].Set(in component);
 
-    public void Get<T>() where T : struct
+    public T Get<T>() where T : struct
         => world[id].Get<T>();
 
     public void Deconstruct(
@@ -145,7 +145,7 @@ public ref struct RefEntity<T1, T2, T3, T4, T5>
     public void Set<T>(in T component) where T : struct
         => world[id].Set(in component);
 
-    public void Get<T>() where T : struct
+    public T Get<T>() where T : struct
         => world[id].Get<T>();
 
     public void Deconstruct(
@@ -183,7 +183,7 @@ public ref struct RefEntity<T1, T2, T3, T4, T5, T6>
     public void Set<T>(in T component) where T : struct
         => world[id].Set(in component);
 
-    public void Get<T>() where T : struct
+    public T Get<T>() where T : struct
         => world[id].Get<T>();
 
     public void Deconstruct(
@@ -224,7 +224,7 @@ public ref struct RefEntity<T1, T2, T3, T4, T5, T6, T7>
     public void Set<T>(in T component) where T : struct
         => world[id].Set(in component);
 
-    public void Get<T>() where T : struct
+    public T Get<T>() where T : struct
         => world[id].Get<T>();
 
     public void Deconstruct(

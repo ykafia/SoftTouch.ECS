@@ -5,7 +5,21 @@ namespace SoftTouch.ECS;
 
 public partial class WorldCommands : Queue<ComponentUpdate>
 {
-
+    public EntityCommands Spawn()
+    {
+        var id = new ArchetypeID();
+        if (world.Archetypes.TryGetValue(id, out var arch))
+        {
+            var entity = new Entity(world.Entities.Count, arch);
+            world.Entities.Add(entity);
+        }
+        else
+        {
+            world.Archetypes[id] = Archetype.CreateEmpty(world);
+            world.Entities.Add(new Entity(world.Entities.Count, world.Archetypes[id]));
+        }
+        return world.Entities[world.Entities.Count - 1];
+    }
     public EntityCommands Spawn<T1>(in T1 component1)
             where T1 : struct
     {

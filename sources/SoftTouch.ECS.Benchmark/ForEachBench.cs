@@ -19,11 +19,11 @@ public class ForEachBench
 	{
 		w1 = new();
 
-		w1.Commands.Spawn(new NameComponent() { Name = "Martha" }).With<HealthComponent>();
-		w1.Commands.Spawn(new NameComponent() { Name = "Martha" }, new HealthComponent());
-		w1.Commands.Spawn(new NameComponent() { Name = "Martha" }, default(int));
-		w1.Commands.Spawn(new NameComponent() { Name = "Martha" }, new HealthComponent(), (1, 5));
-		w1.Commands.Spawn(new NameComponent() { Name = "Martha" }, new HealthComponent());
+		w1.Commands.Spawn(new NameComponent("Martha" )).With<HealthComponent>();
+		w1.Commands.Spawn(new NameComponent("Martha" ), new HealthComponent());
+		w1.Commands.Spawn(new NameComponent("Martha" ), default(int));
+		w1.Commands.Spawn(new NameComponent("Martha" ), new HealthComponent(), (1, 5));
+		w1.Commands.Spawn(new NameComponent("Martha" ), new HealthComponent());
 
         static void WithDeconstruct(Query<NameComponent,HealthComponent> q1)
         {

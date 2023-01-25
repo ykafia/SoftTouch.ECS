@@ -12,17 +12,18 @@ type NameComponent =
 let world = new World()
 
 world 
-|> World.CreateEntity
-|> Entity.WithValue (NameComponent "Martha")
+|> World.Spawn
+|> EntityCommands.WithValue (NameComponent "Martha")
 |> ignore
 
 
 let nameSystem (entities1 : Query<NameComponent>) : unit =
-    let mutable name = entities1[0].Component1
-    printfn "%A" name
-    name.Name <- "Jotaro Kujo"
-    let v = entities1[0].Component1
-    printfn "Changed to %A" v.Name
+    for entity in entities1 do
+        let name = NameComponent "Kujo Jolyne"
+        entity.Set(&name)
+
+        entity.Get<NameComponent>()
+        |> printfn "Changed to %A"
 
 
 
