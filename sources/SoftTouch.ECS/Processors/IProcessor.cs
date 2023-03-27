@@ -2,7 +2,7 @@
 
 public interface IProcessor
 {
-
+    public void Update();
 }
 
 
@@ -11,7 +11,6 @@ public interface IProcessor<W> : IProcessor
 
 {
     public W World { get; set; }
-    public void Update();
     public void WithWorld(W world);
 }
 public interface IProcessor<W, Q1> : IProcessor<W>

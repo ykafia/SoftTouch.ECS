@@ -2,7 +2,7 @@ namespace SoftTouch.ECS;
 
 public static class ProcessorExtensions
 {
-    public static Processor After(this Processor p, Processor other)
+    public static IProcessor After(this IProcessor<World> p, IProcessor<World> other)
     {
         p.World.Processors.MoveAfter(other, p);
         return p;

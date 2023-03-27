@@ -25,7 +25,7 @@ public class QueryBench
         w1.Commands.Spawn(new NameComponent() { Name = "Martha" }, new HealthComponent(),(1, 5));
         w1.Commands.Spawn(new NameComponent() { Name = "Martha" },new HealthComponent());
 
-        w1.AddProcessor<OtherNameProcessor>();
+        //w1.AddProcessor<OtherNameProcessor>();
         w1.Start();
 
         w2 = new();
@@ -45,7 +45,7 @@ public class QueryBench
         new NameComponent("Martha"),
         new HealthComponent());
 
-        w2.AddProcessor<NameProcessor>();
+        //w2.AddProcessor<NameProcessor>();
         w2.Start();
 
         w3 = new();
@@ -75,8 +75,8 @@ public class QueryBench
             }
         }
 
-        w3.AddProcessor((Query<NameComponent> q1) => UpdateName(q1));
-        w3.Start();
+        //w3.AddProcessor((Query<NameComponent> q1) => UpdateName(q1));
+        //w3.Start();
     }
 
     [Benchmark]

@@ -34,12 +34,12 @@ public class BenchReadOnly
             wqs.Commands.Spawn(new HealthComponent(i * 10, i * 11));
             wqros.Commands.Spawn(new ROHealthComponent(i * 10, i * 11));
         }
-        w.AddProcessor<HealthProcessorE>();
-        wro.AddProcessor<HealthProcessorRO>();
-        wq.AddProcessor<HealthProcessorQ>();
-        wqro.AddProcessor<HealthProcessorQRO>();
-        wqs.AddProcessor<HealthProcessorQ>();
-        wqros.AddProcessor<HealthProcessorQRO>();
+        //w.AddProcessor<HealthProcessorE>();
+        //wro.AddProcessor<HealthProcessorRO>();
+        //wq.AddProcessor<HealthProcessorQ>();
+        //wqro.AddProcessor<HealthProcessorQRO>();
+        //wqs.AddProcessor<HealthProcessorQ>();
+        //wqros.AddProcessor<HealthProcessorQRO>();
 
     }
 

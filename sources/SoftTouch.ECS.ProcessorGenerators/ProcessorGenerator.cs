@@ -61,10 +61,10 @@ namespace SoftTouch.ECS.ProcessorGenerators
                     .AppendLine("{")
                     .Indent();
 
-                writer.AppendLine("public ").Append(world.Identifier.ToString()).Append(" World { get; set; }");
+                writer.Append("public ").Append(world.Identifier.ToString()).AppendLine(" World { get; set; }");
                 for (int i = 0; i < queries.Count; i++)
                 {
-                    writer.Append("public ").Append(queries[i].ToString()).Append(' ').Append(queries[i].Identifier.ToString()).Append(i).AppendLine(" { get; set; }");
+                    writer.Append("public ").Append(queries[i].ToString()).Append(' ').Append(queries[i].Identifier.ToString()).Append(i+1).AppendLine(" { get; set; }");
                 }
 
                 writer
@@ -76,8 +76,8 @@ namespace SoftTouch.ECS.ProcessorGenerators
                 writer.AppendLine("World = w;");
                 for (int i = 0; i < queries.Count; i++)
                 {
-                    writer.Append("Query").Append(i).AppendLine(" = new();");
-                    writer.Append("Query").Append(i).AppendLine(".WithWorld(w);");
+                    writer.Append("Query").Append(i+1).AppendLine(" = new();");
+                    writer.Append("Query").Append(i+1).AppendLine(".WithWorld(w);");
                 }
                 writer.Dedent()
                     .AppendLine("}")

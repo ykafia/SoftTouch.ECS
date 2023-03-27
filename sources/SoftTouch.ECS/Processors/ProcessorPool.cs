@@ -2,26 +2,26 @@ namespace SoftTouch.ECS;
 
 public class ProcessorPool
 {
-    List<List<Processor>> processorLists = new();
+    List<List<IProcessor>> processorLists = new();
 
-    Dictionary<Processor, List<Processor>> Lookup = new();
+    Dictionary<IProcessor, List<IProcessor>> Lookup = new();
 
     public ProcessorPool()
     {
         processorLists.Add(new());
     }
-    public void Add(Processor p)
+    public void Add(IProcessor p)
     {
         processorLists[0].Add(p);
         Lookup[p] = processorLists[0];
     }
-    public void Remove(Processor p)
+    public void Remove(IProcessor p)
     {
         Lookup[p].Remove(p);
         Lookup.Remove(p);
     }
 
-    public void MoveAfter(string label, Processor after)
+    public void MoveAfter(string label, IProcessor after)
     {
         // var afterIndex = processorLists.IndexOf(Lookup[after]);
         // foreach(var pl in processorLists)
@@ -30,7 +30,7 @@ public class ProcessorPool
         throw new NotImplementedException();
     }
 
-    public void MoveAfter(Processor before, Processor after)
+    public void MoveAfter(IProcessor before, IProcessor after)
     {
         if (processorLists.IndexOf(Lookup[after]) <= processorLists.IndexOf(Lookup[before]))
         {

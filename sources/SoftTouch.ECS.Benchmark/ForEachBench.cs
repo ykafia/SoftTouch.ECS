@@ -34,8 +34,8 @@ public class ForEachBench
 			}
 		}
 
-        w1.AddProcessor((Query<NameComponent,HealthComponent> q) => WithDeconstruct(q));
-		w1.Start();
+  //      w1.AddProcessor((Query<NameComponent,HealthComponent> q) => WithDeconstruct(q));
+		//w1.Start();
 
 		w2 = new();
 
@@ -62,8 +62,8 @@ public class ForEachBench
 				e.Set<NameComponent>(new("Kujo Jolyne"));
 			}
 		}
-		w2.AddProcessor((Query<NameComponent> q) => SimpleForeach(q));
-		w2.Start();
+		//w2.AddProcessor((Query<NameComponent> q) => SimpleForeach(q));
+		//w2.Start();
 	}
 
 	[Benchmark]
