@@ -6,7 +6,7 @@ namespace SoftTouch.ECS
 {
     public partial class World
     {
-        public Dictionary<Type, object> Resources = new();
+        public WorldResources Resources = new();
         public List<Entity> Entities = new();
 
         public ArchetypeList Archetypes = new();
@@ -25,38 +25,11 @@ namespace SoftTouch.ECS
         public World()
         {
             Archetypes.Add(new(), Archetype.CreateEmpty(this));
-            Resources.Add(typeof(WorldTimer), new WorldTimer());
+            Resources.Set(new WorldTimer());
             Commands = new(this);
         }
 
-        public T GetResource<T>() where T : class
-        {
-            return (T)Resources[typeof(T)];
-        }
-        public void SetResource<T>(T res) where T : class
-        {
-            Resources[typeof(T)] = res;
-        }
-
-        //public EntityBuilder Spawn(
-        //{
-        //    var e = new EntityBuilder(new Entity(Entities.Count, this));
-        //    Archetype.CreateEmpty(this).AddEntity(e.Entity);
-        //    Entities[e.Entity.Index] = new(e.Entity,Archetype.CreateEmpty(this));
-        //    return e;
-        //}
-
-        //public Entity GetOrCreateRecord(ArchetypeID types, EntityBuilder e)
-        //{
-        //    if (Archetypes.TryGetValue(types, out Archetype? a))
-        //    {
-        //        return new(e.Entity, a);
-        //    }
-        //    else
-        //    {
-        //        throw new NotImplementedException("Cannot generate record");
-        //    }
-        //}
+        
 
         internal Archetype GenerateArchetype(ArchetypeID types, IEnumerable<ComponentList> components)
         {

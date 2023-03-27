@@ -1,14 +1,18 @@
 namespace SoftTouch.ECS
 {
-    public abstract class Processor : ProcessorBase
+    public abstract class Processor
     {
+        public Schedule Schedule { get; set; }
+        public World World { get; set; }
         public Processor() { }
+
 
         public virtual Processor With(World world)
         {
             World = world;
             return this;
         }
+
         public virtual void Update() { }
 
     }

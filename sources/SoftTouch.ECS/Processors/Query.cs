@@ -8,7 +8,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SoftTouch.ECS;
 
-public abstract class Query
+public abstract class Query : IQuery<World>
 {
     protected World world;
     public ArchetypeID ID;
@@ -32,21 +32,46 @@ public abstract class Query
         world = w;
     }
 
-
     public virtual Query With(World w)
     {
         world = w;
         return this;
+    }
+    public void WithWorld(World w)
+    {
+        world = w;
     }
 }
 
 
 
 
-public class Query<T> : Query
+public class Res<T> : Query, IQuery<World>
+    where T : class
+{
+    public Res()
+    {
+    }
+
+    public static implicit operator T(Res<T> r) => r.world.Resources.Get<T>();
+
+    public override Res<T> With(World w)
+    {
+        world = w;
+        ID = new(typeof(T));
+        return (Res<T>)this;
+    }
+}
+
+
+
+public class Query<T> : Query, IQuery<World>
     where T : struct
 {
     public Query()
+    {
+    }
+    public Query(World w) : base(w)
     {
     }
 
@@ -63,10 +88,13 @@ public class Query<T> : Query
 
 
 }
-public class Query<T1, T2> : Query
+public class Query<T1, T2> : Query, IQuery<World>
     where T1 : struct
     where T2 : struct
 {
+    public Query()
+    {
+    }
 
     public QueryEnumerator<T1, T2> GetEnumerator() => new(world);
 
@@ -77,7 +105,7 @@ public class Query<T1, T2> : Query
         return this;
     }
 }
-public class Query<T1, T2, T3> : Query
+public class Query<T1, T2, T3> : Query, IQuery<World>
     where T1 : struct
     where T2 : struct
     where T3 : struct
@@ -92,7 +120,7 @@ public class Query<T1, T2, T3> : Query
         return this;
     }
 }
-public class Query<T1, T2, T3, T4> : Query
+public class Query<T1, T2, T3, T4> : Query, IQuery<World>
     where T1 : struct
     where T2 : struct
     where T3 : struct
@@ -108,7 +136,7 @@ public class Query<T1, T2, T3, T4> : Query
         return this;
     }
 }
-public class Query<T1, T2, T3, T4, T5> : Query
+public class Query<T1, T2, T3, T4, T5> : Query, IQuery<World>
     where T1 : struct
     where T2 : struct
     where T3 : struct
@@ -125,7 +153,7 @@ public class Query<T1, T2, T3, T4, T5> : Query
     }
 
 }
-public class Query<T1, T2, T3, T4, T5, T6> : Query
+public class Query<T1, T2, T3, T4, T5, T6> : Query, IQuery<World>
     where T1 : struct
     where T2 : struct
     where T3 : struct
