@@ -19,7 +19,7 @@
     <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.12.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SoftTouch.ECS\SoftTouch.ECS.csproj" />
+    <ProjectReference Include="..\SoftTouch.ECS.Core\SoftTouch.ECS.Core.csproj" />
     <ProjectReference Include="..\SoftTouch.ECS.Shared\SoftTouch.ECS.Shared.csproj" />
   </ItemGroup>
 </Project>

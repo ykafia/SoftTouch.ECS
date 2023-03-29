@@ -16,12 +16,12 @@ namespace SoftTouch.ECS.ProcessorGenerators
 
         public void Initialize(GeneratorInitializationContext context)
         {
-//#if DEBUG
+// #if DEBUG
 //            if (!Debugger.IsAttached)
 //            {
 //                Debugger.Launch();
 //            }
-//#endif
+// #endif
             //Debug.WriteLine("Initalize code generator");
         }
         public void Execute(GeneratorExecutionContext context)
@@ -35,7 +35,11 @@ namespace SoftTouch.ECS.ProcessorGenerators
                 GetAllTypes(projectAssembly.GlobalNamespace)
                 .Where(t => t.AllInterfaces.Any(i => i.OriginalDefinition.ToString().Contains("SoftTouch.ECS.IProcessor")))
                 .Where(t => t.TypeKind != TypeKind.Interface)
+                .Where(t => t?.BaseType?.Name != "Processor")
                 .ToList();
+            
+            context.AddSource("listProcessors.g.cs",$"/*{string.Join("\n",processors.Select(p => p.Name + "-" + p.BaseType.Name))}*/");
+            
             foreach (var processor in processors)
             {
                 var writer = new CodeWriter();
@@ -45,9 +49,17 @@ namespace SoftTouch.ECS.ProcessorGenerators
                     FindTypeDeclarations(context, processor.OriginalDefinition.ToString(), rn,types);
                 var declaration = types.First();
 
-                var processorInterface = declaration.BaseList.Types.First().Type as GenericNameSyntax;
-                var world = processorInterface.TypeArgumentList.Arguments.First() as IdentifierNameSyntax;
+                var processorInterface = declaration?.BaseList?.Types.First().Type as GenericNameSyntax;
+                var world = processorInterface?.TypeArgumentList.Arguments.First() as IdentifierNameSyntax;
                 var queries = processorInterface.TypeArgumentList.Arguments.OfType<GenericNameSyntax>().ToList();
+
+                if(world == null)
+                {
+                    var desc = new DiagnosticDescriptor("YKA", "error generating source", "","processor",DiagnosticSeverity.Error,false);
+                    context.ReportDiagnostic(Diagnostic.Create(desc, null));
+                }
+                
+
 
                 foreach(var import in declaration.SyntaxTree.GetRoot().ChildNodes().OfType<UsingDirectiveSyntax>())
                     writer.Append(import.ToFullString());
@@ -60,11 +72,12 @@ namespace SoftTouch.ECS.ProcessorGenerators
                     .AppendLine(processor.Name)
                     .AppendLine("{")
                     .Indent();
-
+                
                 writer.Append("public ").Append(world.Identifier.ToString()).AppendLine(" World { get; set; }");
                 for (int i = 0; i < queries.Count; i++)
                 {
-                    writer.Append("public ").Append(queries[i].ToString()).Append(' ').Append(queries[i].Identifier.ToString()).Append(i+1).AppendLine(" { get; set; }");
+                    if(queries[i] != null && queries[i].Identifier != null)
+                        writer.Append("public ").Append(queries[i].ToString()).Append(' ').Append(queries[i].Identifier.ToString()).Append(i+1).AppendLine(" { get; set; }");
                 }
 
                 writer

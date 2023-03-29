@@ -17,7 +17,8 @@ namespace SoftTouch.ECS
 
     }
 
-    public partial class Processor<Q> : Processor where Q : Query, new()
+    public class Processor<Q> : Processor, IProcessor<World,Q>
+        where Q : Query, new()
     {
         protected Q Entities1 { get; private set; }
         
@@ -29,8 +30,14 @@ namespace SoftTouch.ECS
             Entities1 = (Q)new Q().With(World);
             return this;
         }
+
+        public void WithWorld(World world)
+        {
+            World = world;
+            Entities1 = (Q)new Q().With(World);
+        }
     }
-    public partial class Processor<Q1, Q2> : Processor
+    public class Processor<Q1, Q2> : Processor, IProcessor<World,Q1,Q2>
         where Q1 : Query, new()
         where Q2 : Query, new()
 
@@ -46,8 +53,14 @@ namespace SoftTouch.ECS
             return this;
         }
 
+        public void WithWorld(World world)
+        {
+            World = world;
+            Entities1 = (Q1)new Q1().With(World);
+            Entities2 = (Q2)new Q2().With(World);
+        }
     }
-    public partial class Processor<Q1, Q2, Q3> : Processor
+    public class Processor<Q1, Q2, Q3> : Processor, IProcessor<World,Q1,Q2,Q3>
         where Q1 : Query, new()
         where Q2 : Query, new()
         where Q3 : Query, new()
@@ -65,8 +78,16 @@ namespace SoftTouch.ECS
             Entities3 = (Q3)new Q3().With(World);
             return this;
         }
+
+        public void WithWorld(World world)
+        {
+            World = world;
+            Entities1 = (Q1)new Q1().With(World);
+            Entities2 = (Q2)new Q2().With(World);
+            Entities3 = (Q3)new Q3().With(World);
+        }
     }
-    public partial class Processor<Q1, Q2, Q3, Q4> : Processor
+    public class Processor<Q1, Q2, Q3, Q4> : Processor, IProcessor<World,Q1,Q2,Q3,Q4>
         where Q1 : Query, new()
         where Q2 : Query, new()
         where Q3 : Query, new()
@@ -85,6 +106,15 @@ namespace SoftTouch.ECS
             Entities3 = (Q3)new Q3().With(World);
             Entities4 = (Q4)new Q4().With(World);
             return this;
+        }
+
+        public void WithWorld(World world)
+        {
+            World = world;
+            Entities1 = (Q1)new Q1().With(World);
+            Entities2 = (Q2)new Q2().With(World);
+            Entities3 = (Q3)new Q3().With(World);
+            Entities4 = (Q4)new Q4().With(World);
         }
     }
 }

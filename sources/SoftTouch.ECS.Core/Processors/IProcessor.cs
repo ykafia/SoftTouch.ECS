@@ -26,7 +26,7 @@ public interface IProcessor<W, Q1, Q2> : IProcessor<W>
 {
 
 }
-public interface IProcessorr<W, Q1, Q2, Q3> : IProcessor<W>
+public interface IProcessor<W, Q1, Q2, Q3> : IProcessor<W>
     where W : World
     where Q1 : IQuery<W>
     where Q2 : IQuery<W>

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using SoftTouch.ECS.Arrays;
 using SoftTouch.ECS.Processors;
 using SoftTouch.ECS.Storage;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SoftTouch.ECS;
 

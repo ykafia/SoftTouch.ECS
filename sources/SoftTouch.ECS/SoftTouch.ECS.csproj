@@ -1,9 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <TargetFrameworks>net7.0</TargetFrameworks>
+        <!-- This project is meta package -->
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+    <PackageTags>ECS</PackageTags>
+    <Description>C# ECS implementation based on FLECS</Description>
+    <Version>1.0.3</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SoftTouch.ECS.Core\SoftTouch.ECS.Core.csproj"/>
+    <ProjectReference Include="..\SoftTouch.ECS.ProcessorGenerators\SoftTouch.ECS.ProcessorGenerators.csproj"/>
+  </ItemGroup>
+
+  <!-- <Target Name="CopyPackage" AfterTargets="Build"> 
+    <Copy SourceFiles="$(OutputPath)..\$(AssemblyName).$(Version).nupkg"
+  DestinationFolder="$(OutputPath)\..\..\..\package" />
+  </Target> -->
 
 </Project>
