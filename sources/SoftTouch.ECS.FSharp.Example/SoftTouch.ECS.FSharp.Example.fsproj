@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SoftTouch.ECS.Core\SoftTouch.ECS.Core.csproj" />
     <ProjectReference Include="..\SoftTouch.ECS.FSharp\SoftTouch.ECS.FSharp.fsproj" />
-    <ProjectReference Include="..\SoftTouch.ECS\SoftTouch.ECS.csproj" />
   </ItemGroup>
 
 </Project>
