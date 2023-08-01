@@ -1,7 +1,7 @@
 
 namespace SoftTouch.ECS.Shared.Components
 {
-    public struct HealthComponent
+    public record struct HealthComponent
     {
         public float LifePoints {get;set;}
         public float Shield {get;set;}
@@ -17,7 +17,7 @@ namespace SoftTouch.ECS.Shared.Components
 
     }
     
-    public readonly struct ROHealthComponent
+    public record struct ROHealthComponent
     {
         public float LifePoints {get;}
         public float Shield {get;}

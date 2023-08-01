@@ -1,7 +1,7 @@
 
 namespace SoftTouch.ECS.Shared.Components
 {
-    public struct ParentComponent
+    public record struct ParentComponent
     {
         public long Parent;
     }

@@ -74,7 +74,6 @@ public class Query<T> : Query, IQuery<World>
     {
     }
 
-
     public QueryEnumerator<T> GetEnumerator() => new(world);
 
 

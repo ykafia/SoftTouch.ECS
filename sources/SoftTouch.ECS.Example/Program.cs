@@ -1,6 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using SoftTouch.ECS.Arrays;
-using SoftTouch.ECS.Components;
+using SoftTouch.ECS.Shared.Components;
 using SoftTouch.ECS.ComponentData;
 using SoftTouch.ECS;
 using SoftTouch.ECS.Example;
@@ -28,13 +28,12 @@ var world = new World();
 // x.Add(new(typeof(HealthComponent)), "first");
 // x.Add(new(typeof(NameComponent)), "second");
 
-world.CreateEntity()
+world.Commands.Spawn()
     .With<HealthComponent>();
-world.CreateEntity()
-    .With(new NameComponent(){Name = "Martha"})
+world.Commands.Spawn(new NameComponent(){Name = "Martha"})
     .With<HealthComponent>();
 
-world.Add<PlayerProcessor>();
+world.AddProcessor<PlayerProcessor>();
 world.Start();
 world.Update();
 

@@ -42,6 +42,11 @@ public class ComponentArray<T> : ComponentArray
         _owner = MemoryOwner<T>.Allocate(8, AllocationMode.Clear);
         Count = 0;
     }
+    public ComponentArray(int size)
+    {
+        _owner = MemoryOwner<T>.Allocate((int)BitOperations.RoundUpToPowerOf2((uint)size), AllocationMode.Clear);
+        Count = 0;
+    }
 
     void Expand(int size)
     {
@@ -58,6 +63,18 @@ public class ComponentArray<T> : ComponentArray
         Expand(1);
         _owner.Span[Count] = item;
         Count += 1;
+    }
+    public void AddRange(List<T> items)
+    {
+        Expand(items.Count);
+        CollectionsMarshal.AsSpan(items).CopyTo(_owner.Span[Count..]);
+        Count += items.Count;
+    }
+    public void AddRange(ComponentArray<T> items)
+    {
+        Expand(items.Count);
+        items.Span.CopyTo(_owner.Span[Count..]);
+        Count += items.Count;
     }
     public bool Remove(T item)
     {

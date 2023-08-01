@@ -1,5 +1,5 @@
 // See https://aka.ms/new-console-template for more information
-using SoftTouch.ECS.Components;
+using SoftTouch.ECS.Shared.Components;
 using SoftTouch.ECS;
 using SoftTouch.ECS.Events;
 

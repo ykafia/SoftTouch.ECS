@@ -1,7 +1,7 @@
 
 namespace SoftTouch.ECS.Shared.Components
 {
-    public struct InstanceOfComponent
+    public record struct InstanceOfComponent
     {
         public long Entity;
     }
