@@ -20,13 +20,13 @@ public struct EntityCommands
     public static implicit operator Entity(EntityCommands commands) => commands.entity;
     
     public EntityCommands With<T1>(in T1 component1)
-        where T1 : struct
+        where T1 : struct, IEquatable<T1>
     {
         entity.Add(component1);
         return this;
     }
     public EntityCommands With<T1>()
-        where T1 : struct
+        where T1 : struct, IEquatable<T1>
     {
         entity.Add(default(T1));
         return this;

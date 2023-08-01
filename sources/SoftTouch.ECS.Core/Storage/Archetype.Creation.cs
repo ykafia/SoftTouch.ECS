@@ -17,7 +17,7 @@ public partial class Archetype
             int entity,
             in T1 component1
         )
-        where T1 : struct
+        where T1 : struct, IEquatable<T1>
     {
         return new Archetype
         {
@@ -25,7 +25,7 @@ public partial class Archetype
             World = world,
             Storage = new()
             {
-                { typeof(T1), new ComponentList<T1>{component1} },
+                { typeof(T1), new ComponentArray<T1>().With(component1)}
             },
             EntityLookup = new(new(){ { new EntityId(entity), 0} })
             
@@ -39,8 +39,8 @@ public partial class Archetype
             in T1 component1,
             in T2 component2
         )
-        where T1 : struct
-        where T2 : struct
+        where T1 : struct, IEquatable<T1>
+        where T2 : struct, IEquatable<T2>
     {
         return new Archetype
         {
@@ -48,8 +48,8 @@ public partial class Archetype
             World = world,
             Storage = new()
             {
-                { typeof(T1), new ComponentList<T1>{component1} },
-                { typeof(T2), new ComponentList<T2>{component2} },
+                { typeof(T1), new ComponentArray<T1>().With(component1)},
+                { typeof(T2), new ComponentArray<T2>().With(component2)},
             },
             EntityLookup = new(new(){ { new EntityId(entity), 0} })
 
@@ -65,9 +65,9 @@ public partial class Archetype
             in T2 component2,
             in T3 component3
         )
-        where T1 : struct
-        where T2 : struct
-        where T3 : struct
+        where T1 : struct, IEquatable<T1>
+        where T2 : struct, IEquatable<T2>
+        where T3 : struct, IEquatable<T3>
     {
         return new Archetype
         {
@@ -75,9 +75,9 @@ public partial class Archetype
             World = world,
             Storage = new()
             {
-                { typeof(T1), new ComponentList<T1>{component1} },
-                { typeof(T2), new ComponentList<T2>{component2} },
-                { typeof(T3), new ComponentList<T3>{component3} },
+                { typeof(T1), new ComponentArray<T1>().With(component1) },
+                { typeof(T2), new ComponentArray<T2>().With(component2) },
+                { typeof(T3), new ComponentArray<T3>().With(component3) },
             },
             EntityLookup = new(new(){ { new EntityId(entity), 0} })
 
@@ -93,10 +93,10 @@ public partial class Archetype
             in T3 component3,
             in T4 component4
         )
-        where T1 : struct
-        where T2 : struct
-        where T3 : struct
-        where T4 : struct
+        where T1 : struct, IEquatable<T1>
+        where T2 : struct, IEquatable<T2>
+        where T3 : struct, IEquatable<T3>
+        where T4 : struct, IEquatable<T4>
     {
         return new Archetype
         {
@@ -104,10 +104,10 @@ public partial class Archetype
             World = world,
             Storage = new()
             {
-                { typeof(T1), new ComponentList<T1>{component1} },
-                { typeof(T2), new ComponentList<T2>{component2} },
-                { typeof(T3), new ComponentList<T3>{component3} },
-                { typeof(T4), new ComponentList<T4>{component4} },
+                { typeof(T1), new ComponentArray<T1>().With(component1) },
+                { typeof(T2), new ComponentArray<T2>().With(component2) },
+                { typeof(T3), new ComponentArray<T3>().With(component3) },
+                { typeof(T4), new ComponentArray<T4>().With(component4) },
             },
             EntityLookup = new(new(){ { new EntityId(entity), 0} })
 
@@ -124,11 +124,11 @@ public partial class Archetype
             in T4 component4,
             in T5 component5
         )
-        where T1 : struct
-        where T2 : struct
-        where T3 : struct
-        where T4 : struct
-        where T5 : struct
+        where T1 : struct, IEquatable<T1>
+        where T2 : struct, IEquatable<T2>
+        where T3 : struct, IEquatable<T3>
+        where T4 : struct, IEquatable<T4>
+        where T5 : struct, IEquatable<T5>
     {
         return new Archetype
         {
@@ -136,11 +136,11 @@ public partial class Archetype
             World = world,
             Storage = new()
             {
-                { typeof(T1), new ComponentList<T1>{component1} },
-                { typeof(T2), new ComponentList<T2>{component2} },
-                { typeof(T3), new ComponentList<T3>{component3} },
-                { typeof(T4), new ComponentList<T4>{component4} },
-                { typeof(T5), new ComponentList<T5>{component5} },
+                { typeof(T1), new ComponentArray<T1>().With(component1) },
+                { typeof(T2), new ComponentArray<T2>().With(component2) },
+                { typeof(T3), new ComponentArray<T3>().With(component3) },
+                { typeof(T4), new ComponentArray<T4>().With(component4) },
+                { typeof(T5), new ComponentArray<T5>().With(component5) },
             },
             EntityLookup = new(new(){ { new EntityId(entity), 0} })
 
@@ -158,12 +158,12 @@ public partial class Archetype
             in T5 component5,
             in T6 component6
         )
-        where T1 : struct
-        where T2 : struct
-        where T3 : struct
-        where T4 : struct
-        where T5 : struct
-        where T6 : struct
+        where T1 : struct, IEquatable<T1>
+        where T2 : struct, IEquatable<T2>
+        where T3 : struct, IEquatable<T3>
+        where T4 : struct, IEquatable<T4>
+        where T5 : struct, IEquatable<T5>
+        where T6 : struct, IEquatable<T6>
     {
         return new Archetype
         {
@@ -171,12 +171,12 @@ public partial class Archetype
             World = world,
             Storage = new()
             {
-                { typeof(T1), new ComponentList<T1>{component1} },
-                { typeof(T2), new ComponentList<T2>{component2} },
-                { typeof(T3), new ComponentList<T3>{component3} },
-                { typeof(T4), new ComponentList<T4>{component4} },
-                { typeof(T5), new ComponentList<T5>{component5} },
-                { typeof(T6), new ComponentList<T6>{component6} },
+                { typeof(T1), new ComponentArray<T1>().With(component1) },
+                { typeof(T2), new ComponentArray<T2>().With(component2) },
+                { typeof(T3), new ComponentArray<T3>().With(component3) },
+                { typeof(T4), new ComponentArray<T4>().With(component4) },
+                { typeof(T5), new ComponentArray<T5>().With(component5) },
+                { typeof(T6), new ComponentArray<T6>().With(component6) },
             },
             EntityLookup = new(new(){ { new EntityId(entity), 0} })
 
@@ -195,13 +195,13 @@ public partial class Archetype
             in T6 component6,
             in T7 component7
         )
-        where T1 : struct
-        where T2 : struct
-        where T3 : struct
-        where T4 : struct
-        where T5 : struct
-        where T6 : struct
-        where T7 : struct
+        where T1 : struct, IEquatable<T1>
+        where T2 : struct, IEquatable<T2>
+        where T3 : struct, IEquatable<T3>
+        where T4 : struct, IEquatable<T4>
+        where T5 : struct, IEquatable<T5>
+        where T6 : struct, IEquatable<T6>
+        where T7 : struct, IEquatable<T7>
     {
         return new Archetype
         {
@@ -209,13 +209,13 @@ public partial class Archetype
             World = world,
             Storage = new()
             {
-                { typeof(T1), new ComponentList<T1>{component1} },
-                { typeof(T2), new ComponentList<T2>{component2} },
-                { typeof(T3), new ComponentList<T3>{component3} },
-                { typeof(T4), new ComponentList<T4>{component4} },
-                { typeof(T5), new ComponentList<T5>{component5} },
-                { typeof(T6), new ComponentList<T6>{component6} },
-                { typeof(T7), new ComponentList<T7>{component7} },
+                { typeof(T1), new ComponentArray<T1>().With(component1) },
+                { typeof(T2), new ComponentArray<T2>().With(component2) },
+                { typeof(T3), new ComponentArray<T3>().With(component3) },
+                { typeof(T4), new ComponentArray<T4>().With(component4) },
+                { typeof(T5), new ComponentArray<T5>().With(component5) },
+                { typeof(T6), new ComponentArray<T6>().With(component6) },
+                { typeof(T7), new ComponentArray<T7>().With(component7) },
             },
             EntityLookup = new(new(){ { new EntityId(entity), 0} })
 

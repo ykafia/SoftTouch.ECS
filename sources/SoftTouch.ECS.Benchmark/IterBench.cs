@@ -66,7 +66,7 @@ namespace SoftTouch.ECS.Benchmark
             {
                 var x = 0;
                 // if(a.HasEntities)
-                //     a.GetComponentList<HealthComponent>()[0] = new(127,127);
+                //     a.GetComponentArray<HealthComponent>()[0] = new(127,127);
             }
         }
 
@@ -78,7 +78,7 @@ namespace SoftTouch.ECS.Benchmark
             {
                 var x = 0;
                 // if(a.HasEntities)
-                //     a.GetComponentList<HealthComponent>()[0] = new(128,128);
+                //     a.GetComponentArray<HealthComponent>()[0] = new(128,128);
             }
         }
 
@@ -90,7 +90,7 @@ namespace SoftTouch.ECS.Benchmark
             {
                 var x = 0;
                 // if(l[i].HasEntities)
-                //     l[i].GetComponentList<HealthComponent>()[0] = new(129,129);
+                //     l[i].GetComponentArray<HealthComponent>()[0] = new(129,129);
             }
         }
         

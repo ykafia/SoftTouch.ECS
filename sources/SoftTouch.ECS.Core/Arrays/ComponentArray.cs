@@ -123,7 +123,11 @@ public class ComponentArray<T> : ComponentArray
         return false;
     }
 
-    public override ComponentArray Create() => new ComponentArray<T>();
+    internal ComponentArray<T> With(T item)
+    {
+        Add(item);
+        return this;
+    }
 
-    
+    public override ComponentArray Create() => new ComponentArray<T>();
 }

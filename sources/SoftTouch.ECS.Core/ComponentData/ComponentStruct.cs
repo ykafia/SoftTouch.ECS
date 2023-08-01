@@ -3,7 +3,7 @@ using SoftTouch.ECS.Arrays;
 namespace SoftTouch.ECS.ComponentData
 {
     public class ComponentStruct<T> : ComponentBase 
-        where T : struct
+        where T : struct, IEquatable<T>
     {
         public T Value;
 
@@ -18,8 +18,8 @@ namespace SoftTouch.ECS.ComponentData
         }
         public override Type GetComponentType() => typeof(T);
 
-        public override ComponentList ToArray() => new ComponentList<T>(){Value};
-        public override ComponentList EmptyArray() => new ComponentList<T>();
+        public override ComponentArray ToArray() => new ComponentArray<T>().With(Value);
+        public override ComponentArray EmptyArray() => new ComponentArray<T>();
 
     }
 }

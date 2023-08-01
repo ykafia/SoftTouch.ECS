@@ -65,7 +65,7 @@ public class Res<T> : Query, IQuery<World>
 
 
 public class Query<T> : Query, IQuery<World>
-    where T : struct
+    where T : struct, IEquatable<T>
 {
     public Query()
     {
@@ -88,8 +88,8 @@ public class Query<T> : Query, IQuery<World>
 
 }
 public class Query<T1, T2> : Query, IQuery<World>
-    where T1 : struct
-    where T2 : struct
+    where T1 : struct, IEquatable<T1>
+    where T2 : struct, IEquatable<T2>
 {
     public Query()
     {
@@ -105,9 +105,9 @@ public class Query<T1, T2> : Query, IQuery<World>
     }
 }
 public class Query<T1, T2, T3> : Query, IQuery<World>
-    where T1 : struct
-    where T2 : struct
-    where T3 : struct
+    where T1 : struct, IEquatable<T1>
+    where T2 : struct, IEquatable<T2>
+    where T3 : struct, IEquatable<T3>
 {
     public QueryEnumerator<T1, T2, T3> GetEnumerator() => new(world);
 
@@ -120,10 +120,10 @@ public class Query<T1, T2, T3> : Query, IQuery<World>
     }
 }
 public class Query<T1, T2, T3, T4> : Query, IQuery<World>
-    where T1 : struct
-    where T2 : struct
-    where T3 : struct
-    where T4 : struct
+    where T1 : struct, IEquatable<T1>
+    where T2 : struct, IEquatable<T2>
+    where T3 : struct, IEquatable<T3>
+    where T4 : struct, IEquatable<T4>
 {
     public QueryEnumerator<T1, T2, T3, T4> GetEnumerator() => new(world);
 
@@ -136,11 +136,11 @@ public class Query<T1, T2, T3, T4> : Query, IQuery<World>
     }
 }
 public class Query<T1, T2, T3, T4, T5> : Query, IQuery<World>
-    where T1 : struct
-    where T2 : struct
-    where T3 : struct
-    where T4 : struct
-    where T5 : struct
+    where T1 : struct, IEquatable<T1>
+    where T2 : struct, IEquatable<T2>
+    where T3 : struct, IEquatable<T3>
+    where T4 : struct, IEquatable<T4>
+    where T5 : struct, IEquatable<T5>
 {
     public QueryEnumerator<T1, T2, T3, T4, T5> GetEnumerator() => new(world);
 
@@ -153,12 +153,12 @@ public class Query<T1, T2, T3, T4, T5> : Query, IQuery<World>
 
 }
 public class Query<T1, T2, T3, T4, T5, T6> : Query, IQuery<World>
-    where T1 : struct
-    where T2 : struct
-    where T3 : struct
-    where T4 : struct
-    where T5 : struct
-    where T6 : struct
+    where T1 : struct, IEquatable<T1>
+    where T2 : struct, IEquatable<T2>
+    where T3 : struct, IEquatable<T3>
+    where T4 : struct, IEquatable<T4>
+    where T5 : struct, IEquatable<T5>
+    where T6 : struct, IEquatable<T6>
 {
     public QueryEnumerator<T1, T2, T3, T4, T5, T6> GetEnumerator() => new(world);
 

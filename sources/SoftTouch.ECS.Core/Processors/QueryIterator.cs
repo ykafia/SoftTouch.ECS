@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace SoftTouch.ECS.Processors;
 
 public ref struct QueryEnumerator<T1>
-    where T1 : struct
+    where T1 : struct, IEquatable<T1>
 {
     World world;
     int archIdx;
@@ -58,8 +58,8 @@ public ref struct QueryEnumerator<T1>
 }
 
 public ref struct QueryEnumerator<T1, T2>
-    where T1 : struct
-    where T2 : struct
+    where T1 : struct, IEquatable<T1>
+    where T2 : struct, IEquatable<T2>
 {
     World world;
     int archIdx;
@@ -108,9 +108,9 @@ public ref struct QueryEnumerator<T1, T2>
 
 
 public ref struct QueryEnumerator<T1, T2, T3>
-    where T1 : struct
-    where T2 : struct
-    where T3 : struct
+    where T1 : struct, IEquatable<T1>
+    where T2 : struct, IEquatable<T2>
+    where T3 : struct, IEquatable<T3>
 {
     World world;
     int archIdx;
@@ -158,10 +158,10 @@ public ref struct QueryEnumerator<T1, T2, T3>
 }
 
 public ref struct QueryEnumerator<T1, T2, T3, T4>
-    where T1 : struct
-    where T2 : struct
-    where T3 : struct
-    where T4 : struct
+    where T1 : struct, IEquatable<T1>
+    where T2 : struct, IEquatable<T2>
+    where T3 : struct, IEquatable<T3>
+    where T4 : struct, IEquatable<T4>
 {
     World world;
     int archIdx;
@@ -208,11 +208,11 @@ public ref struct QueryEnumerator<T1, T2, T3, T4>
 
 }
 public ref struct QueryEnumerator<T1, T2, T3, T4, T5>
-    where T1 : struct
-    where T2 : struct
-    where T3 : struct
-    where T4 : struct
-    where T5 : struct
+    where T1 : struct, IEquatable<T1>
+    where T2 : struct, IEquatable<T2>
+    where T3 : struct, IEquatable<T3>
+    where T4 : struct, IEquatable<T4>
+    where T5 : struct, IEquatable<T5>
 {
     World world;
     int archIdx;
@@ -260,12 +260,12 @@ public ref struct QueryEnumerator<T1, T2, T3, T4, T5>
 }
 
 public ref struct QueryEnumerator<T1, T2, T3, T4, T5, T6>
-    where T1 : struct
-    where T2 : struct
-    where T3 : struct
-    where T4 : struct
-    where T5 : struct
-    where T6 : struct
+    where T1 : struct, IEquatable<T1>
+    where T2 : struct, IEquatable<T2>
+    where T3 : struct, IEquatable<T3>
+    where T4 : struct, IEquatable<T4>
+    where T5 : struct, IEquatable<T5>
+    where T6 : struct, IEquatable<T6>
 {
     World world;
     int archIdx;
@@ -313,13 +313,13 @@ public ref struct QueryEnumerator<T1, T2, T3, T4, T5, T6>
 }
 
 public ref struct QueryEnumerator<T1, T2, T3, T4, T5, T6, T7>
-    where T1 : struct
-    where T2 : struct
-    where T3 : struct
-    where T4 : struct
-    where T5 : struct
-    where T6 : struct
-    where T7 : struct
+    where T1 : struct, IEquatable<T1>
+    where T2 : struct, IEquatable<T2>
+    where T3 : struct, IEquatable<T3>
+    where T4 : struct, IEquatable<T4>
+    where T5 : struct, IEquatable<T5>
+    where T6 : struct, IEquatable<T6>
+    where T7 : struct, IEquatable<T7>
 {
     World world;
     int archIdx;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SoftTouch.ECS.Processors;
 
 public ref struct RefEntity<T1>
-    where T1 : struct
+    where T1 : struct, IEquatable<T1>
 {
     int id;
     World world;
@@ -18,10 +18,10 @@ public ref struct RefEntity<T1>
         this.world = world;
     }
 
-    public void Set<T>(in T component) where T : struct
+    public void Set<T>(in T component) where T : struct, IEquatable<T>
         => world[id].Set(in component);
 
-    public T Get<T>() where T : struct
+    public T Get<T>() where T : struct, IEquatable<T>
         => world[id].Get<T>();
 
     public void Deconstruct(out T1 comp1)
@@ -31,8 +31,8 @@ public ref struct RefEntity<T1>
 }
 
 public ref struct RefEntity<T1, T2>
-    where T1 : struct
-    where T2 : struct
+    where T1 : struct, IEquatable<T1>
+    where T2 : struct, IEquatable<T2>
 {
     int id;
     World world;
@@ -43,10 +43,10 @@ public ref struct RefEntity<T1, T2>
         this.world = world;
     }
 
-    public void Set<T>(in T component) where T : struct
+    public void Set<T>(in T component) where T : struct, IEquatable<T>
         => world[id].Set(in component);
 
-    public T Get<T>() where T : struct
+    public T Get<T>() where T : struct, IEquatable<T>
         => world[id].Get<T>();
 
     public void Deconstruct(
@@ -60,9 +60,9 @@ public ref struct RefEntity<T1, T2>
 }
 
 public ref struct RefEntity<T1, T2, T3>
-    where T1 : struct
-    where T2 : struct
-    where T3 : struct
+    where T1 : struct, IEquatable<T1>
+    where T2 : struct, IEquatable<T2>
+    where T3 : struct, IEquatable<T3>
 {
     int id;
     World world;
@@ -73,10 +73,10 @@ public ref struct RefEntity<T1, T2, T3>
         this.world = world;
     }
 
-    public void Set<T>(in T component) where T : struct
+    public void Set<T>(in T component) where T : struct, IEquatable<T>
         => world[id].Set(in component);
 
-    public T Get<T>() where T : struct
+    public T Get<T>() where T : struct, IEquatable<T>
         => world[id].Get<T>();
 
     public void Deconstruct(
@@ -92,10 +92,10 @@ public ref struct RefEntity<T1, T2, T3>
 }
 
 public ref struct RefEntity<T1, T2, T3, T4>
-    where T1 : struct
-    where T2 : struct
-    where T3 : struct
-    where T4 : struct
+    where T1 : struct, IEquatable<T1>
+    where T2 : struct, IEquatable<T2>
+    where T3 : struct, IEquatable<T3>
+    where T4 : struct, IEquatable<T4>
 {
     int id;
     World world;
@@ -106,10 +106,10 @@ public ref struct RefEntity<T1, T2, T3, T4>
         this.world = world;
     }
 
-    public void Set<T>(in T component) where T : struct
+    public void Set<T>(in T component) where T : struct, IEquatable<T>
         => world[id].Set(in component);
 
-    public T Get<T>() where T : struct
+    public T Get<T>() where T : struct, IEquatable<T>
         => world[id].Get<T>();
 
     public void Deconstruct(
@@ -127,11 +127,11 @@ public ref struct RefEntity<T1, T2, T3, T4>
 }
 
 public ref struct RefEntity<T1, T2, T3, T4, T5>
-    where T1 : struct
-    where T2 : struct
-    where T3 : struct
-    where T4 : struct
-    where T5 : struct
+    where T1 : struct, IEquatable<T1>
+    where T2 : struct, IEquatable<T2>
+    where T3 : struct, IEquatable<T3>
+    where T4 : struct, IEquatable<T4>
+    where T5 : struct, IEquatable<T5>
 {
     int id;
     World world;
@@ -142,10 +142,10 @@ public ref struct RefEntity<T1, T2, T3, T4, T5>
         this.world = world;
     }
 
-    public void Set<T>(in T component) where T : struct
+    public void Set<T>(in T component) where T : struct, IEquatable<T>
         => world[id].Set(in component);
 
-    public T Get<T>() where T : struct
+    public T Get<T>() where T : struct, IEquatable<T>
         => world[id].Get<T>();
 
     public void Deconstruct(
@@ -164,12 +164,12 @@ public ref struct RefEntity<T1, T2, T3, T4, T5>
     }
 }
 public ref struct RefEntity<T1, T2, T3, T4, T5, T6>
-    where T1 : struct
-    where T2 : struct
-    where T3 : struct
-    where T4 : struct
-    where T5 : struct
-    where T6 : struct
+    where T1 : struct, IEquatable<T1>
+    where T2 : struct, IEquatable<T2>
+    where T3 : struct, IEquatable<T3>
+    where T4 : struct, IEquatable<T4>
+    where T5 : struct, IEquatable<T5>
+    where T6 : struct, IEquatable<T6>
 {
     int id;
     World world;
@@ -180,10 +180,10 @@ public ref struct RefEntity<T1, T2, T3, T4, T5, T6>
         this.world = world;
     }
 
-    public void Set<T>(in T component) where T : struct
+    public void Set<T>(in T component) where T : struct, IEquatable<T>
         => world[id].Set(in component);
 
-    public T Get<T>() where T : struct
+    public T Get<T>() where T : struct, IEquatable<T>
         => world[id].Get<T>();
 
     public void Deconstruct(
@@ -204,13 +204,13 @@ public ref struct RefEntity<T1, T2, T3, T4, T5, T6>
     }
 }
 public ref struct RefEntity<T1, T2, T3, T4, T5, T6, T7>
-    where T1 : struct
-    where T2 : struct
-    where T3 : struct
-    where T4 : struct
-    where T5 : struct
-    where T6 : struct
-    where T7 : struct
+    where T1 : struct, IEquatable<T1>
+    where T2 : struct, IEquatable<T2>
+    where T3 : struct, IEquatable<T3>
+    where T4 : struct, IEquatable<T4>
+    where T5 : struct, IEquatable<T5>
+    where T6 : struct, IEquatable<T6>
+    where T7 : struct, IEquatable<T7>
 {
     int id;
     World world;
@@ -221,10 +221,10 @@ public ref struct RefEntity<T1, T2, T3, T4, T5, T6, T7>
         this.world = world;
     }
 
-    public void Set<T>(in T component) where T : struct
+    public void Set<T>(in T component) where T : struct, IEquatable<T>
         => world[id].Set(in component);
 
-    public T Get<T>() where T : struct
+    public T Get<T>() where T : struct, IEquatable<T>
         => world[id].Get<T>();
 
     public void Deconstruct(

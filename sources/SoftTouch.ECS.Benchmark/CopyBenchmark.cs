@@ -30,10 +30,10 @@ public class CopyBench
             return MemberwiseClone();
         }
     }
-    public ComponentList<HealthComponent> comps1 = new(Size);
+    public ComponentArray<HealthComponent> comps1 = new(Size);
     public List<Person> compo1 = new(Size);
 
-    public ComponentList<HealthComponent> comps2 = new(Size);
+    public ComponentArray<HealthComponent> comps2 = new(Size);
     public List<Person> compo2 = new(Size);
 
     static int Size = 10;

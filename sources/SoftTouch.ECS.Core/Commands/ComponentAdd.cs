@@ -2,7 +2,7 @@
 
 namespace SoftTouch.ECS;
 
-public class ComponentAdd<T> : ComponentUpdate where T : struct
+public class ComponentAdd<T> : ComponentUpdate where T : struct, IEquatable<T>
 {
     public T Value {get;set;}
 

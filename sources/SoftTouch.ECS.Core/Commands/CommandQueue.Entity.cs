@@ -21,7 +21,7 @@ public partial class WorldCommands : Queue<ComponentUpdate>
         return world.Entities[world.Entities.Count - 1];
     }
     public EntityCommands Spawn<T1>(in T1 component1)
-            where T1 : struct
+            where T1 : struct, IEquatable<T1>
     {
         var id = new ArchetypeID(typeof(T1));
         if (world.Archetypes.TryGetValue(id, out var arch))
@@ -42,8 +42,8 @@ public partial class WorldCommands : Queue<ComponentUpdate>
             in T1 component1,
             in T2 component2
         )
-        where T1 : struct
-        where T2 : struct
+        where T1 : struct, IEquatable<T1>
+        where T2 : struct, IEquatable<T2>
     {
         var id = new ArchetypeID(typeof(T1), typeof(T2));
         if (world.Archetypes.TryGetValue(id, out var arch))
@@ -65,9 +65,9 @@ public partial class WorldCommands : Queue<ComponentUpdate>
             in T2 component2,
             in T3 component3
         )
-        where T1 : struct
-        where T2 : struct
-        where T3 : struct
+        where T1 : struct, IEquatable<T1>
+        where T2 : struct, IEquatable<T2>
+        where T3 : struct, IEquatable<T3>
     {
         var id = new ArchetypeID(typeof(T1), typeof(T2), typeof(T3));
         if (world.Archetypes.TryGetValue(id, out var arch))
@@ -91,10 +91,10 @@ public partial class WorldCommands : Queue<ComponentUpdate>
             in T3 component3,
             in T4 component4
         )
-        where T1 : struct
-        where T2 : struct
-        where T3 : struct
-        where T4 : struct
+        where T1 : struct, IEquatable<T1>
+        where T2 : struct, IEquatable<T2>
+        where T3 : struct, IEquatable<T3>
+        where T4 : struct, IEquatable<T4>
     {
         var id = new ArchetypeID(typeof(T1), typeof(T2), typeof(T3), typeof(T4));
         if (world.Archetypes.TryGetValue(id, out var arch))
@@ -120,11 +120,11 @@ public partial class WorldCommands : Queue<ComponentUpdate>
             in T4 component4,
             in T5 component5
         )
-        where T1 : struct
-        where T2 : struct
-        where T3 : struct
-        where T4 : struct
-        where T5 : struct
+        where T1 : struct, IEquatable<T1>
+        where T2 : struct, IEquatable<T2>
+        where T3 : struct, IEquatable<T3>
+        where T4 : struct, IEquatable<T4>
+        where T5 : struct, IEquatable<T5>
     {
         var id = new ArchetypeID(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5));
         if (world.Archetypes.TryGetValue(id, out var arch))
@@ -152,12 +152,12 @@ public partial class WorldCommands : Queue<ComponentUpdate>
             in T5 component5,
             in T6 component6
         )
-        where T1 : struct
-        where T2 : struct
-        where T3 : struct
-        where T4 : struct
-        where T5 : struct
-        where T6 : struct
+        where T1 : struct, IEquatable<T1>
+        where T2 : struct, IEquatable<T2>
+        where T3 : struct, IEquatable<T3>
+        where T4 : struct, IEquatable<T4>
+        where T5 : struct, IEquatable<T5>
+        where T6 : struct, IEquatable<T6>
     {
         var id = new ArchetypeID(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6));
         if (world.Archetypes.TryGetValue(id, out var arch))
@@ -187,13 +187,13 @@ public partial class WorldCommands : Queue<ComponentUpdate>
             in T6 component6,
             in T7 component7
         )
-        where T1 : struct
-        where T2 : struct
-        where T3 : struct
-        where T4 : struct
-        where T5 : struct
-        where T6 : struct
-        where T7 : struct
+        where T1 : struct, IEquatable<T1>
+        where T2 : struct, IEquatable<T2>
+        where T3 : struct, IEquatable<T3>
+        where T4 : struct, IEquatable<T4>
+        where T5 : struct, IEquatable<T5>
+        where T6 : struct, IEquatable<T6>
+        where T7 : struct, IEquatable<T7>
     {
         var id = new ArchetypeID(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7));
         if (world.Archetypes.TryGetValue(id, out var arch))
@@ -216,59 +216,59 @@ public partial class WorldCommands : Queue<ComponentUpdate>
         return world.Entities[world.Entities.Count -1];
     }
     public EntityCommands Spawn<T1>()
-        where T1 : struct
+        where T1 : struct, IEquatable<T1>
     {
         return Spawn<T1>(default);
     }
     public EntityCommands Spawn<T1, T2>()
-        where T1 : struct
-        where T2 : struct
+        where T1 : struct, IEquatable<T1>
+        where T2 : struct, IEquatable<T2>
     {
         return Spawn<T1, T2>(default, default);
     }
     public EntityCommands Spawn<T1, T2, T3>()
-        where T1 : struct
-        where T2 : struct
-        where T3 : struct
+        where T1 : struct, IEquatable<T1>
+        where T2 : struct, IEquatable<T2>
+        where T3 : struct, IEquatable<T3>
     {
         return Spawn<T1, T2, T3>(default, default, default);
     }
     public EntityCommands Spawn<T1, T2, T3, T4>()
-        where T1 : struct
-        where T2 : struct
-        where T3 : struct
-        where T4 : struct
+        where T1 : struct, IEquatable<T1>
+        where T2 : struct, IEquatable<T2>
+        where T3 : struct, IEquatable<T3>
+        where T4 : struct, IEquatable<T4>
     {
         return Spawn<T1, T2, T3, T4>(default, default, default, default);
     }
     public EntityCommands Spawn<T1, T2, T3, T4, T5>()
-        where T1 : struct
-        where T2 : struct
-        where T3 : struct
-        where T4 : struct
-        where T5 : struct
+        where T1 : struct, IEquatable<T1>
+        where T2 : struct, IEquatable<T2>
+        where T3 : struct, IEquatable<T3>
+        where T4 : struct, IEquatable<T4>
+        where T5 : struct, IEquatable<T5>
     {
         return Spawn<T1, T2, T3, T4, T5>(default, default, default, default, default);
     }
 
     public EntityCommands Spawn<T1, T2, T3, T4, T5, T6>()
-        where T1 : struct
-        where T2 : struct
-        where T3 : struct
-        where T4 : struct
-        where T5 : struct
-        where T6 : struct
+        where T1 : struct, IEquatable<T1>
+        where T2 : struct, IEquatable<T2>
+        where T3 : struct, IEquatable<T3>
+        where T4 : struct, IEquatable<T4>
+        where T5 : struct, IEquatable<T5>
+        where T6 : struct, IEquatable<T6>
     {
         return Spawn<T1, T2, T3, T4, T5, T6>(default, default, default, default, default, default);
     }
     public EntityCommands Spawn<T1, T2, T3, T4, T5, T6, T7>()
-        where T1 : struct
-        where T2 : struct
-        where T3 : struct
-        where T4 : struct
-        where T5 : struct
-        where T6 : struct
-        where T7 : struct
+        where T1 : struct, IEquatable<T1>
+        where T2 : struct, IEquatable<T2>
+        where T3 : struct, IEquatable<T3>
+        where T4 : struct, IEquatable<T4>
+        where T5 : struct, IEquatable<T5>
+        where T6 : struct, IEquatable<T6>
+        where T7 : struct, IEquatable<T7>
     {
         return Spawn<T1, T2, T3, T4, T5, T6, T7>(default, default, default, default, default, default, default);
     }
