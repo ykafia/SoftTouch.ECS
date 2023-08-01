@@ -13,7 +13,7 @@ public partial class Archetype
     public static Archetype CreateEmpty(World w) => new(new List<ComponentBase>(), w);
 
     public World World { get; init; }
-    public Dictionary<Type, ComponentList> Storage = new();
+    public Dictionary<Type, ComponentArray> Storage = new();
     public EntityLookup EntityLookup { get; init; }
     public bool HasEntities => EntityLookup.Count > 0;
 
@@ -34,11 +34,11 @@ public partial class Archetype
         EntityLookup = new();
     }
 
-    public Archetype(IEnumerable<ComponentList> componentArrays, World w)
+    public Archetype(IEnumerable<ComponentArray> componentArrays, World w)
     {
         foreach (var ca in componentArrays)
         {
-            Storage[ca.ComponentType] = ca.New();
+            Storage[ca.ComponentType] = ca.Create();
         };
         ID = new ArchetypeID(componentArrays.Select(x => x.ComponentType).ToArray());
         World = w;
@@ -55,20 +55,20 @@ public partial class Archetype
     }
 
 
-    private Span<T> GetComponentSpan<T>() where T : struct
+    private Span<T> GetComponentSpan<T>() where T : struct, IEquatable<T>
     {
-        return ((ComponentList<T>)Storage[typeof(T)]).AsSpan();
+        return ((ComponentArray<T>)Storage[typeof(T)]).Span;
     }
-    internal ComponentList<T> GetComponentArray<T>() where T : struct
+    internal ComponentArray<T> GetComponentArray<T>() where T : struct, IEquatable<T>
     {
-        return (ComponentList<T>)Storage[typeof(T)];
+        return (ComponentArray<T>)Storage[typeof(T)];
     }
-    public void GetComponent<T>(int i, out T c) where T : struct
+    public void GetComponent<T>(int i, out T c) where T : struct, IEquatable<T>
     {
-        c = ((ComponentList<T>)Storage[typeof(T)])[i];
+        c = ((ComponentArray<T>)Storage[typeof(T)])[i];
     }
 
-    internal void SetEntityComponent<T>(in EntityId entity, in T component) where T : struct
+    internal void SetEntityComponent<T>(in EntityId entity, in T component) where T : struct, IEquatable<T>
     {
         lock (myLocker)
         {
@@ -90,15 +90,11 @@ public partial class Archetype
         if (EntityLookup.Count > 0)
             EntityLookup.Remove(idx);
     }
-    public ComponentList<T> GetComponentList<T>() where T : struct
-    {
-        return (ComponentList<T>)Storage[typeof(T)];
-    }
-    public void SetComponent<T>(int index, in T component) where T : struct
+    public void SetComponent<T>(int index, in T component) where T : struct, IEquatable<T>
     {
         lock (myLocker)
         {
-            GetComponentList<T>()[index] = component;
+            GetComponentArray<T>()[index] = component;
         }
     }
 

@@ -31,7 +31,7 @@ namespace SoftTouch.ECS
 
         
 
-        internal Archetype GenerateArchetype(ArchetypeID types, IEnumerable<ComponentList> components)
+        internal Archetype GenerateArchetype(ArchetypeID types, IEnumerable<ComponentArray> components)
         {
             if (!Archetypes.ContainsKey(types))
             {

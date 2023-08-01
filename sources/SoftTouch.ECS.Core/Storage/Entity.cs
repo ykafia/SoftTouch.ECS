@@ -32,25 +32,25 @@ public struct Entity
 
 
 
-    public void Set<T>(in T cmp) where T : struct
+    public void Set<T>(in T cmp) where T : struct, IEquatable<T>
         => Archetype.SetComponent(ArchetypeIndex,in cmp);
 
-    public T Get<T>() where T : struct
+    public T Get<T>() where T : struct, IEquatable<T>
         => Archetype.GetComponentArray<T>()[ArchetypeIndex];
 
     public bool Has<T>()
         => Archetype.Storage.ContainsKey(typeof(T));
 
-    public void Add<T>(in T c) where T : struct
+    public void Add<T>(in T c) where T : struct, IEquatable<T>
     {
         World.AddArchetypeUpdate(new ComponentAdd<T>(c, in this));
     }
-    public void Remove<T>() where T : struct
+    public void Remove<T>() where T : struct, IEquatable<T>
     {
         World.AddArchetypeUpdate(new ComponentRemove<T>(in this));
     }
 
-    internal void AddComponent<T>(in T c) where T : struct
+    internal void AddComponent<T>(in T c) where T : struct, IEquatable<T>
     {
         var arrays = Archetype.Storage;
 
@@ -59,7 +59,7 @@ public struct Entity
             // Add all components to new archetype
             foreach (var cmp in arrays)
             {
-                cmp.Value.TransferTo(newArch.Storage[cmp.Key], ArchetypeIndex);
+                cmp.Value.MoveTo(ArchetypeIndex, newArch.Storage[cmp.Key]);
             }
             // Add entity
             newArch.SetEntityComponent(in index, c);
@@ -73,11 +73,11 @@ public struct Entity
             var aid = new ArchetypeID(arrays.Keys.Append(typeof(T)).ToArray());
 
             var world = World;
-            var arch = world.GenerateArchetype(aid, arrays.Values.Append(new ComponentList<T>()));
+            var arch = world.GenerateArchetype(aid, arrays.Values.Append(new ComponentArray<T>()));
             arch.SetEntityComponent(in index, c);
 
             foreach (var (type, cmps) in arrays)
-                cmps.TransferTo(arch.Storage[type], ArchetypeIndex);
+                cmps.MoveTo(ArchetypeIndex, arch.Storage[type]);
 
             Archetype.RemoveEntity(Index);
             World.Entities[Index] = this with { Archetype = arch };
@@ -91,7 +91,7 @@ public struct Entity
         {
             // Add all components to new archetype
             foreach (var cmp in arrays.Where(x => x.Key != typeof(T)))
-                cmp.Value.TransferTo(newArch.Storage[cmp.Key], ArchetypeIndex);
+                cmp.Value.MoveTo(ArchetypeIndex, newArch.Storage[cmp.Key]);
             // Add entity
             newArch.AddEntity(Index);
             // Remove Entity from old
@@ -107,7 +107,7 @@ public struct Entity
             var arch = world.GenerateArchetype(aid, arrays.Where(c => c.Key != typeof(T)).Select(x => x.Value));
             arch.AddEntity(Index);
             foreach (var cmp in arrays.Where(x => x.Key != typeof(T)))
-                cmp.Value.TransferTo(arch.Storage[cmp.Key], ArchetypeIndex);
+                cmp.Value.MoveTo(ArchetypeIndex, arch.Storage[cmp.Key]);
             Archetype.RemoveEntity(Index);
             World.Entities[Index] = this with { Archetype = arch };
             world.BuildGraph();

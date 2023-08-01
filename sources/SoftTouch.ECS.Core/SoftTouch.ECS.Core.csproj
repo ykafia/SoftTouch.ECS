@@ -7,4 +7,8 @@
     <RootNamespace>SoftTouch.ECS</RootNamespace>
     <LangVersion>11</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.2.1" />
+  </ItemGroup>
 </Project>

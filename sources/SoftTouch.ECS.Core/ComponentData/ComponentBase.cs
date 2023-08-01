@@ -7,7 +7,7 @@ namespace SoftTouch.ECS.ComponentData
     {
         public abstract object Get();
         public abstract Type GetComponentType();
-        public abstract ComponentList ToArray();
-        public abstract ComponentList EmptyArray();
+        public abstract ComponentArray ToArray();
+        public abstract ComponentArray EmptyArray();
     }
 }
