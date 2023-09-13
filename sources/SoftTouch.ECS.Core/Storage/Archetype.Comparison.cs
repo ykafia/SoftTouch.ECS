@@ -132,4 +132,17 @@ public partial class Archetype
             && ID.Types.Contains(typeof(T6))
             && ID.Types.Contains(typeof(T7));
     }
+    public bool IsSupersetOf<T1, T2, T3, T4, T5, T6, T7, T8>()
+    {
+        return
+            ID.Count >= 6
+            && ID.Types.Contains(typeof(T1))
+            && ID.Types.Contains(typeof(T2))
+            && ID.Types.Contains(typeof(T3))
+            && ID.Types.Contains(typeof(T4))
+            && ID.Types.Contains(typeof(T5))
+            && ID.Types.Contains(typeof(T6))
+            && ID.Types.Contains(typeof(T7))
+            && ID.Types.Contains(typeof(T8));
+    }
 }

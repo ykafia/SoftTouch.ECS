@@ -12,7 +12,6 @@ public struct ArchetypeID : IComparable
     static int GetNext() => ++globalId;
 
     public readonly int Id;
-
     public readonly Type[] Types;
     public readonly Span<Type> Span => Types.AsSpan();
 
@@ -22,12 +21,6 @@ public struct ArchetypeID : IComparable
         Types = types;
         Id = GetNext();
     }
-    
-    // public ArchetypeID(IEnumerable<Type> types)
-    // {
-    //     Types = types.ToHashSet();
-    //     Id = GetNext();
-    // }
 
     public bool IsStrictSupersetOf(ArchetypeID other)
     {

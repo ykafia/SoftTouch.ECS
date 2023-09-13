@@ -168,3 +168,40 @@ public class Query<T1, T2, T3, T4, T5, T6> : Query, IQuery<World>
         return this;
     }
 }
+public class Query<T1, T2, T3, T4, T5, T6, T7> : Query, IQuery<World>
+    where T1 : struct, IEquatable<T1>
+    where T2 : struct, IEquatable<T2>
+    where T3 : struct, IEquatable<T3>
+    where T4 : struct, IEquatable<T4>
+    where T5 : struct, IEquatable<T5>
+    where T6 : struct, IEquatable<T6>
+    where T7 : struct, IEquatable<T7>
+{
+    public QueryEnumerator<T1, T2, T3, T4, T5, T6, T7> GetEnumerator() => new(world);
+
+    public override Query<T1, T2, T3, T4, T5, T6, T7> With(World w)
+    {
+        world = w;
+        ID = new ArchetypeID(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7));
+        return this;
+    }
+}
+public class Query<T1, T2, T3, T4, T5, T6, T7, T8> : Query, IQuery<World>
+    where T1 : struct, IEquatable<T1>
+    where T2 : struct, IEquatable<T2>
+    where T3 : struct, IEquatable<T3>
+    where T4 : struct, IEquatable<T4>
+    where T5 : struct, IEquatable<T5>
+    where T6 : struct, IEquatable<T6>
+    where T7 : struct, IEquatable<T7>
+    where T8 : struct, IEquatable<T8>
+{
+    public QueryEnumerator<T1, T2, T3, T4, T5, T6, T7, T8> GetEnumerator() => new(world);
+
+    public override Query<T1, T2, T3, T4, T5, T6, T7, T8> With(World w)
+    {
+        world = w;
+        ID = new ArchetypeID(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7));
+        return this;
+    }
+}

@@ -30,3 +30,9 @@ public class PlayerProcessor : Processor<Query<NameComponent, HealthComponent>>
         }
     }
 }
+
+
+public class AsyncProcessor : Processor<Query<int>>
+{
+    
+}
