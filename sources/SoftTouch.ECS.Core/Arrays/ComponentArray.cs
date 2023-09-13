@@ -48,6 +48,9 @@ public class ComponentArray<T> : ComponentArray
         Count = 0;
     }
 
+    public Span<T>.Enumerator GetEnumerator() => Span.GetEnumerator();
+
+
     void Expand(int size)
     {
         if (_owner.Length < Count + size)
@@ -147,4 +150,5 @@ public class ComponentArray<T> : ComponentArray
     }
 
     public override ComponentArray Create() => new ComponentArray<T>();
+
 }
