@@ -20,7 +20,7 @@ public class GenericsGenerator : ISourceGenerator
         foreach (var p in Permutations())
         {
         
-            code.WriteLine($"public partial struct Query<{string.Join(", ", p.Select(x => $"T{x}"))}>")
+            code.WriteLine($"public partial struct Entity<{string.Join(", ", p.Select(x => $"T{x}"))}>")
             .WriteLine($"{string.Join("\n",p.Select(x => $"where T{x} : struct, I{x}"))}")
             .OpenBlock()
             .CloseAllBlocks()
