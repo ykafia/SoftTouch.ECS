@@ -1,14 +1,34 @@
-namespace SoftTouch.ECS;
+using SoftTouch.ECS.NewProcessors;
+using System.Diagnostics.CodeAnalysis;
 
-public struct Schedule
+namespace SoftTouch.ECS.NewProcessors;
+
+public class Scheduler
 {
-    public string Label { get; set; } = "Default";
+    public World World { get; }
 
-    public Schedule(string label)
+    public SortedList<string, List<NewProcessor>> Schedules;
+    public SortedList<int, string> Order;
+
+    public Scheduler(World world)
     {
-        Label = label;
+        World = world;
+        Schedules = new();
+        Order = new();
     }
 
-    public static implicit operator string(Schedule s) => s.Label;
-    public static explicit operator Schedule(string s) => new Schedule(s);
+    public void Register<T>([NotNull] string schedule)
+        where T : NewProcessor, new()
+    {
+        if(Schedules.TryGetValue(schedule, out var list))
+        {
+            list.Add(NewProcessor.Create<T>(World));
+            Order.Add(Order.Count, schedule);
+        }
+        else
+        {
+            Schedules.Add(schedule, new());
+            Register<T>(schedule);
+        }
+    }
 }
