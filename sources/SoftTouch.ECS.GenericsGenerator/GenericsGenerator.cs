@@ -12,32 +12,26 @@ public class GenericsGenerator : ISourceGenerator
     }
     public void Execute(GeneratorExecutionContext context)
     {
+        
+        
+        // context.AddSource("Query.g.cs", code.ToString());
+    }
+
+    public static string GenerateValueTuplesComponents()
+    {
         var code = new CodeWriter();
         code.WriteLine("using CommunityToolkit.HighPerformance.Buffers;")
-                .WriteEmptyLines(2)
-                .WriteLine("namespace SoftTouch.ECS.Core.Queries;")
-                .WriteEmptyLines(3);
-        foreach (var p in Permutations())
-        {
+                        .WriteEmptyLines(2)
+                        .WriteLine("namespace SoftTouch.ECS.Core.Queries;")
+                        .WriteEmptyLines(3);
         
-            code.WriteLine($"public partial struct Entity<{string.Join(", ", p.Select(x => $"T{x}"))}>")
-            .WriteLine($"{string.Join("\n",p.Select(x => $"where T{x} : struct, I{x}"))}")
-            .OpenBlock()
-            .CloseAllBlocks()
-            .WriteEmptyLines(3);
-                
+        for(int i = 1; i < 17; i++)
+        {
+            // code.WriteLine("public struct")
         }
-        context.AddSource("Query.g.cs", code.ToString());
+        
+        return code.ToString();
+
     }
-
-
-    public static IEnumerable<string[]> Permutations()
-    {
-        yield return new[] { "With" };
-        yield return new[] { "WithAll" };
-        yield return new[] { "Without" };
-        yield return new[] { "With", "Without" };
-    }
-
 
 }

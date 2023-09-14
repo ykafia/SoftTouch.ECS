@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace SoftTouch.ECS;
 
-public interface IWithWorld<W>
-    where W : World
+public interface IWithWorld
 {
-    void WithWorld(W world);
+    void WithWorld(World world);
 }
 
-public interface IQuery<W> : IWithWorld<W>
-    where W : World
+public interface IQuery : IWithWorld
 {
     
 }

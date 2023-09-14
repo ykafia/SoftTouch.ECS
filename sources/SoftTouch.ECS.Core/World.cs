@@ -4,18 +4,12 @@ using SoftTouch.ECS.Storage;
 
 namespace SoftTouch.ECS
 {
-    public partial class World
+    public partial sealed class World
     {
         public WorldResources Resources = new();
         public List<Entity> Entities = new();
 
         public ArchetypeList Archetypes = new();
-        public List<Processor> StartupProcessors { get; set; } = new();
-        public ProcessorPool Processors { get; set; } = new();
-
-        public bool IsRunning { get; private set; }
-
-        public WorldCommands Commands { get; }
 
         public Entity this[int id]
         {
@@ -26,7 +20,6 @@ namespace SoftTouch.ECS
         {
             Archetypes.Add(new(), Archetype.CreateEmpty(this));
             Resources.Set(new WorldTimer());
-            Commands = new(this);
         }
 
         
@@ -81,24 +74,6 @@ namespace SoftTouch.ECS
                 if (Archetypes.Values[i].ID.IsSupersetOf(types.Span))
                     yield return Archetypes.Values[i];
             }
-        }
-
-
-        public void AddArchetypeUpdate(ComponentUpdate update)
-        {
-            Commands.Enqueue(update);
-        }
-
-        public void Start()
-        {
-            foreach (Processor pa in StartupProcessors)
-                pa.Update();
-            Commands.ExecuteUpdates();
-        }
-        public virtual void Update(bool parallel = true)
-        {
-            Processors.Execute(parallel);
-            Commands.ExecuteUpdates();
         }
     }
 }

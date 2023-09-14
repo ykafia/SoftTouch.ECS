@@ -17,7 +17,7 @@ namespace SoftTouch.ECS
 
     }
 
-    public class Processor<Q> : Processor, IProcessor<World,Q>
+    public class Processor<Q> : Processor, IProcessor<Q>
         where Q : Query, new()
     {
         protected Q Entities1 { get; private set; }
@@ -37,7 +37,7 @@ namespace SoftTouch.ECS
             Entities1 = (Q)new Q().With(World);
         }
     }
-    public class Processor<Q1, Q2> : Processor, IProcessor<World,Q1,Q2>
+    public class Processor<Q1, Q2> : Processor, IProcessor<Q1,Q2>
         where Q1 : Query, new()
         where Q2 : Query, new()
 
@@ -60,7 +60,7 @@ namespace SoftTouch.ECS
             Entities2 = (Q2)new Q2().With(World);
         }
     }
-    public class Processor<Q1, Q2, Q3> : Processor, IProcessor<World,Q1,Q2,Q3>
+    public class Processor<Q1, Q2, Q3> : Processor, IProcessor<Q1,Q2,Q3>
         where Q1 : Query, new()
         where Q2 : Query, new()
         where Q3 : Query, new()
@@ -87,7 +87,7 @@ namespace SoftTouch.ECS
             Entities3 = (Q3)new Q3().With(World);
         }
     }
-    public class Processor<Q1, Q2, Q3, Q4> : Processor, IProcessor<World,Q1,Q2,Q3,Q4>
+    public class Processor<Q1, Q2, Q3, Q4> : Processor, IProcessor<Q1,Q2,Q3,Q4>
         where Q1 : Query, new()
         where Q2 : Query, new()
         where Q3 : Query, new()
