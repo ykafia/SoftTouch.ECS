@@ -4,7 +4,7 @@ using SoftTouch.ECS.Storage;
 
 namespace SoftTouch.ECS
 {
-    public partial sealed class World
+    public sealed partial class World
     {
         public WorldResources Resources = new();
         public List<Entity> Entities = new();

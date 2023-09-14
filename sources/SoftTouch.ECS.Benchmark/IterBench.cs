@@ -23,36 +23,36 @@ namespace SoftTouch.ECS.Benchmark
 
         public IterBench()
         {
-            for (int i = 0; i < Size; i++)
-            {
-                W1.Commands.Spawn
-                    <HealthComponent>();
-                W1.Commands.Spawn
-                    <NameComponent,
-                    HealthComponent>();
-                W1.Commands.Spawn
-                    <NameComponent,
-                    HealthComponent,
-                    ModelComponent>();
-                W1.Commands.Spawn
-                    <int,
-                    HealthComponent,
-                    uint>();
-                W1.Commands.Spawn
-                    <int,
-                    HealthComponent>();
-                W1.Commands.Spawn
-                    <float,
-                    HealthComponent,
-                    uint>();
-                W1.Commands.Spawn
-                    <float,
-                    HealthComponent,
-                    double>();
-                W1.Commands.Spawn
-                    <float,
-                    HealthComponent>();
-            }
+            //for (int i = 0; i < Size; i++)
+            //{
+            //    W1.Commands.Spawn
+            //        <HealthComponent>();
+            //    W1.Commands.Spawn
+            //        <NameComponent,
+            //        HealthComponent>();
+            //    W1.Commands.Spawn
+            //        <NameComponent,
+            //        HealthComponent,
+            //        ModelComponent>();
+            //    W1.Commands.Spawn
+            //        <int,
+            //        HealthComponent,
+            //        uint>();
+            //    W1.Commands.Spawn
+            //        <int,
+            //        HealthComponent>();
+            //    W1.Commands.Spawn
+            //        <float,
+            //        HealthComponent,
+            //        uint>();
+            //    W1.Commands.Spawn
+            //        <float,
+            //        HealthComponent,
+            //        double>();
+            //    W1.Commands.Spawn
+            //        <float,
+            //        HealthComponent>();
+            //}
         }
         [Benchmark]
         public void DoNothing()
@@ -62,36 +62,36 @@ namespace SoftTouch.ECS.Benchmark
         [Benchmark]
         public void IterForeach()
         {
-            foreach(var a in W1.QueryArchetypes(aid))
-            {
-                var x = 0;
-                // if(a.HasEntities)
-                //     a.GetComponentArray<HealthComponent>()[0] = new(127,127);
-            }
+            //foreach(var a in W1.QueryArchetypes(aid))
+            //{
+            //    var x = 0;
+            //    // if(a.HasEntities)
+            //    //     a.GetComponentArray<HealthComponent>()[0] = new(127,127);
+            //}
         }
 
         [Benchmark]
         public void IterForEachToList()
         {
-            var l = W1.QueryArchetypes(aid).ToList();
-            foreach(Archetype a in l)
-            {
-                var x = 0;
-                // if(a.HasEntities)
-                //     a.GetComponentArray<HealthComponent>()[0] = new(128,128);
-            }
+            //var l = W1.QueryArchetypes(aid).ToList();
+            //foreach(Archetype a in l)
+            //{
+            //    var x = 0;
+            //    // if(a.HasEntities)
+            //    //     a.GetComponentArray<HealthComponent>()[0] = new(128,128);
+            //}
         }
 
         [Benchmark]
         public void IterForToList()
         {
-            var l = W1.QueryArchetypes(aid).ToList();
-            for(int i = 0; i < l.Count; i ++)
-            {
-                var x = 0;
-                // if(l[i].HasEntities)
-                //     l[i].GetComponentArray<HealthComponent>()[0] = new(129,129);
-            }
+            //var l = W1.QueryArchetypes(aid).ToList();
+            //for(int i = 0; i < l.Count; i ++)
+            //{
+            //    var x = 0;
+            //    // if(l[i].HasEntities)
+            //    //     l[i].GetComponentArray<HealthComponent>()[0] = new(129,129);
+            //}
         }
         
     }

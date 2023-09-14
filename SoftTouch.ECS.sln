@@ -1,31 +1,34 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30114.105
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34018.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sources", "sources", "{1F9F4560-CA0F-477A-B8F6-AA8072ADA27C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftTouch.ECS", "sources\SoftTouch.ECS\SoftTouch.ECS.csproj", "{34B323D4-5CDE-4761-B036-C726F824B95E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftTouch.ECS", "sources\SoftTouch.ECS\SoftTouch.ECS.csproj", "{34B323D4-5CDE-4761-B036-C726F824B95E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftTouch.ECS.Test", "sources\SoftTouch.ECS.Test\SoftTouch.ECS.Test.csproj", "{E446B83D-8E62-40D9-BCA9-DE8ADB0178BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftTouch.ECS.Test", "sources\SoftTouch.ECS.Test\SoftTouch.ECS.Test.csproj", "{E446B83D-8E62-40D9-BCA9-DE8ADB0178BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftTouch.ECS.Benchmark", "sources\SoftTouch.ECS.Benchmark\SoftTouch.ECS.Benchmark.csproj", "{D9A4C094-013A-4F90-9571-880FA33CC9E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftTouch.ECS.Benchmark", "sources\SoftTouch.ECS.Benchmark\SoftTouch.ECS.Benchmark.csproj", "{D9A4C094-013A-4F90-9571-880FA33CC9E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftTouch.ECS.Example", "sources\SoftTouch.ECS.Example\SoftTouch.ECS.Example.csproj", "{ED966F03-60B6-4288-964E-5BC029385AD3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftTouch.ECS.Example", "sources\SoftTouch.ECS.Example\SoftTouch.ECS.Example.csproj", "{ED966F03-60B6-4288-964E-5BC029385AD3}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SoftTouch.ECS.FSharp", "sources\SoftTouch.ECS.FSharp\SoftTouch.ECS.FSharp.fsproj", "{55E59DB3-A448-4A01-9FBE-57D786B78803}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "SoftTouch.ECS.FSharp", "sources\SoftTouch.ECS.FSharp\SoftTouch.ECS.FSharp.fsproj", "{55E59DB3-A448-4A01-9FBE-57D786B78803}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SoftTouch.ECS.FSharp.Example", "sources\SoftTouch.ECS.FSharp.Example\SoftTouch.ECS.FSharp.Example.fsproj", "{C631824B-B9B8-447F-9E5C-9E16A9584FFC}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "SoftTouch.ECS.FSharp.Example", "sources\SoftTouch.ECS.FSharp.Example\SoftTouch.ECS.FSharp.Example.fsproj", "{C631824B-B9B8-447F-9E5C-9E16A9584FFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftTouch.ECS.GenericsGenerator", "sources\SoftTouch.ECS.GenericsGenerator\SoftTouch.ECS.GenericsGenerator.csproj", "{C4CD75CB-6B5A-4AB9-859B-EF624E5F7D98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftTouch.ECS.GenericsGenerator", "sources\SoftTouch.ECS.GenericsGenerator\SoftTouch.ECS.GenericsGenerator.csproj", "{C4CD75CB-6B5A-4AB9-859B-EF624E5F7D98}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftTouch.ECS.Core", "sources\SoftTouch.ECS.Core\SoftTouch.ECS.Core.csproj", "{151DA28B-8048-4303-B878-F217E6210589}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftTouch.ECS.ProcessorGenerators", "sources\SoftTouch.ECS.ProcessorGenerators\SoftTouch.ECS.ProcessorGenerators.csproj", "{C13AAF00-C06D-4569-BE20-7FFF5FA63392}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftTouch.ECS.Shared", "sources\SoftTouch.ECS.Shared\SoftTouch.ECS.Shared.csproj", "{C86FE0C1-1420-48FE-92E0-583B075183E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{34B323D4-5CDE-4761-B036-C726F824B95E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -56,6 +59,21 @@ Global
 		{C4CD75CB-6B5A-4AB9-859B-EF624E5F7D98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4CD75CB-6B5A-4AB9-859B-EF624E5F7D98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4CD75CB-6B5A-4AB9-859B-EF624E5F7D98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{151DA28B-8048-4303-B878-F217E6210589}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{151DA28B-8048-4303-B878-F217E6210589}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{151DA28B-8048-4303-B878-F217E6210589}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{151DA28B-8048-4303-B878-F217E6210589}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C13AAF00-C06D-4569-BE20-7FFF5FA63392}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C13AAF00-C06D-4569-BE20-7FFF5FA63392}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C13AAF00-C06D-4569-BE20-7FFF5FA63392}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C13AAF00-C06D-4569-BE20-7FFF5FA63392}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C86FE0C1-1420-48FE-92E0-583B075183E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C86FE0C1-1420-48FE-92E0-583B075183E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C86FE0C1-1420-48FE-92E0-583B075183E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C86FE0C1-1420-48FE-92E0-583B075183E0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{34B323D4-5CDE-4761-B036-C726F824B95E} = {1F9F4560-CA0F-477A-B8F6-AA8072ADA27C}
@@ -65,5 +83,11 @@ Global
 		{55E59DB3-A448-4A01-9FBE-57D786B78803} = {1F9F4560-CA0F-477A-B8F6-AA8072ADA27C}
 		{C631824B-B9B8-447F-9E5C-9E16A9584FFC} = {1F9F4560-CA0F-477A-B8F6-AA8072ADA27C}
 		{C4CD75CB-6B5A-4AB9-859B-EF624E5F7D98} = {1F9F4560-CA0F-477A-B8F6-AA8072ADA27C}
+		{151DA28B-8048-4303-B878-F217E6210589} = {1F9F4560-CA0F-477A-B8F6-AA8072ADA27C}
+		{C13AAF00-C06D-4569-BE20-7FFF5FA63392} = {1F9F4560-CA0F-477A-B8F6-AA8072ADA27C}
+		{C86FE0C1-1420-48FE-92E0-583B075183E0} = {1F9F4560-CA0F-477A-B8F6-AA8072ADA27C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {088E9130-BBEB-434D-81F4-8939372421C1}
 	EndGlobalSection
 EndGlobal

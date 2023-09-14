@@ -17,19 +17,19 @@ namespace SoftTouch.ECS.Benchmark
         [Benchmark]
         public void CreateNewEntitiesSameArchetype()
         {
-            W1.Commands.Spawn(new NameComponent{Name = "Lola"});
+            //W1.Commands.Spawn(new NameComponent{Name = "Lola"});
         }
 
         [Benchmark]
         public void CreateNewEntitiesSameArchetype2()
         {
-            W2.Commands.Spawn(new NameComponent("Lola"),new HealthComponent());
+            //W2.Commands.Spawn(new NameComponent("Lola"),new HealthComponent());
         }
 
         [Benchmark]
         public void RemoveComponent()
         {
-            W2.Commands.Spawn(new NameComponent("Lola"), new HealthComponent());
+            //W2.Commands.Spawn(new NameComponent("Lola"), new HealthComponent());
             //W2[0].Remove<NameComponent>();
         }
         

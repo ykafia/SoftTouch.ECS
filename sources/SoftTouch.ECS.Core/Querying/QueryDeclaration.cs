@@ -1,7 +1,7 @@
 using CommunityToolkit.HighPerformance.Buffers;
 
 
-namespace SoftTouch.ECS.Core.Queries;
+namespace SoftTouch.ECS.Querying;
 
 public struct QueryDeclaration
 {

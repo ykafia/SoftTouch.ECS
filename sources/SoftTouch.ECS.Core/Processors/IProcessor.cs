@@ -1,16 +1,13 @@
 ﻿namespace SoftTouch.ECS;
 
+
 public interface IProcessor
+
 {
+    public World World { get; set; }
+    public void WithWorld(World world);
     public void Update();
-}
 
-
-public interface IProcessor : IProcessor
-
-{
-    public W World { get; set; }
-    public void WithWorld(W world);
 }
 public interface IProcessor<Q1> : IProcessor
     where Q1 : Query

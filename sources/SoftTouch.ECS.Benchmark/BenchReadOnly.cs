@@ -27,12 +27,12 @@ public class BenchReadOnly
         wqros = new();
         for (int i = 0; i < 100; i++)
         {
-            w.Commands.Spawn(new HealthComponent(i * 10, i * 11));
-            wro.Commands.Spawn(new ROHealthComponent(i * 10, i * 11));
-            wq.Commands.Spawn(new HealthComponent(i * 10, i * 11));
-            wqro.Commands.Spawn(new ROHealthComponent(i * 10, i * 11));
-            wqs.Commands.Spawn(new HealthComponent(i * 10, i * 11));
-            wqros.Commands.Spawn(new ROHealthComponent(i * 10, i * 11));
+            //w.Commands.Spawn(new HealthComponent(i * 10, i * 11));
+            //wro.Commands.Spawn(new ROHealthComponent(i * 10, i * 11));
+            //wq.Commands.Spawn(new HealthComponent(i * 10, i * 11));
+            //wqro.Commands.Spawn(new ROHealthComponent(i * 10, i * 11));
+            //wqs.Commands.Spawn(new HealthComponent(i * 10, i * 11));
+            //wqros.Commands.Spawn(new ROHealthComponent(i * 10, i * 11));
         }
         //w.AddProcessor<HealthProcessorE>();
         //wro.AddProcessor<HealthProcessorRO>();
@@ -46,42 +46,42 @@ public class BenchReadOnly
     [Benchmark]
     public void BenchEnumerable()
     {
-        for(int i = 0; i < 100; i++)
-            w.Update();
+        //for(int i = 0; i < 100; i++)
+        //    w.Update();
     }
 
     [Benchmark]
     public void BenchArchetype()
     {
-        for(int i = 0; i < 100; i++)
-            wq.Update();
+        //for(int i = 0; i < 100; i++)
+        //    wq.Update();
     }
 
     [Benchmark]
     public void BenchEnumerableRo()
     {
-        for(int i = 0; i < 100; i++)
-            wro.Update();
+        //for(int i = 0; i < 100; i++)
+        //    wro.Update();
     }
 
     [Benchmark]
     public void BenchArchetypeRo()
     {
-        for(int i = 0; i < 100; i++)
-            wqro.Update();
+        //for(int i = 0; i < 100; i++)
+        //    wqro.Update();
     }
     [Benchmark]
     public void BenchArchetypeSpan()
     {
-        for(int i = 0; i < 100; i++)
-            wqs.Update();
+        //for(int i = 0; i < 100; i++)
+        //    wqs.Update();
     }
 
     [Benchmark]
     public void BenchArchetypeRoSpan()
     {
-        for(int i = 0; i < 100; i++)
-            wqros.Update();
+        //for(int i = 0; i < 100; i++)
+        //    wqros.Update();
     }
 
 }

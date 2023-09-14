@@ -79,6 +79,10 @@ namespace SoftTouch.ECS.GenericsGenerator
         {
             for(int i = 0; i < indentation; i++)
                 CloseBlock();
+            if(indentation > 0)
+            {
+                CloseBlock();
+            }
             return this;
         }
 

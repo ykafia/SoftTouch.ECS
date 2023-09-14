@@ -7,11 +7,11 @@ using SoftTouch.ECS.Storage;
 
 namespace SoftTouch.ECS;
 
-public abstract class Query : IQuery<World>
+public abstract class Query : IQuery
 {
     protected World world;
     public ArchetypeID ID;
-    protected WorldCommands Commands => world.Commands;
+    //protected WorldCommands Commands => world.Commands;
 
     public virtual int Length
     {
@@ -45,7 +45,7 @@ public abstract class Query : IQuery<World>
 
 
 
-public class Res<T> : Query, IQuery<World>
+public class Res<T> : Query, IQuery
     where T : class
 {
     public Res()
@@ -64,7 +64,7 @@ public class Res<T> : Query, IQuery<World>
 
 
 
-public class Query<T> : Query, IQuery<World>
+public class Query<T> : Query, IQuery
     where T : struct, IEquatable<T>
 {
     public Query()
@@ -86,7 +86,7 @@ public class Query<T> : Query, IQuery<World>
 
 
 }
-public class Query<T1, T2> : Query, IQuery<World>
+public class Query<T1, T2> : Query, IQuery
     where T1 : struct, IEquatable<T1>
     where T2 : struct, IEquatable<T2>
 {
@@ -103,7 +103,7 @@ public class Query<T1, T2> : Query, IQuery<World>
         return this;
     }
 }
-public class Query<T1, T2, T3> : Query, IQuery<World>
+public class Query<T1, T2, T3> : Query, IQuery
     where T1 : struct, IEquatable<T1>
     where T2 : struct, IEquatable<T2>
     where T3 : struct, IEquatable<T3>
@@ -118,7 +118,7 @@ public class Query<T1, T2, T3> : Query, IQuery<World>
         return this;
     }
 }
-public class Query<T1, T2, T3, T4> : Query, IQuery<World>
+public class Query<T1, T2, T3, T4> : Query, IQuery
     where T1 : struct, IEquatable<T1>
     where T2 : struct, IEquatable<T2>
     where T3 : struct, IEquatable<T3>
@@ -134,7 +134,7 @@ public class Query<T1, T2, T3, T4> : Query, IQuery<World>
         return this;
     }
 }
-public class Query<T1, T2, T3, T4, T5> : Query, IQuery<World>
+public class Query<T1, T2, T3, T4, T5> : Query, IQuery
     where T1 : struct, IEquatable<T1>
     where T2 : struct, IEquatable<T2>
     where T3 : struct, IEquatable<T3>
@@ -151,7 +151,7 @@ public class Query<T1, T2, T3, T4, T5> : Query, IQuery<World>
     }
 
 }
-public class Query<T1, T2, T3, T4, T5, T6> : Query, IQuery<World>
+public class Query<T1, T2, T3, T4, T5, T6> : Query, IQuery
     where T1 : struct, IEquatable<T1>
     where T2 : struct, IEquatable<T2>
     where T3 : struct, IEquatable<T3>
@@ -168,7 +168,7 @@ public class Query<T1, T2, T3, T4, T5, T6> : Query, IQuery<World>
         return this;
     }
 }
-public class Query<T1, T2, T3, T4, T5, T6, T7> : Query, IQuery<World>
+public class Query<T1, T2, T3, T4, T5, T6, T7> : Query, IQuery
     where T1 : struct, IEquatable<T1>
     where T2 : struct, IEquatable<T2>
     where T3 : struct, IEquatable<T3>
@@ -186,7 +186,7 @@ public class Query<T1, T2, T3, T4, T5, T6, T7> : Query, IQuery<World>
         return this;
     }
 }
-public class Query<T1, T2, T3, T4, T5, T6, T7, T8> : Query, IQuery<World>
+public class Query<T1, T2, T3, T4, T5, T6, T7, T8> : Query, IQuery
     where T1 : struct, IEquatable<T1>
     where T2 : struct, IEquatable<T2>
     where T3 : struct, IEquatable<T3>

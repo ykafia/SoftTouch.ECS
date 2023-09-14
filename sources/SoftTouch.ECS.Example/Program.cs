@@ -1,14 +1,26 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using SoftTouch.ECS.Arrays;
-using SoftTouch.ECS.Shared.Components;
-using SoftTouch.ECS.ComponentData;
-using SoftTouch.ECS;
-using SoftTouch.ECS.Example;
-using System.Collections.Generic;
-using System.Linq;
 
-var world = new World();
 
+using SoftTouch.ECS.Querying;
+
+
+
+//public 
+
+
+
+//using SoftTouch.ECS.Arrays;
+//using SoftTouch.ECS.Shared.Components;
+//using SoftTouch.ECS.ComponentData;
+//using SoftTouch.ECS;
+//using SoftTouch.ECS.Example;
+//using System.Collections.Generic;
+//using System.Linq;
+
+//var world = new World();
+
+
+//foreach()
 
 // world
 //     .CreateEntity()
@@ -28,16 +40,16 @@ var world = new World();
 // x.Add(new(typeof(HealthComponent)), "first");
 // x.Add(new(typeof(NameComponent)), "second");
 
-world.Commands.Spawn()
-    .With<HealthComponent>();
-world.Commands.Spawn(new NameComponent(){Name = "Martha"})
-    .With<HealthComponent>();
+//world.Commands.Spawn()
+//    .With<HealthComponent>();
+//world.Commands.Spawn(new NameComponent(){Name = "Martha"})
+//    .With<HealthComponent>();
 
-world.AddProcessor<PlayerProcessor>();
-world.Start();
-world.Update();
+//world.AddProcessor<PlayerProcessor>();
+//world.Start();
+//world.Update();
 
-Console.WriteLine(world[1].Get<NameComponent>().Name);
+//Console.WriteLine(world[1].Get<NameComponent>().Name);
 // world.CreateEntity()
 //     .With<NameComponent>()
 //     .With<HealthComponent>()
