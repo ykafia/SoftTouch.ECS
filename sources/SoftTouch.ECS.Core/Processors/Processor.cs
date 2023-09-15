@@ -1,120 +1,94 @@
-namespace SoftTouch.ECS
+﻿using SoftTouch.ECS.Querying;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SoftTouch.ECS.Processors;
+
+
+
+public abstract class Processor
 {
-    public abstract class Processor
+    public World World { get; set; }
+
+    public Processor()
     {
-        public Schedule Schedule { get; set; }
-        public World World { get; set; }
-        public Processor() { }
-
-
-        public virtual Processor With(World world)
-        {
-            World = world;
-            return this;
-        }
-
-        public virtual void Update() { }
-
+        World = null!;
     }
 
-    public class Processor<Q> : Processor, IProcessor<Q>
-        where Q : Query, new()
+    public Processor(World world)
     {
-        protected Q Entities1 { get; private set; }
-        
-        public Processor(){}
-
-        public override Processor With(World world)
-        {
-            World = world;
-            Entities1 = (Q)new Q().With(World);
-            return this;
-        }
-
-        public void WithWorld(World world)
-        {
-            World = world;
-            Entities1 = (Q)new Q().With(World);
-        }
+        World = world;
     }
-    public class Processor<Q1, Q2> : Processor, IProcessor<Q1,Q2>
-        where Q1 : Query, new()
-        where Q2 : Query, new()
+    public abstract void Update();
 
+    public static Processor Create<T>(World world)
+        where T : Processor, new()
     {
-        protected Q1 Entities1 {get;private set;}
-        protected Q2 Entities2 {get;private set;}
-
-        public override Processor With(World world)
-        {
-            World = world;
-            Entities1 = (Q1)new Q1().With(World);
-            Entities2 = (Q2)new Q2().With(World);
-            return this;
-        }
-
-        public void WithWorld(World world)
-        {
-            World = world;
-            Entities1 = (Q1)new Q1().With(World);
-            Entities2 = (Q2)new Q2().With(World);
-        }
+        return new T() { World = world };
     }
-    public class Processor<Q1, Q2, Q3> : Processor, IProcessor<Q1,Q2,Q3>
-        where Q1 : Query, new()
-        where Q2 : Query, new()
-        where Q3 : Query, new()
+}
 
+
+public abstract class Processor<Q> : Processor
+    where Q : struct, IWorldQuery
+{
+
+    public Q Query => new() { World = World };
+    protected Processor(World world) : base(world)
     {
-        protected Q1 Entities1 {get;private set;}
-        protected Q2 Entities2 {get;private set;}
-        protected Q3 Entities3 {get;private set;}
-
-        public override Processor With(World world)
-        {
-            World = world;
-            Entities1 = (Q1)new Q1().With(World);
-            Entities2 = (Q2)new Q2().With(World);
-            Entities3 = (Q3)new Q3().With(World);
-            return this;
-        }
-
-        public void WithWorld(World world)
-        {
-            World = world;
-            Entities1 = (Q1)new Q1().With(World);
-            Entities2 = (Q2)new Q2().With(World);
-            Entities3 = (Q3)new Q3().With(World);
-        }
     }
-    public class Processor<Q1, Q2, Q3, Q4> : Processor, IProcessor<Q1,Q2,Q3,Q4>
-        where Q1 : Query, new()
-        where Q2 : Query, new()
-        where Q3 : Query, new()
-        where Q4 : Query, new()
+}
+
+public abstract class Processor<Q1, Q2> : Processor
+    where Q1 : struct, IWorldQuery
+    where Q2 : struct, IWorldQuery
+{
+
+    public Q1 Query1 => new() { World = World };
+    public Q2 Query2 => new() { World = World };
+
+    protected Processor(World world) : base(world)
     {
-        protected Q1 Entities1 {get;private set;}
-        protected Q2 Entities2 {get;private set;}
-        protected Q3 Entities3 {get;private set;}
-        protected Q4 Entities4 {get;private set;}
-
-        public override Processor With(World world)
-        {
-            World = world;
-            Entities1 = (Q1)new Q1().With(World);
-            Entities2 = (Q2)new Q2().With(World);
-            Entities3 = (Q3)new Q3().With(World);
-            Entities4 = (Q4)new Q4().With(World);
-            return this;
-        }
-
-        public void WithWorld(World world)
-        {
-            World = world;
-            Entities1 = (Q1)new Q1().With(World);
-            Entities2 = (Q2)new Q2().With(World);
-            Entities3 = (Q3)new Q3().With(World);
-            Entities4 = (Q4)new Q4().With(World);
-        }
     }
+
+
+}
+
+public abstract class Processor<Q1, Q2, Q3> : Processor
+    where Q1 : struct, IWorldQuery
+    where Q2 : struct, IWorldQuery
+    where Q3 : struct, IWorldQuery
+{
+
+
+    public Q1 Query1 => new() { World = World };
+    public Q2 Query2 => new() { World = World };
+    public Q3 Query3 => new() { World = World };
+
+    protected Processor(World world) : base(world)
+    {
+    }
+}
+
+
+public abstract class Processor<Q1, Q2, Q3, Q4> : Processor
+    where Q1 : struct, IWorldQuery
+    where Q2 : struct, IWorldQuery
+    where Q3 : struct, IWorldQuery
+    where Q4 : struct, IWorldQuery
+{
+
+    public Q1 Query1 => new() { World = World };
+    public Q2 Query2 => new() { World = World };
+    public Q3 Query3 => new() { World = World };
+    public Q4 Query4 => new() { World = World };
+
+    protected Processor(World world) : base(world)
+    {
+    }
+
+
 }

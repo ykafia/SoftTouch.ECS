@@ -10,6 +10,9 @@ public interface IFilterQuery
 {
     public abstract static Type[] WithTypes { get; }
     public abstract static Type[] WithoutTypes { get; }
+
+    public Type[] ImplWithTypes { get; }
+    public Type[] ImplWithoutTypes { get; }
 }
 public interface IFilter
 {
@@ -39,6 +42,9 @@ public record Filter<T>() : IFilterQuery
 {
     public static Type[] WithTypes { get; } = T.WithTypes; 
     public static Type[] WithoutTypes { get; } = T.WithoutTypes;
+
+    public Type[] ImplWithTypes => WithTypes;
+    public Type[] ImplWithoutTypes => WithoutTypes;
 }
 
 public record Filter<THas, TWithout>() : IFilterQuery
@@ -47,6 +53,9 @@ public record Filter<THas, TWithout>() : IFilterQuery
 {
     public static Type[] WithTypes { get; } = THas.WithTypes;
     public static Type[] WithoutTypes { get; } = TWithout.WithoutTypes;
+
+    public Type[] ImplWithTypes => WithTypes;
+    public Type[] ImplWithoutTypes => WithoutTypes;
 }
 
 

@@ -20,6 +20,7 @@ namespace SoftTouch.ECS
         {
             Archetypes.Add(new(), Archetype.CreateEmpty(this));
             Resources.Set(new WorldTimer());
+            Resources.Set(new WorldCommands(this));
         }
 
         

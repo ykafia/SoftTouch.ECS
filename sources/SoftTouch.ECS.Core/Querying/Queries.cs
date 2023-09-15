@@ -4,22 +4,30 @@ using System.ComponentModel;
 
 namespace SoftTouch.ECS.Querying;
 
-
-public interface IWorldQuery 
+public interface IWorldQuery
 {
     public World World { get; set; }
-    public abstract static IReadComponent Read {get;}
-    public abstract static IMayReadComponent MayRead {get;}
-    public abstract static IWriteComponent Write {get;}
-    public abstract static IMayWriteComponent MayWrite { get; }
 }
 
-public interface IFilteredWorldQuery : IWorldQuery
+public interface IEntityQuery : IWorldQuery
+{
+    public abstract static IReadComponent Read { get; }
+    public abstract static IMayReadComponent MayRead { get; }
+    public abstract static IWriteComponent Write { get; }
+    public abstract static IMayWriteComponent MayWrite { get; }
+
+    public Type[] ImplRead { get; }
+    public Type[] ImplWrite { get; }
+    public Type[] ImplMayRead { get; }
+    public Type[] ImplMayWrite { get; }
+}
+
+public interface IFilteredEntityQuery : IEntityQuery
 {
     public abstract static IFilterQuery Filters { get; }
 }
 
-public record struct Query<TComp> : IWorldQuery
+public record struct Query<TComp> : IEntityQuery
     where TComp : IComponentQuery, new()
 {
 
@@ -40,9 +48,18 @@ public record struct Query<TComp> : IWorldQuery
     public static IMayReadComponent MayRead { get; }
     public static IWriteComponent Write { get; }
     public static IMayWriteComponent MayWrite { get; }
+
     public World World { get; set; }
+
+
+    public Type[] ImplRead => Read.ImplRead;
+    public Type[] ImplWrite => Write.ImplWrite;
+    public Type[] ImplMayRead => MayRead.ImplMayRead;
+    public Type[] ImplMayWrite => MayWrite.ImplMayWrite;
+
+    public WorldQueryEnumerator<Query<TComp>> GetEnumerator() => new(this);
 }
-public record struct FilteredQuery<TComp, TFilter> : IFilteredWorldQuery
+public record struct FilteredQuery<TComp, TFilter> : IFilteredEntityQuery
     where TComp : IComponentQuery, new()
     where TFilter : IFilterQuery, new()
 {
@@ -65,6 +82,12 @@ public record struct FilteredQuery<TComp, TFilter> : IFilteredWorldQuery
     public static IWriteComponent Write { get; }
     public static IMayWriteComponent MayWrite { get; }
     public static IFilterQuery Filters { get; }
+
     public World World { get; set; }
+
+    public Type[] ImplRead => Read.ImplRead;
+    public Type[] ImplWrite => Write.ImplWrite;
+    public Type[] ImplMayRead => MayRead.ImplMayRead;
+    public Type[] ImplMayWrite => MayWrite.ImplMayWrite;
 }
 

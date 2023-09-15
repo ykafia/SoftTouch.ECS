@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using SoftTouch.ECS.Generators.Shared;
 using System.ComponentModel;
 
 
@@ -40,6 +41,10 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine($"public static Type[] TypesWrite {{ get; }} = Array.Empty<Type>();")
                 .WriteLine($"public static Type[] TypesMayRead {{ get; }} = Array.Empty<Type>();")
                 .WriteLine($"public static Type[] TypesMayWrite {{ get; }} = Array.Empty<Type>();")
+                .WriteLine("public Type[] ImplRead => TypesRead;")
+                .WriteLine("public Type[] ImplWrite => TypesWrite;")
+                .WriteLine("public Type[] ImplMayRead => TypesMayRead;")
+                .WriteLine("public Type[] ImplMayWrite => TypesMayWrite;")
                 .CloseAllBlocks();
 
             code.WriteEmptyLines(3);
@@ -52,6 +57,10 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine($"public static Type[] TypesWrite {{ get; }} = {{ {string.Join(", ", generics.Select(x => $"typeof({x})"))} }};")
                 .WriteLine($"public static Type[] TypesMayRead {{ get; }} = Array.Empty<Type>();")
                 .WriteLine($"public static Type[] TypesMayWrite {{ get; }} = Array.Empty<Type>();")
+                .WriteLine("public Type[] ImplRead => TypesRead;")
+                .WriteLine("public Type[] ImplWrite => TypesWrite;")
+                .WriteLine("public Type[] ImplMayRead => TypesMayRead;")
+                .WriteLine("public Type[] ImplMayWrite => TypesMayWrite;")
                 .CloseAllBlocks();
 
             code.WriteEmptyLines(3);
@@ -64,6 +73,10 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine($"public static Type[] TypesWrite {{ get; }} = Array.Empty<Type>();")
                 .WriteLine($"public static Type[] TypesMayRead {{ get; }} = {{ {string.Join(", ", generics.Select(x => $"typeof({x})"))} }};")
                 .WriteLine($"public static Type[] TypesMayWrite {{ get; }} = Array.Empty<Type>();")
+                .WriteLine("public Type[] ImplRead => TypesRead;")
+                .WriteLine("public Type[] ImplWrite => TypesWrite;")
+                .WriteLine("public Type[] ImplMayRead => TypesMayRead;")
+                .WriteLine("public Type[] ImplMayWrite => TypesMayWrite;")
                 .CloseAllBlocks();
 
             code.WriteEmptyLines(3);
@@ -76,6 +89,10 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine($"public static Type[] TypesWrite {{ get; }} = Array.Empty<Type>();")
                 .WriteLine($"public static Type[] TypesMayRead {{ get; }} = Array.Empty<Type>();")
                 .WriteLine($"public static Type[] TypesMayWrite {{ get; }} = {{ {string.Join(", ", generics.Select(x => $"typeof({x})"))} }};")
+                .WriteLine("public Type[] ImplRead => TypesRead;")
+                .WriteLine("public Type[] ImplWrite => TypesWrite;")
+                .WriteLine("public Type[] ImplMayRead => TypesMayRead;")
+                .WriteLine("public Type[] ImplMayWrite => TypesMayWrite;")
                 .CloseAllBlocks();
         }
 
@@ -95,13 +112,19 @@ public class GenericsGenerator : ISourceGenerator
 
             var generics = Enumerable.Range(1, i).Select(x => "TComp" + x);
             code
-                .WriteLine($"public record struct Query<{string.Join(", ", generics)}>() : IWorldQuery")
+                .WriteLine($"public record struct Query<{string.Join(", ", generics)}>() : IEntityQuery")
                 .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : IComponentQuery, new()")))
                 .OpenBlock()
                 .WriteLine("public static IReadComponent Read { get; }")
                 .WriteLine("public static IMayReadComponent MayRead { get; }")
                 .WriteLine("public static IWriteComponent Write { get; }")
                 .WriteLine("public static IMayWriteComponent MayWrite { get; }")
+                .WriteLine("public World World { get; set; }")
+                .WriteLine("public Type[] ImplRead => Read.ImplRead;")
+                .WriteLine("public Type[] ImplWrite => Write.ImplWrite;")
+                .WriteLine("public Type[] ImplMayRead => MayRead.ImplMayRead;")
+                .WriteLine("public Type[] ImplMayWrite => MayWrite.ImplMayWrite;")
+                .WriteLine($"public WorldQueryEnumerator<Query<{string.Join(", ", generics)}>> GetEnumerator() => new(this);")
                 .WriteEmptyLines(2)
                 .WriteLine("static Query()")
                 .OpenBlock();
@@ -124,7 +147,7 @@ public class GenericsGenerator : ISourceGenerator
             code.WriteEmptyLines(3);
 
             code
-                .WriteLine($"public record struct FilteredQuery<{string.Join(", ", generics)}, TFilter>() : IFilteredWorldQuery")
+                .WriteLine($"public record struct FilteredQuery<{string.Join(", ", generics)}, TFilter>() : IFilteredEntityQuery")
                 .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : IComponentQuery, new()")))
                 .WriteLine("    where TFilter : IFilterQuery, new()")
                 .OpenBlock()
@@ -133,6 +156,12 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine("public static IWriteComponent Write { get; }")
                 .WriteLine("public static IMayWriteComponent MayWrite { get; }")
                 .WriteLine("public static IFilterQuery Filters { get; }")
+                .WriteLine("public World World { get; set; }")
+                .WriteLine("public Type[] ImplRead => Read.ImplRead;")
+                .WriteLine("public Type[] ImplWrite => Write.ImplWrite;")
+                .WriteLine("public Type[] ImplMayRead => MayRead.ImplMayRead;")
+                .WriteLine("public Type[] ImplMayWrite => MayWrite.ImplMayWrite;")
+                .WriteLine($"public WorldFilteredQueryEnumerator<FilteredQuery<{string.Join(", ", generics)}, TFilter>> GetEnumerator() => new(this);")
                 .WriteEmptyLines(2)
                 .WriteLine("static FilteredQuery()")
                 .OpenBlock();
@@ -176,6 +205,8 @@ public class GenericsGenerator : ISourceGenerator
                 .OpenBlock()
                 .WriteLine($"public static Type[] WithTypes {{ get; }} = {{ {string.Join(", ", generics.Select(x => $"typeof({x})"))} }};")
                 .WriteLine($"public static Type[] WithoutTypes {{ get; }} =  Array.Empty<Type>();")
+                .WriteLine("public Type[] ImplWithTypes => WithTypes;")
+                .WriteLine("public Type[] ImplWithoutTypes => WithoutTypes;")
                 .CloseAllBlocks();
 
             code.WriteEmptyLines(3);
@@ -186,6 +217,8 @@ public class GenericsGenerator : ISourceGenerator
                 .OpenBlock()
                 .WriteLine($"public static Type[] WithoutTypes {{ get; }} = {{ {string.Join(", ", generics.Select(x => $"typeof({x})"))} }};")
                 .WriteLine($"public static Type[] WithTypes {{ get; }} = Array.Empty<Type>();")
+                .WriteLine("public Type[] ImplWithTypes => WithTypes;")
+                .WriteLine("public Type[] ImplWithoutTypes => WithoutTypes;")
                 .CloseAllBlocks();
         }
 

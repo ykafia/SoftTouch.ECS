@@ -43,11 +43,11 @@ public struct Entity
 
     public void Add<T>(in T c) where T : struct, IEquatable<T>
     {
-        //World.AddArchetypeUpdate(new ComponentAdd<T>(c, in this));
+        World.AddArchetypeUpdate(new ComponentAdd<T>(c, in this));
     }
     public void Remove<T>() where T : struct, IEquatable<T>
     {
-        //World.AddArchetypeUpdate(new ComponentRemove<T>(in this));
+        World.AddArchetypeUpdate(new ComponentRemove<T>(in this));
     }
 
     internal void AddComponent<T>(in T c) where T : struct, IEquatable<T>

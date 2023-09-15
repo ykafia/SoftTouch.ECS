@@ -1,38 +1,54 @@
 // See https://aka.ms/new-console-template for more information
 using SoftTouch.ECS.Shared.Components;
 using SoftTouch.ECS;
+using SoftTouch.ECS.Processors;
+using SoftTouch.ECS.Querying;
 
 namespace SoftTouch.ECS.Example;
 
-public class HealthProcessor : Processor<Query<HealthComponent>>
+public class HealthProcessor : Processor<Query<Read<HealthComponent>>>
 {
     Random rand = new Random();
 
+    public HealthProcessor(World world) : base(world)
+    {
+    }
+
     public override void Update()
     {
-        foreach(var e in Entities1)
+        foreach(var e in Query)
         {
             // Do something;
         }
     }
 }
 
-public class PlayerProcessor : Processor<Query<NameComponent, HealthComponent>>
+//public class PlayerProcessor : Processor<Query<Write<NameComponent, HealthComponent>>>
+//{
+//    Random rand = new Random();
+
+//    public PlayerProcessor(World world) : base(world)
+//    {
+//    }
+
+//    public override void Update()
+//    {
+//        foreach(var e in Query)
+//        {
+//            e.Set<NameComponent>("Bobby Kane");
+//        }
+//    }
+//}
+
+
+public class AsyncProcessor : Processor<Query<Read<int>>>
 {
-    Random rand = new Random();
+    public AsyncProcessor(World world) : base(world)
+    {
+    }
 
     public override void Update()
     {
-        foreach(var e in Entities1)
-        {
-            var (name, health) = e;
-            name.Name = "Bob Kane";
-        }
+        throw new NotImplementedException();
     }
-}
-
-
-public class AsyncProcessor : Processor<Query<int>>
-{
-    
 }

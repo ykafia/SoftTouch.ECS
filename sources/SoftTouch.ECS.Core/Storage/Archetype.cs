@@ -65,7 +65,7 @@ public partial class Archetype
     }
     public void GetComponent<T>(int i, out T c) where T : struct, IEquatable<T>
     {
-        c = ((ComponentArray<T>)Storage[typeof(T)])[i];
+        c = GetComponentArray<T>()[i];
     }
 
     internal void SetEntityComponent<T>(in EntityId entity, in T component) where T : struct, IEquatable<T>

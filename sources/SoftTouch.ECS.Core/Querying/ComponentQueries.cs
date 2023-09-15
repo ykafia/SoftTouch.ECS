@@ -12,6 +12,11 @@ public interface IComponentQuery
     public static abstract Type[] TypesWrite { get; }
     public static abstract Type[] TypesMayRead { get; }
     public static abstract Type[] TypesMayWrite { get; }
+
+    public Type[] ImplRead { get; }
+    public Type[] ImplWrite { get; }
+    public Type[] ImplMayRead { get; }
+    public Type[] ImplMayWrite { get; }
 }
 public interface IReadComponent : IComponentQuery { }
 public interface IMayReadComponent : IReadComponent { }
@@ -26,6 +31,11 @@ public record Read<T>() : IReadComponent
     public static Type[] TypesWrite { get; } = Array.Empty<Type>();
     public static Type[] TypesMayRead { get; } = Array.Empty<Type>();
     public static Type[] TypesMayWrite { get; } = Array.Empty<Type>();
+
+    public Type[] ImplRead => TypesRead;
+    public Type[] ImplWrite => TypesWrite;
+    public Type[] ImplMayRead => TypesMayRead;
+    public Type[] ImplMayWrite => TypesMayWrite;
 }
 
 public record MayRead<T>() : IMayReadComponent
@@ -35,6 +45,11 @@ public record MayRead<T>() : IMayReadComponent
     public static Type[] TypesWrite { get; } = Array.Empty<Type>();
     public static Type[] TypesMayRead { get; } = { typeof(T) };
     public static Type[] TypesMayWrite { get; } = Array.Empty<Type>();
+
+    public Type[] ImplRead => TypesRead;
+    public Type[] ImplWrite => TypesWrite;
+    public Type[] ImplMayRead => TypesMayRead;
+    public Type[] ImplMayWrite => TypesMayWrite;
 }
 
 
@@ -46,6 +61,11 @@ public record Write<T>() : IWriteComponent
     public static Type[] TypesWrite { get; } = { typeof(T) };
     public static Type[] TypesMayRead { get; } = Array.Empty<Type>();
     public static Type[] TypesMayWrite { get; } = Array.Empty<Type>();
+
+    public Type[] ImplRead => TypesRead;
+    public Type[] ImplWrite => TypesWrite;
+    public Type[] ImplMayRead => TypesMayRead;
+    public Type[] ImplMayWrite => TypesMayWrite;
 }
 
 public record MayWrite<T>() : IMayWriteComponent
@@ -55,13 +75,9 @@ public record MayWrite<T>() : IMayWriteComponent
     public static Type[] TypesWrite { get; } = Array.Empty<Type>();
     public static Type[] TypesMayRead { get; } = Array.Empty<Type>();
     public static Type[] TypesMayWrite { get; } = { typeof(T) };
-}
 
-
-public struct Something
-{
-    public static void Hello()
-    {
-        var q = new FilteredQuery<Read<int>, Write<float>, Filter<Without<long>>>();
-    }
+    public Type[] ImplRead => TypesRead;
+    public Type[] ImplWrite => TypesWrite;
+    public Type[] ImplMayRead => TypesMayRead;
+    public Type[] ImplMayWrite => TypesMayWrite;
 }

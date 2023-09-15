@@ -1,10 +1,15 @@
+using SoftTouch.ECS.Processors;
+using SoftTouch.ECS.Querying;
 using SoftTouch.ECS.Shared.Components;
 using System.Linq;
 
 namespace SoftTouch.ECS.Shared.Processors
 {
-    public class HealthProcessor : Processor<Query<HealthComponent>>
+    public class HealthProcessor : Processor<Query<Read<HealthComponent>>>
     {
+        public HealthProcessor(World world) : base(world)
+        {
+        }
 
         public override void Update()
         {
@@ -15,8 +20,11 @@ namespace SoftTouch.ECS.Shared.Processors
             // }
         }
     }
-    public class HealthProcessorE : Processor<Query<HealthComponent>>
+    public class HealthProcessorE : Processor<Query<Read<HealthComponent>>>
     {
+        public HealthProcessorE(World world) : base(world)
+        {
+        }
 
         public override void Update()
         {
@@ -27,8 +35,12 @@ namespace SoftTouch.ECS.Shared.Processors
             // }
         }
     }
-    public class HealthProcessorQ : Processor<Query<HealthComponent>>
+    public class HealthProcessorQ : Processor<Query<Read<HealthComponent>>>
     {
+        public HealthProcessorQ(World world) : base(world)
+        {
+        }
+
         public override void Update()
         {
             // foreach (var arch in entities1)
@@ -38,8 +50,11 @@ namespace SoftTouch.ECS.Shared.Processors
             //     }
         }
     }
-    public class HealthProcessorRO : Processor<Query<ROHealthComponent>>
+    public class HealthProcessorRO : Processor<Query<Read<ROHealthComponent>>>
     {
+        public HealthProcessorRO(World world) : base(world)
+        {
+        }
 
         public override void Update()
         {
@@ -49,8 +64,11 @@ namespace SoftTouch.ECS.Shared.Processors
             // }
         }
     }
-    public class HealthProcessorQRO : Processor<Query<ROHealthComponent>>
+    public class HealthProcessorQRO : Processor<Query<Read<ROHealthComponent>>>
     {
+        public HealthProcessorQRO(World world) : base(world)
+        {
+        }
 
         public override void Update()
         {
@@ -61,8 +79,11 @@ namespace SoftTouch.ECS.Shared.Processors
             //     }
         }
     }
-    public class HealthProcessorQS : Processor<Query<HealthComponent>>
+    public class HealthProcessorQS : Processor<Query<Read<HealthComponent>>>
     {
+        public HealthProcessorQS(World world) : base(world)
+        {
+        }
 
         public override void Update()
         {
@@ -73,8 +94,11 @@ namespace SoftTouch.ECS.Shared.Processors
             // }
         }
     }
-    public class HealthProcessorQROS : Processor<Query<ROHealthComponent>>
+    public class HealthProcessorQROS : Processor<Query<Read<ROHealthComponent>>>
     {
+        public HealthProcessorQROS(World world) : base(world)
+        {
+        }
 
         public override void Update()
         {

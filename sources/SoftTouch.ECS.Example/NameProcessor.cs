@@ -1,37 +1,35 @@
 // See https://aka.ms/new-console-template for more information
+
+using SoftTouch.ECS.Processors;
+using SoftTouch.ECS.Querying;
 using SoftTouch.ECS.Shared.Components;
-using SoftTouch.ECS;
-using SoftTouch.ECS.Events;
+using System.Security.Cryptography.X509Certificates;
 
-namespace SoftTouch.ECS.Example
+namespace SoftTouch.ECS.Example;
+
+public class StartupProcessor : Processor<Resource<WorldCommands>>
 {
-    // public class NameProcessor : Processor<Query<NameComponent>>
-    // {
-    //     public static EventKey<(string, long)> NewNameEvent = new EventKey<(string, long)>(eventName: "New Name");
-    //     EventReceiver<(string, long)> NewNameReceiver = new EventReceiver<(string, long)>(NewNameEvent);
-    //     public override async Task Execute()
-    //     {
-            
-    //         while(World.IsRunning)
-    //         {
-    //             (string name, long id) = await NewNameReceiver.ReceiveAsync();
-    //             World[id].Set(new NameComponent{Name = name});
-    //         }
-    //     }
-    // }
+    public StartupProcessor() : base(null!)
+    {
 
-    // public class ChangeName : Processor<Query<NameComponent>>
-    // {
-    //     public static EventKey<(string, long)> NewNameEvent = new EventKey<(string, long)>(eventName: "New Name");
-    //     EventReceiver<(string, long)> NewNameReceiver = new EventReceiver<(string, long)>(NewNameEvent);
+    }
+    public override void Update()
+    {
+        WorldCommands commands = Query;
+        commands.Spawn(1, new NameComponent("toto"));
+        commands.Spawn(8, new NameComponent("john"));
+        commands.Spawn(12, new NameComponent("jane"));
+    }
+}
 
-    //     public override void Update()
-    //     {
-    //         if(World.FrameCount % 15 == 0)
-    //         {
-    //             NameProcessor.NewNameEvent.Broadcast(("NameNumber" + World.FrameCount, 0));
-    //         }
-    //     }
-    // }
-    
+public class MyProcessor : Processor<Query<Read<int>>>
+{
+    public MyProcessor() : base(null!) { }
+    public override void Update()
+    {
+        foreach(var entity in Query)
+        {
+            Console.WriteLine($"Person with age {entity.Get<int>()} has for name {entity.Get<NameComponent>().Name}");
+        }
+    }
 }

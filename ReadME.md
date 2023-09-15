@@ -177,7 +177,7 @@ Here's an example :
 ```fsharp
 open SoftTouch.ECS
 open SoftTouch.ECS.FSharp
-open SoftTouch.ECS.FSharp.ProcessorTypes
+open SoftTouch.ECS.Querying
 
 [<Struct>]
 type NameComponent = 
@@ -186,16 +186,22 @@ type NameComponent =
     override this.ToString() = $"{this.Name}"
     
 
-let world = new World()
-
-world 
-|> World.Spawn
-|> EntityCommands.WithValue (NameComponent "Martha")
-|> ignore
+let app = new App()
 
 
-let nameSystem (entities1 : Query<NameComponent>) : unit =
-    for entity in entities1 do
+let startup (commands : Commands) =
+    commands
+    |> Commands.spawn
+    |> Commands.WithValue (NameComponent "hello")
+    |> ignore
+    
+
+let nameSystem (entities : Query<Read<NameComponent>>) : unit =
+    for entity in entities do
+        entity.Get<NameComponent>().Name
+        |> printfn "original name is : %s"
+
+
         let name = NameComponent "Kujo Jolyne"
         entity.Set(&name)
 
@@ -204,11 +210,12 @@ let nameSystem (entities1 : Query<NameComponent>) : unit =
 
 
 
-world
+app
+|> Processor.AddStartup startup
 |> Processor.Add nameSystem
-|> World.Start
-|> World.Update
-|> World.GetEntity 0 
+|> App.update
+|> (fun app -> app.World)
+|> World.getEntity 0 
 |> Entity.Get<NameComponent>
 |> fun x -> x.Name
 |> printfn "Hello %s"
