@@ -23,9 +23,9 @@ var app = new App();
 Once you have a world you can spawn entities either with components or without.
 
 ```csharp
-app.Spawn();
-app.Spawn(new Name("John Doe"), default(Transform), (1,"some text"));
-app
+app.World.Commands.Spawn();
+app.World.Commands.Spawn(new Name("John Doe"), default(Transform), (1,"some text"));
+app.World.Commands
     .Spawn()
     .With(Name("Jane doe"))
     .With(("mochi",5,true));
@@ -57,6 +57,18 @@ In this library, the S in ECS has been renamed to `Processor`, this was a choice
 To create Systems/Processors you can either create it from a class implementation
 
 ```csharp
+
+
+public class MyStartupProcessor : Processor<Commands, Resource<MyResource>>
+{
+    public override void Update()
+    {
+        var commands = Query1;
+        commands.Spawn(new NameComponent("Jane doe"), 5, new HealthComponent(100,100));
+        commands.Spawn();
+    }
+}
+
 public class MyFirstProcessor : Processor<Query<Read<Name>,Write<Transform>>>
 {
     public override void Update()
@@ -84,6 +96,7 @@ And then add it to the world and you can start updating your frames!
 
 ```csharp
 app.AddProcessor<MyFirstProcessor>();
+app.AddStartupProcessor<MyStartupProcessor>();
 // world.AddProcessor(new MyFirstProcessor());
 
 app.AddProcessor(
@@ -120,8 +133,10 @@ public class MyFirstProcessor : Processor<Query<Read<Name,Transform>>>
 }
 ```
 
-But when you want to iterate over many entities and avoid allocation, the type `Query<T1,T2,..., T7>` offers an enumerator to help you iterate over entities containing components you specified in the generics.
-And thanks to the power of `ref struct`s and duck typing, you can use `foreach` without worrying about allocation or speed. The enumerator is made in the same way of `Span<T>`'s enumerator, is allocation free and tries to be as fast as possible.
+This is a very versatile way of querying the world, you get to the data you need, but it's mouthful and not really good for performances.
+
+Processors have Query fields that contains helper methods and iterators to help you iterate over entities and their components. When using iterators you constrain your logic to the types you have chosen to work with. This makes it easier for the system to avoid processors accessing the same chunks of memory at the same time, to avoid cache misses.
+
 
 ```csharp
 // Here the processor queries over entities that have a Name and Transform components
@@ -129,10 +144,10 @@ public class MyFirstProcessor : Processor<Query<Read<Name,Transform>>>
 {
     public override void Update()
     {
-        // Entities1 is the Query object, it basically queries entities
+        // Query is a field helping you with iterators
         // The 1 is because you can have up to 4 queries in a processor if you want to iterate over two different list of entities
         // e.g. an entity with a mesh component and another with a camera component
-        foreach(var entity in Entities1)
+        foreach(var entity in Query)
         {
             // The entity here can be deconstructed into the components queried
             var (name, transform) = entity;
@@ -145,7 +160,6 @@ public class MyFirstProcessor : Processor<Query<Read<Name,Transform>>>
 }
 ```
 
-When using iterators you constrain your logic to the types you have chosen to work with. This makes it easier to make every processors work in parallel without too many cache misses.
 
 
 ### Future of the API

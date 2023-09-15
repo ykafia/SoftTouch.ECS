@@ -6,10 +6,13 @@ namespace SoftTouch.ECS
 {
     public sealed partial class World
     {
+
         public WorldResources Resources = new();
         public List<Entity> Entities = new();
 
         public ArchetypeList Archetypes = new();
+
+        public WorldCommands Commands => Resources.Get<WorldCommands>();
 
         public Entity this[int id]
         {
