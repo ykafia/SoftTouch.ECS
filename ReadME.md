@@ -14,18 +14,18 @@ The api is very similar to [bevy-ecs](https://bevyengine.org) but the naming con
 
 #### World and entities
 
-Everything starts with the creation of a `World` object. Worlds manage their entities, storages for components and processors. 
+Everything starts with the creation of a `World` object. Worlds manage their entities, storages for components and processors. You usually use it through the `App` object.
 
 ```csharp
-var world = new World();
+var app = new App();
 ```
 
 Once you have a world you can spawn entities either with components or without.
 
 ```csharp
-world.Spawn();
-world.Spawn(new Name("John Doe"), default(Transform), (1,"some text"));
-world
+app.Spawn();
+app.Spawn(new Name("John Doe"), default(Transform), (1,"some text"));
+app
     .Spawn()
     .With(Name("Jane doe"))
     .With(("mochi",5,true));
@@ -39,29 +39,15 @@ This both avoids fragmentation and make sure iterating over them is made very fa
 Using the code above we could have defined our components this way :
 
 ```csharp
-public struct Name
+public record struct Name(string Value)
 {
-    public string Value { get; init; }
-
-    public Name(string name){ Value = name };
-
     public static implicit operator string(Name n) => n.Value
 }
 
 
-public struct Transform
-{
-    public Vector3 Position { get; init; }
-    public Quaternion Rotation { get; init; }
-    public Vector3 Scale { get; init; }
+public record struct Transform(Vector3 Position, Quaternion Rotation, Vector3 Scale);
 
-    public Transform(Vector3 pos, Quaternion rot, Vector3 scale)
-    {
-        Position = pos;
-        Rotation = rot;
-        Scale = scale;
-    }
-}
+
 ```
 
 #### Systems/Processors
@@ -71,11 +57,14 @@ In this library, the S in ECS has been renamed to `Processor`, this was a choice
 To create Systems/Processors you can either create it from a class implementation
 
 ```csharp
-public class MyFirstProcessor : Processor<Query<Name,Transform>>
+public class MyFirstProcessor : Processor<Query<Read<Name>,Write<Transform>>>
 {
     public override void Update()
     {
-        // Here goes your logic
+        foreach(var e in Query)
+        {
+            // Here goes your logic
+        }
     }
 }
 ```
@@ -84,7 +73,7 @@ Or create a static function
 
 ```csharp
 
-public static void MyFirstSystem(Query<Name,Transform> query1)
+public static void MyFirstSystem(Query<Write<Name,Transform>> entities)
 {
     // Here goes your logic
 }
@@ -94,17 +83,12 @@ public static void MyFirstSystem(Query<Name,Transform> query1)
 And then add it to the world and you can start updating your frames!
 
 ```csharp
-world.AddProcessor<MyFirstProcessor>();
+app.AddProcessor<MyFirstProcessor>();
 // world.AddProcessor(new MyFirstProcessor());
 
-world.AddProcessor(
-    (Query<Name,Transform> q1) => MyFirstSystem(q1)
+app.AddProcessor(
+    (Query<Read<Name,Transform>> q1) => MyFirstSystem(q1)
 );
-
-// Sometimes you can add processors that are called only once in the beginning before anything
-// For this, the Start function was created
-world.Start();
-
 
 for(int i = 0; i < 100; i++)
     world.Update();
@@ -126,7 +110,7 @@ You can also add a component to an entity and the world will wait for the end of
 As a bare bone implementation, you could iterate over those `Archetype`s yourself and select which entities you want to work with like so :
 
 ```csharp
-public class MyFirstProcessor : Processor<Query<Name,Transform>>
+public class MyFirstProcessor : Processor<Query<Read<Name,Transform>>>
 {
     public override void Update()
     {
@@ -141,7 +125,7 @@ And thanks to the power of `ref struct`s and duck typing, you can use `foreach` 
 
 ```csharp
 // Here the processor queries over entities that have a Name and Transform components
-public class MyFirstProcessor : Processor<Query<Name,Transform>>
+public class MyFirstProcessor : Processor<Query<Read<Name,Transform>>>
 {
     public override void Update()
     {
@@ -160,6 +144,8 @@ public class MyFirstProcessor : Processor<Query<Name,Transform>>
     }
 }
 ```
+
+When using iterators you constrain your logic to the types you have chosen to work with. This makes it easier to make every processors work in parallel without too many cache misses.
 
 
 ### Future of the API
