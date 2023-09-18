@@ -3,7 +3,7 @@ using SoftTouch.ECS.Storage;
 namespace SoftTouch.ECS;
 
 
-public partial class WorldCommands : Queue<ComponentUpdate>
+public partial class WorldCommands
 {
     public EntityCommands Spawn()
     {
