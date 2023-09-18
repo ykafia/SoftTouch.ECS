@@ -15,7 +15,7 @@ public class GenericsGenerator : ISourceGenerator
     public void Execute(GeneratorExecutionContext context)
     {
         GenerateQueries(context);
-        GenerateWorldQueries(context);
+        //GenerateWorldQueries(context);
         GenerateFilters(context);
     }
 
@@ -39,12 +39,8 @@ public class GenericsGenerator : ISourceGenerator
                 .OpenBlock()
                 .WriteLine($"public static Type[] TypesRead {{ get; }} = {{ {string.Join(", ", generics.Select(x => $"typeof({x})"))} }};")
                 .WriteLine($"public static Type[] TypesWrite {{ get; }} = Array.Empty<Type>();")
-                .WriteLine($"public static Type[] TypesMayRead {{ get; }} = Array.Empty<Type>();")
-                .WriteLine($"public static Type[] TypesMayWrite {{ get; }} = Array.Empty<Type>();")
                 .WriteLine("public Type[] ImplRead => TypesRead;")
                 .WriteLine("public Type[] ImplWrite => TypesWrite;")
-                .WriteLine("public Type[] ImplMayRead => TypesMayRead;")
-                .WriteLine("public Type[] ImplMayWrite => TypesMayWrite;")
                 .CloseAllBlocks();
 
             code.WriteEmptyLines(3);
@@ -55,45 +51,12 @@ public class GenericsGenerator : ISourceGenerator
                 .OpenBlock()
                 .WriteLine($"public static Type[] TypesRead {{ get; }} = Array.Empty<Type>();")
                 .WriteLine($"public static Type[] TypesWrite {{ get; }} = {{ {string.Join(", ", generics.Select(x => $"typeof({x})"))} }};")
-                .WriteLine($"public static Type[] TypesMayRead {{ get; }} = Array.Empty<Type>();")
-                .WriteLine($"public static Type[] TypesMayWrite {{ get; }} = Array.Empty<Type>();")
                 .WriteLine("public Type[] ImplRead => TypesRead;")
                 .WriteLine("public Type[] ImplWrite => TypesWrite;")
-                .WriteLine("public Type[] ImplMayRead => TypesMayRead;")
-                .WriteLine("public Type[] ImplMayWrite => TypesMayWrite;")
                 .CloseAllBlocks();
 
             code.WriteEmptyLines(3);
 
-            code
-                .WriteLine($"public record struct MayRead<{string.Join(", ", generics)}>() : IMayReadComponent")
-                .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct, IEquatable<{x}>")))
-                .OpenBlock()
-                .WriteLine($"public static Type[] TypesRead {{ get; }} = Array.Empty<Type>();")
-                .WriteLine($"public static Type[] TypesWrite {{ get; }} = Array.Empty<Type>();")
-                .WriteLine($"public static Type[] TypesMayRead {{ get; }} = {{ {string.Join(", ", generics.Select(x => $"typeof({x})"))} }};")
-                .WriteLine($"public static Type[] TypesMayWrite {{ get; }} = Array.Empty<Type>();")
-                .WriteLine("public Type[] ImplRead => TypesRead;")
-                .WriteLine("public Type[] ImplWrite => TypesWrite;")
-                .WriteLine("public Type[] ImplMayRead => TypesMayRead;")
-                .WriteLine("public Type[] ImplMayWrite => TypesMayWrite;")
-                .CloseAllBlocks();
-
-            code.WriteEmptyLines(3);
-
-            code
-                .WriteLine($"public record struct MayWrite<{string.Join(", ", generics)}>() : IMayWriteComponent")
-                .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct, IEquatable<{x}>")))
-                .OpenBlock()
-                .WriteLine($"public static Type[] TypesRead {{ get; }} = Array.Empty<Type>();")
-                .WriteLine($"public static Type[] TypesWrite {{ get; }} = Array.Empty<Type>();")
-                .WriteLine($"public static Type[] TypesMayRead {{ get; }} = Array.Empty<Type>();")
-                .WriteLine($"public static Type[] TypesMayWrite {{ get; }} = {{ {string.Join(", ", generics.Select(x => $"typeof({x})"))} }};")
-                .WriteLine("public Type[] ImplRead => TypesRead;")
-                .WriteLine("public Type[] ImplWrite => TypesWrite;")
-                .WriteLine("public Type[] ImplMayRead => TypesMayRead;")
-                .WriteLine("public Type[] ImplMayWrite => TypesMayWrite;")
-                .CloseAllBlocks();
         }
 
         context.AddSource("Queries.g.cs", code.ToString());
@@ -116,14 +79,10 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : IComponentQuery, new()")))
                 .OpenBlock()
                 .WriteLine("public static IReadComponent Read { get; }")
-                .WriteLine("public static IMayReadComponent MayRead { get; }")
                 .WriteLine("public static IWriteComponent Write { get; }")
-                .WriteLine("public static IMayWriteComponent MayWrite { get; }")
                 .WriteLine("public World World { get; set; }")
                 .WriteLine("public Type[] ImplRead => Read.ImplRead;")
                 .WriteLine("public Type[] ImplWrite => Write.ImplWrite;")
-                .WriteLine("public Type[] ImplMayRead => MayRead.ImplMayRead;")
-                .WriteLine("public Type[] ImplMayWrite => MayWrite.ImplMayWrite;")
                 .WriteLine($"public WorldQueryEnumerator<Query<{string.Join(", ", generics)}>> GetEnumerator() => new(this);")
                 .WriteEmptyLines(2)
                 .WriteLine("static Query()")
@@ -134,12 +93,8 @@ public class GenericsGenerator : ISourceGenerator
                 code.WriteLine($"var comp{t} = new {t}();")
                     .WriteLine($"if (comp{t} is IReadComponent read{t})")
                     .WriteLine($"    Read = read{t};")
-                    .WriteLine($"else if (comp{t} is IMayReadComponent mayread{t})")
-                    .WriteLine($"    MayRead = mayread{t};")
                     .WriteLine($"else if (comp{t} is IWriteComponent write{t})")
-                    .WriteLine($"    Write = write{t};")
-                    .WriteLine($"else if (comp{t} is IMayWriteComponent mayWrite{t})")
-                    .WriteLine($"    MayWrite = mayWrite{t};");
+                    .WriteLine($"    Write = write{t};");
 
             }
             code.CloseAllBlocks();
@@ -152,15 +107,11 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine("    where TFilter : IFilterQuery, new()")
                 .OpenBlock()
                 .WriteLine("public static IReadComponent Read { get; }")
-                .WriteLine("public static IMayReadComponent MayRead { get; }")
                 .WriteLine("public static IWriteComponent Write { get; }")
-                .WriteLine("public static IMayWriteComponent MayWrite { get; }")
                 .WriteLine("public static IFilterQuery Filters { get; }")
                 .WriteLine("public World World { get; set; }")
                 .WriteLine("public Type[] ImplRead => Read.ImplRead;")
                 .WriteLine("public Type[] ImplWrite => Write.ImplWrite;")
-                .WriteLine("public Type[] ImplMayRead => MayRead.ImplMayRead;")
-                .WriteLine("public Type[] ImplMayWrite => MayWrite.ImplMayWrite;")
                 .WriteLine($"public WorldFilteredQueryEnumerator<FilteredQuery<{string.Join(", ", generics)}, TFilter>> GetEnumerator() => new(this);")
                 .WriteEmptyLines(2)
                 .WriteLine("static FilteredQuery()")
@@ -171,12 +122,8 @@ public class GenericsGenerator : ISourceGenerator
                 code.WriteLine($"var comp{t} = new {t}();")
                     .WriteLine($"if (comp{t} is IReadComponent read{t})")
                     .WriteLine($"    Read = read{t};")
-                    .WriteLine($"else if (comp{t} is IMayReadComponent mayread{t})")
-                    .WriteLine($"    MayRead = mayread{t};")
                     .WriteLine($"else if (comp{t} is IWriteComponent write{t})")
                     .WriteLine($"    Write = write{t};")
-                    .WriteLine($"else if (comp{t} is IMayWriteComponent mayWrite{t})")
-                    .WriteLine($"    MayWrite = mayWrite{t};")
                     .WriteEmptyLines(1);
 
             }

@@ -12,14 +12,10 @@ public interface IWorldQuery
 public interface IEntityQuery : IWorldQuery
 {
     public abstract static IReadComponent Read { get; }
-    public abstract static IMayReadComponent MayRead { get; }
     public abstract static IWriteComponent Write { get; }
-    public abstract static IMayWriteComponent MayWrite { get; }
 
     public Type[] ImplRead { get; }
     public Type[] ImplWrite { get; }
-    public Type[] ImplMayRead { get; }
-    public Type[] ImplMayWrite { get; }
 }
 
 public interface IFilteredEntityQuery : IEntityQuery
@@ -36,26 +32,18 @@ public record struct Query<TComp> : IEntityQuery
         var comp = new TComp();
         if (comp is IReadComponent read)
             Read = read;
-        else if (comp is IMayReadComponent mayread)
-            MayRead = mayread;
         else if (comp is IWriteComponent write)
             Write = write;
-        else if (comp is IMayWriteComponent mayWrite)
-            MayWrite = mayWrite;
     }
 
     public static IReadComponent Read { get; }
-    public static IMayReadComponent MayRead { get; }
     public static IWriteComponent Write { get; }
-    public static IMayWriteComponent MayWrite { get; }
 
     public World World { get; set; }
 
 
     public Type[] ImplRead => Read.ImplRead;
     public Type[] ImplWrite => Write.ImplWrite;
-    public Type[] ImplMayRead => MayRead.ImplMayRead;
-    public Type[] ImplMayWrite => MayWrite.ImplMayWrite;
 
     public WorldQueryEnumerator<Query<TComp>> GetEnumerator() => new(this);
 }
@@ -68,26 +56,67 @@ public record struct FilteredQuery<TComp, TFilter> : IFilteredEntityQuery
         var comp = new TComp();
         if (comp is IReadComponent read)
             Read = read;
-        else if (comp is IMayReadComponent mayread)
-            MayRead = mayread;
         else if (comp is IWriteComponent write)
             Write = write;
-        else if (comp is IMayWriteComponent mayWrite)
-            MayWrite = mayWrite;
         Filters = new TFilter();
     }
 
     public static IReadComponent Read { get; }
-    public static IMayReadComponent MayRead { get; }
     public static IWriteComponent Write { get; }
-    public static IMayWriteComponent MayWrite { get; }
     public static IFilterQuery Filters { get; }
 
     public World World { get; set; }
 
     public Type[] ImplRead => Read.ImplRead;
     public Type[] ImplWrite => Write.ImplWrite;
-    public Type[] ImplMayRead => MayRead.ImplMayRead;
-    public Type[] ImplMayWrite => MayWrite.ImplMayWrite;
 }
+
+
+public record struct Query<TRead, TWrite> : IEntityQuery
+    where TRead : IReadComponent, new()
+    where TWrite : IWriteComponent, new()
+{
+
+    static Query()
+    {
+        Read = new TRead();
+        Write = new TWrite();
+    }
+
+    public static IReadComponent Read { get; }
+    public static IWriteComponent Write { get; }
+
+    public World World { get; set; }
+
+
+    public Type[] ImplRead => Read.ImplRead;
+    public Type[] ImplWrite => Write.ImplWrite;
+
+    public WorldQueryEnumerator<Query<TRead,TWrite>> GetEnumerator() => new(this);
+}
+public record struct FilteredQuery<TRead, TWrite, TFilter> : IFilteredEntityQuery
+    where TRead : IReadComponent, new()
+    where TWrite : IWriteComponent, new()
+    where TFilter : IFilterQuery, new()
+{
+    static FilteredQuery()
+    {
+        Read = new TRead();
+        Write = new TWrite();
+        Filters = new TFilter();
+    }
+
+    public static IReadComponent Read { get; }
+    public static IWriteComponent Write { get; }
+    public static IFilterQuery Filters { get; }
+
+    public World World { get; set; }
+
+    public Type[] ImplRead => Read.ImplRead;
+    public Type[] ImplWrite => Write.ImplWrite;
+
+    public WorldFilteredQueryEnumerator<FilteredQuery<TRead, TWrite, TFilter>> GetEnumerator() => new(this);
+
+}
+
 
