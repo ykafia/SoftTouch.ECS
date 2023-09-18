@@ -36,6 +36,15 @@ public ref struct QueryEntity<Q>
         // TODO : check if value is written
         archetype.SetComponent(archetypeIndex,value);
     }
+
+    public void Add<T>(in T c) where T : struct, IEquatable<T>
+    {
+        query.World.AddArchetypeUpdate(new ComponentAdd<T>(c, new(archetype.EntityLookup.LookUp(archetypeIndex), archetype)));
+    }
+    public void Remove<T>() where T : struct, IEquatable<T>
+    {
+        query.World.AddArchetypeUpdate(new ComponentRemove<T>(new(archetype.EntityLookup.LookUp(archetypeIndex), archetype)));
+    }
 }
 
 

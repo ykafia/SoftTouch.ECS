@@ -47,7 +47,7 @@ public class EntityLookup
     {
         return ArchetypeIndices.TryGetValue(id, out index);
     }
-    public int LookUp(int archId)
+    public EntityId LookUp(int archId)
     {
         return EntityIndices[archId];
     }
