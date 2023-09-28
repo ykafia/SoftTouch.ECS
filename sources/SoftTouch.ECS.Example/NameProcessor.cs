@@ -22,7 +22,7 @@ public class StartupProcessor : Processor<Resource<WorldCommands>>
     }
 }
 
-public class MyProcessor : Processor<Query<Read<int>>>
+public class MyProcessor : Processor<Query<Read<int, NameComponent>>>
 {
     public MyProcessor() : base(null!) { }
     public override void Update()
