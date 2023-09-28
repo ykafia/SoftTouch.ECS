@@ -15,8 +15,8 @@ public interface IEntityQuery : IWorldQuery
     public abstract static IReadComponent Read { get; }
     public abstract static IWriteComponent Write { get; }
 
-    public ImmutableHashSet<Type> ImplRead { get; }
-    public ImmutableHashSet<Type> ImplWrite { get; }
+    public ImmutableSortedSet<Type> ImplRead { get; }
+    public ImmutableSortedSet<Type> ImplWrite { get; }
 
     public bool CanRead<T>() where T : struct, IEquatable<T>;
     public bool CanWrite<T>() where T : struct, IEquatable<T>;
@@ -48,8 +48,8 @@ public record struct Query<TComp> : IEntityQuery
     public World World { get; set; }
 
 
-    public ImmutableHashSet<Type> ImplRead => Read.ImplRead;
-    public ImmutableHashSet<Type> ImplWrite => Write.ImplWrite;
+    public ImmutableSortedSet<Type> ImplRead => Read.ImplRead;
+    public ImmutableSortedSet<Type> ImplWrite => Write.ImplWrite;
 
     public bool CanRead<T>() where T : struct, IEquatable<T> => CanRead(typeof(T));
     public bool CanRead(Type t) => (Read != null && ImplRead.Contains(t)) || (Write != null && ImplWrite.Contains(t));
@@ -79,8 +79,8 @@ public record struct FilteredQuery<TComp, TFilter> : IFilteredEntityQuery
 
     public World World { get; set; }
 
-    public ImmutableHashSet<Type> ImplRead => Read.ImplRead;
-    public ImmutableHashSet<Type> ImplWrite => Write.ImplWrite;
+    public ImmutableSortedSet<Type> ImplRead => Read.ImplRead;
+    public ImmutableSortedSet<Type> ImplWrite => Write.ImplWrite;
 
     public bool CanRead<T>() where T : struct, IEquatable<T> => CanRead(typeof(T));
     public bool CanRead(Type t) => (Read != null && ImplRead.Contains(t)) || (Write != null && ImplWrite.Contains(t));
@@ -108,8 +108,8 @@ public record struct Query<TRead, TWrite> : IEntityQuery
     public World World { get; set; }
 
 
-    public ImmutableHashSet<Type> ImplRead => Read.ImplRead;
-    public ImmutableHashSet<Type> ImplWrite => Write.ImplWrite;
+    public ImmutableSortedSet<Type> ImplRead => Read.ImplRead;
+    public ImmutableSortedSet<Type> ImplWrite => Write.ImplWrite;
 
     public bool CanRead<T>() where T : struct, IEquatable<T> => CanRead(typeof(T));
     public bool CanRead(Type t) => (Read != null && ImplRead.Contains(t)) || (Write != null && ImplWrite.Contains(t));
@@ -136,8 +136,8 @@ public record struct FilteredQuery<TRead, TWrite, TFilter> : IFilteredEntityQuer
 
     public World World { get; set; }
 
-    public ImmutableHashSet<Type> ImplRead => Read.ImplRead;
-    public ImmutableHashSet<Type> ImplWrite => Write.ImplWrite;
+    public ImmutableSortedSet<Type> ImplRead => Read.ImplRead;
+    public ImmutableSortedSet<Type> ImplWrite => Write.ImplWrite;
 
     
     public bool CanRead<T>() where T : struct, IEquatable<T> => CanRead(typeof(T));

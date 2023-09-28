@@ -100,14 +100,8 @@ public ref struct WorldQueryEnumerator<Q>
     {
         if (id.Types == null)
             return false;
-        if(Q.Read != null)
-            foreach (var t in id.Types)
-                if (!query.CanRead(t))
-                    return false;
-        if(Q.Write != null)
-            foreach (var t in query.ImplWrite)
-                if (!query.CanRead(t))
-                    return false;
-        return true;
+        return
+            Q.Write != null && query.ImplRead.IsQuerySubsetOf(id.Types)
+            || Q.Read != null && query.ImplWrite.IsQuerySubsetOf(id.Types);
     }
 }

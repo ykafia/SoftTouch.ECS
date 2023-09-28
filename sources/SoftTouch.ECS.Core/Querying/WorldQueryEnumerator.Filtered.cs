@@ -99,21 +99,12 @@ public ref struct WorldFilteredQueryEnumerator<Q>
 
     public bool MatchArch(ArchetypeID id)
     {
-        if(Q.Read != null)
-            foreach (var t in query.ImplRead)
-                if (!id.Types.Contains(t))
-                    return false;
-        if(Q.Write != null)
-            foreach (var t in query.ImplWrite)
-                if (!id.Types.Contains(t))
-                    return false;
-        foreach (var t in Q.Filters.ImplWithTypes)
-            if (!id.Types.Contains(t))
-                return false;
-        foreach (var t in Q.Filters.ImplWithoutTypes)
-            if (id.Types.Contains(t))
-                return false;
-
-        return true;
+        if (id.Types == null)
+            return false;
+        return
+            query.ImplRead.IsQuerySubsetOf(id.Types)
+            && query.ImplWrite.IsQuerySubsetOf(id.Types)
+            && Q.Filters.ImplWithTypes.IsQuerySubsetOf(id.Types)
+            && !Q.Filters.ImplWithoutTypes.IsQuerySubsetOf(id.Types);
     }
 }

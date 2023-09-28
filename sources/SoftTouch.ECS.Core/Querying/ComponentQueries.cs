@@ -9,11 +9,11 @@ namespace SoftTouch.ECS.Querying;
 
 public interface IComponentQuery 
 {
-    public static abstract ImmutableHashSet<Type> TypesRead { get; }
-    public static abstract ImmutableHashSet<Type> TypesWrite { get; }
+    public static abstract ImmutableSortedSet<Type> TypesRead { get; }
+    public static abstract ImmutableSortedSet<Type> TypesWrite { get; }
 
-    public ImmutableHashSet<Type> ImplRead { get; }
-    public ImmutableHashSet<Type> ImplWrite { get; }
+    public ImmutableSortedSet<Type> ImplRead { get; }
+    public ImmutableSortedSet<Type> ImplWrite { get; }
 }
 public interface IReadComponent : IComponentQuery { }
 public interface IWriteComponent : IComponentQuery { }
@@ -22,19 +22,19 @@ public interface IWriteComponent : IComponentQuery { }
 public record Read<T>() : IReadComponent
     where T : struct
 {
-    public static ImmutableHashSet<Type> TypesRead { get; } = ImmutableHashSet.Create(typeof(T));
-    public static ImmutableHashSet<Type> TypesWrite { get; } = ImmutableHashSet<Type>.Empty;
+    public static ImmutableSortedSet<Type> TypesRead { get; } = ImmutableSortedSet.Create(Comparer<Type>.Create(static (a,b) => a.Name.CompareTo(b.Name)),typeof(T));
+    public static ImmutableSortedSet<Type> TypesWrite { get; } = ImmutableSortedSet<Type>.Empty;
 
-    public ImmutableHashSet<Type> ImplRead => TypesRead;
-    public ImmutableHashSet<Type> ImplWrite => TypesWrite;
+    public ImmutableSortedSet<Type> ImplRead => TypesRead;
+    public ImmutableSortedSet<Type> ImplWrite => TypesWrite;
 }
 
 public record Write<T>() : IWriteComponent
     where T : struct
 {
-    public static ImmutableHashSet<Type> TypesRead { get; } = ImmutableHashSet<Type>.Empty;
-    public static ImmutableHashSet<Type> TypesWrite { get; } = ImmutableHashSet.Create(typeof(T));
+    public static ImmutableSortedSet<Type> TypesRead { get; } = ImmutableSortedSet<Type>.Empty;
+    public static ImmutableSortedSet<Type> TypesWrite { get; } = ImmutableSortedSet.Create(Comparer<Type>.Create(static (a,b) => a.Name.CompareTo(b.Name)),typeof(T));
 
-    public ImmutableHashSet<Type> ImplRead => TypesRead;
-    public ImmutableHashSet<Type> ImplWrite => TypesWrite;
+    public ImmutableSortedSet<Type> ImplRead => TypesRead;
+    public ImmutableSortedSet<Type> ImplWrite => TypesWrite;
 }

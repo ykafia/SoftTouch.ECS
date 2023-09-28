@@ -38,10 +38,10 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine($"public record struct Read<{string.Join(", ", generics)}>() : IReadComponent")
                 .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct, IEquatable<{x}>")))
                 .OpenBlock()
-                .WriteLine($"public static ImmutableHashSet<Type> TypesRead {{ get; }} = ImmutableHashSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
-                .WriteLine($"public static ImmutableHashSet<Type> TypesWrite {{ get; }} = ImmutableHashSet<Type>.Empty;")
-                .WriteLine("public ImmutableHashSet<Type> ImplRead => TypesRead;")
-                .WriteLine("public ImmutableHashSet<Type> ImplWrite => TypesWrite;")
+                .WriteLine($"public static ImmutableSortedSet<Type> TypesRead {{ get; }} = ImmutableSortedSet.Create(Comparer<Type>.Create(static (a,b) => a.Name.CompareTo(b.Name)), {string.Join(", ", generics.Select(x => $"typeof({x})"))});")
+                .WriteLine($"public static ImmutableSortedSet<Type> TypesWrite {{ get; }} = ImmutableSortedSet<Type>.Empty;")
+                .WriteLine("public ImmutableSortedSet<Type> ImplRead => TypesRead;")
+                .WriteLine("public ImmutableSortedSet<Type> ImplWrite => TypesWrite;")
                 .CloseAllBlocks();
 
             code.WriteEmptyLines(3);
@@ -50,10 +50,10 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine($"public record struct Write<{string.Join(", ", generics)}>() : IWriteComponent")
                 .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct, IEquatable<{x}>")))
                 .OpenBlock()
-                .WriteLine($"public static ImmutableHashSet<Type> TypesRead {{ get; }} = ImmutableHashSet<Type>.Empty;")
-                .WriteLine($"public static ImmutableHashSet<Type> TypesWrite {{ get; }} = ImmutableHashSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
-                .WriteLine("public ImmutableHashSet<Type> ImplRead => TypesRead;")
-                .WriteLine("public ImmutableHashSet<Type> ImplWrite => TypesWrite;")
+                .WriteLine($"public static ImmutableSortedSet<Type> TypesRead {{ get; }} = ImmutableSortedSet<Type>.Empty;")
+                .WriteLine($"public static ImmutableSortedSet<Type> TypesWrite {{ get; }} = ImmutableSortedSet.Create(Comparer<Type>.Create(static (a,b) => a.Name.CompareTo(b.Name)), {string.Join(", ", generics.Select(x => $"typeof({x})"))});")
+                .WriteLine("public ImmutableSortedSet<Type> ImplRead => TypesRead;")
+                .WriteLine("public ImmutableSortedSet<Type> ImplWrite => TypesWrite;")
                 .CloseAllBlocks();
 
             code.WriteEmptyLines(3);
@@ -83,8 +83,8 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine("public static IReadComponent Read { get; }")
                 .WriteLine("public static IWriteComponent Write { get; }")
                 .WriteLine("public World World { get; set; }")
-                .WriteLine("public ImmutableHashSet<Type> ImplRead => Read.ImplRead;")
-                .WriteLine("public ImmutableHashSet<Type> ImplWrite => Write.ImplWrite;")
+                .WriteLine("public ImmutableSortedSet<Type> ImplRead => Read.ImplRead;")
+                .WriteLine("public ImmutableSortedSet<Type> ImplWrite => Write.ImplWrite;")
                 .WriteLine($"public WorldQueryEnumerator<Query<{string.Join(", ", generics)}>> GetEnumerator() => new(this);")
                 .WriteLine("public bool CanRead<T>() where T : struct, IEquatable<T> => CanRead(typeof(T));")
                 .WriteLine("public bool CanRead(Type t) => (Read != null && ImplRead.Contains(t)) || (Write != null &&ImplWrite.Contains(t));")
@@ -116,8 +116,8 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine("public static IWriteComponent Write { get; }")
                 .WriteLine("public static IFilterQuery Filters { get; }")
                 .WriteLine("public World World { get; set; }")
-                .WriteLine("public ImmutableHashSet<Type> ImplRead => Read.ImplRead;")
-                .WriteLine("public ImmutableHashSet<Type> ImplWrite => Write.ImplWrite;")
+                .WriteLine("public ImmutableSortedSet<Type> ImplRead => Read.ImplRead;")
+                .WriteLine("public ImmutableSortedSet<Type> ImplWrite => Write.ImplWrite;")
                 .WriteLine($"public WorldFilteredQueryEnumerator<FilteredQuery<{string.Join(", ", generics)}, TFilter>> GetEnumerator() => new(this);")
                 .WriteLine("public bool CanRead<T>() where T : struct, IEquatable<T> => CanRead(typeof(T));")
                 .WriteLine("public bool CanRead(Type t) => (Read != null && ImplRead.Contains(t)) || (Write != null &&ImplWrite.Contains(t));")
@@ -161,10 +161,10 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine($"public record Has<{string.Join(", ", generics)}>() : IFilter")
                 .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct, IEquatable<{x}>")))
                 .OpenBlock()
-                .WriteLine($"public static ImmutableHashSet<Type> WithTypes {{ get; }} = ImmutableHashSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
-                .WriteLine($"public static ImmutableHashSet<Type> WithoutTypes {{ get; }} =  ImmutableHashSet<Type>.Empty;")
-                .WriteLine("public ImmutableHashSet<Type> ImplWithTypes => WithTypes;")
-                .WriteLine("public ImmutableHashSet<Type> ImplWithoutTypes => WithoutTypes;")
+                .WriteLine($"public static ImmutableSortedSet<Type> WithTypes {{ get; }} = ImmutableSortedSet.Create(Comparer<Type>.Create(static (a,b) => a.Name.CompareTo(b.Name)), {string.Join(", ", generics.Select(x => $"typeof({x})"))});")
+                .WriteLine($"public static ImmutableSortedSet<Type> WithoutTypes {{ get; }} =  ImmutableSortedSet<Type>.Empty;")
+                .WriteLine("public ImmutableSortedSet<Type> ImplWithTypes => WithTypes;")
+                .WriteLine("public ImmutableSortedSet<Type> ImplWithoutTypes => WithoutTypes;")
                 .CloseAllBlocks();
 
             code.WriteEmptyLines(3);
@@ -173,10 +173,10 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine($"public record Without<{string.Join(", ", generics )}>() : IFilter")
                 .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct, IEquatable<{x}>")))
                 .OpenBlock()
-                .WriteLine($"public static ImmutableHashSet<Type> WithoutTypes {{ get; }} = ImmutableHashSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
-                .WriteLine($"public static ImmutableHashSet<Type> WithTypes {{ get; }} = ImmutableHashSet<Type>.Empty;")
-                .WriteLine("public ImmutableHashSet<Type> ImplWithTypes => WithTypes;")
-                .WriteLine("public ImmutableHashSet<Type> ImplWithoutTypes => WithoutTypes;")
+                .WriteLine($"public static ImmutableSortedSet<Type> WithoutTypes {{ get; }} = ImmutableSortedSet.Create(Comparer<Type>.Create(static (a,b) => a.Name.CompareTo(b.Name)), {string.Join(", ", generics.Select(x => $"typeof({x})"))});")
+                .WriteLine($"public static ImmutableSortedSet<Type> WithTypes {{ get; }} = ImmutableSortedSet<Type>.Empty;")
+                .WriteLine("public ImmutableSortedSet<Type> ImplWithTypes => WithTypes;")
+                .WriteLine("public ImmutableSortedSet<Type> ImplWithoutTypes => WithoutTypes;")
                 .CloseAllBlocks();
         }
 
