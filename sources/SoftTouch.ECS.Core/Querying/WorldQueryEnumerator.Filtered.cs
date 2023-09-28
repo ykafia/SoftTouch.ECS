@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,14 +26,16 @@ public ref struct FilteredQueryEntity<Q>
     public T Get<T>()
         where T : struct, IEquatable<T>
     {
-        // TODO : check if value is read
+        if(!query.CanRead(typeof(T)))
+            throw new ArgumentException($"Cannot read from type {typeof(T).Name}");
         archetype.GetComponent<T>(archetype.EntityLookup[archetypeIndex], out var result);
         return result;
     }
     public void Set<T>(T value)
         where T : struct, IEquatable<T>
     {
-        // TODO : check if value is written
+        if (!query.CanWrite(typeof(T)))
+            throw new ArgumentException($"Cannot read from type {typeof(T).Name}");
         archetype.SetComponent(archetype.EntityLookup[archetypeIndex], value);
     }
 

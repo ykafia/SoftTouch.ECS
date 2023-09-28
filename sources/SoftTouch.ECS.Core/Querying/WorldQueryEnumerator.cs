@@ -25,15 +25,16 @@ public ref struct QueryEntity<Q>
     public T Get<T>()
         where T : struct, IEquatable<T>
     {
-        // TODO : check if value is read
-
+        if (!query.CanRead(typeof(T)))
+            throw new ArgumentException($"Cannot read from type {typeof(T).Name}");
         archetype.GetComponent<T>(archetypeIndex, out var result);
         return result;
     }
     public void Set<T>(in T value)
         where T : struct, IEquatable<T>
     {
-        // TODO : check if value is written
+        if (!query.CanWrite(typeof(T)))
+            throw new ArgumentException($"Cannot read from type {typeof(T).Name}");
         archetype.SetComponent(archetypeIndex,value);
     }
 
@@ -100,12 +101,12 @@ public ref struct WorldQueryEnumerator<Q>
         if (id.Types == null)
             return false;
         if(Q.Read != null)
-            foreach (var t in query.ImplRead)
-                if (!id.Types.Contains(t))
+            foreach (var t in id.Types)
+                if (!query.CanRead(t))
                     return false;
         if(Q.Write != null)
             foreach (var t in query.ImplWrite)
-                if (!id.Types.Contains(t))
+                if (!query.CanRead(t))
                     return false;
         return true;
     }

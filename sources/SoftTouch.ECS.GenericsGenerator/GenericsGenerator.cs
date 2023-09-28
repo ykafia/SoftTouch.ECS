@@ -15,7 +15,7 @@ public class GenericsGenerator : ISourceGenerator
     public void Execute(GeneratorExecutionContext context)
     {
         GenerateQueries(context);
-        //GenerateWorldQueries(context);
+        // GenerateWorldQueries(context);
         GenerateFilters(context);
     }
 
@@ -26,9 +26,10 @@ public class GenericsGenerator : ISourceGenerator
     {
         var code = new CodeWriter();
         code.WriteLine("using CommunityToolkit.HighPerformance.Buffers;")
-                        .WriteEmptyLines(2)
-                        .WriteLine("namespace SoftTouch.ECS.Querying;")
-                        .WriteEmptyLines(3);
+            .WriteLine("using System.Collections.Immutable;")
+            .WriteEmptyLines(2)
+            .WriteLine("namespace SoftTouch.ECS.Querying;")
+            .WriteEmptyLines(3);
         for (int i = 2; i < 17; i++)
         {
 
@@ -37,10 +38,10 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine($"public record struct Read<{string.Join(", ", generics)}>() : IReadComponent")
                 .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct, IEquatable<{x}>")))
                 .OpenBlock()
-                .WriteLine($"public static Type[] TypesRead {{ get; }} = {{ {string.Join(", ", generics.Select(x => $"typeof({x})"))} }};")
-                .WriteLine($"public static Type[] TypesWrite {{ get; }} = Array.Empty<Type>();")
-                .WriteLine("public Type[] ImplRead => TypesRead;")
-                .WriteLine("public Type[] ImplWrite => TypesWrite;")
+                .WriteLine($"public static ImmutableHashSet<Type> TypesRead {{ get; }} = ImmutableHashSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
+                .WriteLine($"public static ImmutableHashSet<Type> TypesWrite {{ get; }} = ImmutableHashSet<Type>.Empty;")
+                .WriteLine("public ImmutableHashSet<Type> ImplRead => TypesRead;")
+                .WriteLine("public ImmutableHashSet<Type> ImplWrite => TypesWrite;")
                 .CloseAllBlocks();
 
             code.WriteEmptyLines(3);
@@ -49,10 +50,10 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine($"public record struct Write<{string.Join(", ", generics)}>() : IWriteComponent")
                 .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct, IEquatable<{x}>")))
                 .OpenBlock()
-                .WriteLine($"public static Type[] TypesRead {{ get; }} = Array.Empty<Type>();")
-                .WriteLine($"public static Type[] TypesWrite {{ get; }} = {{ {string.Join(", ", generics.Select(x => $"typeof({x})"))} }};")
-                .WriteLine("public Type[] ImplRead => TypesRead;")
-                .WriteLine("public Type[] ImplWrite => TypesWrite;")
+                .WriteLine($"public static ImmutableHashSet<Type> TypesRead {{ get; }} = ImmutableHashSet<Type>.Empty;")
+                .WriteLine($"public static ImmutableHashSet<Type> TypesWrite {{ get; }} = ImmutableHashSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
+                .WriteLine("public ImmutableHashSet<Type> ImplRead => TypesRead;")
+                .WriteLine("public ImmutableHashSet<Type> ImplWrite => TypesWrite;")
                 .CloseAllBlocks();
 
             code.WriteEmptyLines(3);
@@ -67,9 +68,10 @@ public class GenericsGenerator : ISourceGenerator
     {
         var code = new CodeWriter();
         code.WriteLine("using CommunityToolkit.HighPerformance.Buffers;")
-                        .WriteEmptyLines(2)
-                        .WriteLine("namespace SoftTouch.ECS.Querying;")
-                        .WriteEmptyLines(3);
+            .WriteLine("using System.Collections.Immutable;")
+            .WriteEmptyLines(2)
+            .WriteLine("namespace SoftTouch.ECS.Querying;")
+            .WriteEmptyLines(3);
         for (int i = 2; i < 5; i++)
         {
 
@@ -81,9 +83,13 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine("public static IReadComponent Read { get; }")
                 .WriteLine("public static IWriteComponent Write { get; }")
                 .WriteLine("public World World { get; set; }")
-                .WriteLine("public Type[] ImplRead => Read.ImplRead;")
-                .WriteLine("public Type[] ImplWrite => Write.ImplWrite;")
+                .WriteLine("public ImmutableHashSet<Type> ImplRead => Read.ImplRead;")
+                .WriteLine("public ImmutableHashSet<Type> ImplWrite => Write.ImplWrite;")
                 .WriteLine($"public WorldQueryEnumerator<Query<{string.Join(", ", generics)}>> GetEnumerator() => new(this);")
+                .WriteLine("public bool CanRead<T>() where T : struct, IEquatable<T> => CanRead(typeof(T));")
+                .WriteLine("public bool CanRead(Type t) => (Read != null && ImplRead.Contains(t)) || (Write != null &&ImplWrite.Contains(t));")
+                .WriteLine("public bool CanWrite<T>() where T : struct, IEquatable<T> => ImplWrite.Contains(typeof(T));")
+                .WriteLine("public bool CanWrite(Type t) => ImplWrite.Contains(t);")
                 .WriteEmptyLines(2)
                 .WriteLine("static Query()")
                 .OpenBlock();
@@ -110,9 +116,13 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine("public static IWriteComponent Write { get; }")
                 .WriteLine("public static IFilterQuery Filters { get; }")
                 .WriteLine("public World World { get; set; }")
-                .WriteLine("public Type[] ImplRead => Read.ImplRead;")
-                .WriteLine("public Type[] ImplWrite => Write.ImplWrite;")
+                .WriteLine("public ImmutableHashSet<Type> ImplRead => Read.ImplRead;")
+                .WriteLine("public ImmutableHashSet<Type> ImplWrite => Write.ImplWrite;")
                 .WriteLine($"public WorldFilteredQueryEnumerator<FilteredQuery<{string.Join(", ", generics)}, TFilter>> GetEnumerator() => new(this);")
+                .WriteLine("public bool CanRead<T>() where T : struct, IEquatable<T> => CanRead(typeof(T));")
+                .WriteLine("public bool CanRead(Type t) => (Read != null && ImplRead.Contains(t)) || (Write != null &&ImplWrite.Contains(t));")
+                .WriteLine("public bool CanWrite<T>() where T : struct, IEquatable<T> => ImplWrite.Contains(typeof(T));")
+                .WriteLine("public bool CanWrite(Type t) => ImplWrite.Contains(t);")
                 .WriteEmptyLines(2)
                 .WriteLine("static FilteredQuery()")
                 .OpenBlock();
@@ -139,9 +149,10 @@ public class GenericsGenerator : ISourceGenerator
     {
         var code = new CodeWriter();
         code.WriteLine("using CommunityToolkit.HighPerformance.Buffers;")
-                        .WriteEmptyLines(2)
-                        .WriteLine("namespace SoftTouch.ECS.Querying;")
-                        .WriteEmptyLines(3);
+            .WriteLine("using System.Collections.Immutable;")
+            .WriteEmptyLines(2)
+            .WriteLine("namespace SoftTouch.ECS.Querying;")
+            .WriteEmptyLines(3);
         for (int i = 2; i < 17; i++)
         {
 
@@ -150,10 +161,10 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine($"public record Has<{string.Join(", ", generics)}>() : IFilter")
                 .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct, IEquatable<{x}>")))
                 .OpenBlock()
-                .WriteLine($"public static Type[] WithTypes {{ get; }} = {{ {string.Join(", ", generics.Select(x => $"typeof({x})"))} }};")
-                .WriteLine($"public static Type[] WithoutTypes {{ get; }} =  Array.Empty<Type>();")
-                .WriteLine("public Type[] ImplWithTypes => WithTypes;")
-                .WriteLine("public Type[] ImplWithoutTypes => WithoutTypes;")
+                .WriteLine($"public static ImmutableHashSet<Type> WithTypes {{ get; }} = ImmutableHashSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
+                .WriteLine($"public static ImmutableHashSet<Type> WithoutTypes {{ get; }} =  ImmutableHashSet<Type>.Empty;")
+                .WriteLine("public ImmutableHashSet<Type> ImplWithTypes => WithTypes;")
+                .WriteLine("public ImmutableHashSet<Type> ImplWithoutTypes => WithoutTypes;")
                 .CloseAllBlocks();
 
             code.WriteEmptyLines(3);
@@ -162,10 +173,10 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine($"public record Without<{string.Join(", ", generics )}>() : IFilter")
                 .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct, IEquatable<{x}>")))
                 .OpenBlock()
-                .WriteLine($"public static Type[] WithoutTypes {{ get; }} = {{ {string.Join(", ", generics.Select(x => $"typeof({x})"))} }};")
-                .WriteLine($"public static Type[] WithTypes {{ get; }} = Array.Empty<Type>();")
-                .WriteLine("public Type[] ImplWithTypes => WithTypes;")
-                .WriteLine("public Type[] ImplWithoutTypes => WithoutTypes;")
+                .WriteLine($"public static ImmutableHashSet<Type> WithoutTypes {{ get; }} = ImmutableHashSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
+                .WriteLine($"public static ImmutableHashSet<Type> WithTypes {{ get; }} = ImmutableHashSet<Type>.Empty;")
+                .WriteLine("public ImmutableHashSet<Type> ImplWithTypes => WithTypes;")
+                .WriteLine("public ImmutableHashSet<Type> ImplWithoutTypes => WithoutTypes;")
                 .CloseAllBlocks();
         }
 

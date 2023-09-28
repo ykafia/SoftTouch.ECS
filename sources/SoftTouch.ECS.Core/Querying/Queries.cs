@@ -1,4 +1,5 @@
 using CommunityToolkit.HighPerformance.Buffers;
+using System.Collections.Immutable;
 using System.ComponentModel;
 
 
@@ -14,8 +15,13 @@ public interface IEntityQuery : IWorldQuery
     public abstract static IReadComponent Read { get; }
     public abstract static IWriteComponent Write { get; }
 
-    public Type[] ImplRead { get; }
-    public Type[] ImplWrite { get; }
+    public ImmutableHashSet<Type> ImplRead { get; }
+    public ImmutableHashSet<Type> ImplWrite { get; }
+
+    public bool CanRead<T>() where T : struct, IEquatable<T>;
+    public bool CanWrite<T>() where T : struct, IEquatable<T>;
+    public bool CanRead(Type t);
+    public bool CanWrite(Type t);
 }
 
 public interface IFilteredEntityQuery : IEntityQuery
@@ -42,8 +48,14 @@ public record struct Query<TComp> : IEntityQuery
     public World World { get; set; }
 
 
-    public Type[] ImplRead => Read.ImplRead;
-    public Type[] ImplWrite => Write.ImplWrite;
+    public ImmutableHashSet<Type> ImplRead => Read.ImplRead;
+    public ImmutableHashSet<Type> ImplWrite => Write.ImplWrite;
+
+    public bool CanRead<T>() where T : struct, IEquatable<T> => CanRead(typeof(T));
+    public bool CanRead(Type t) => (Read != null && ImplRead.Contains(t)) || (Write != null && ImplWrite.Contains(t));
+    public bool CanWrite<T>() where T : struct, IEquatable<T> => ImplWrite.Contains(typeof(T));
+    public bool CanWrite(Type t) => ImplWrite.Contains(t);
+
 
     public WorldQueryEnumerator<Query<TComp>> GetEnumerator() => new(this);
 }
@@ -67,8 +79,15 @@ public record struct FilteredQuery<TComp, TFilter> : IFilteredEntityQuery
 
     public World World { get; set; }
 
-    public Type[] ImplRead => Read.ImplRead;
-    public Type[] ImplWrite => Write.ImplWrite;
+    public ImmutableHashSet<Type> ImplRead => Read.ImplRead;
+    public ImmutableHashSet<Type> ImplWrite => Write.ImplWrite;
+
+    public bool CanRead<T>() where T : struct, IEquatable<T> => CanRead(typeof(T));
+    public bool CanRead(Type t) => (Read != null && ImplRead.Contains(t)) || (Write != null && ImplWrite.Contains(t));
+    public bool CanWrite<T>() where T : struct, IEquatable<T> => ImplWrite.Contains(typeof(T));
+    public bool CanWrite(Type t) => ImplWrite.Contains(t);
+
+    public WorldFilteredQueryEnumerator<FilteredQuery<TComp, TFilter>> GetEnumerator() => new(this);
 }
 
 
@@ -89,8 +108,13 @@ public record struct Query<TRead, TWrite> : IEntityQuery
     public World World { get; set; }
 
 
-    public Type[] ImplRead => Read.ImplRead;
-    public Type[] ImplWrite => Write.ImplWrite;
+    public ImmutableHashSet<Type> ImplRead => Read.ImplRead;
+    public ImmutableHashSet<Type> ImplWrite => Write.ImplWrite;
+
+    public bool CanRead<T>() where T : struct, IEquatable<T> => CanRead(typeof(T));
+    public bool CanRead(Type t) => (Read != null && ImplRead.Contains(t)) || (Write != null && ImplWrite.Contains(t));
+    public bool CanWrite<T>() where T : struct, IEquatable<T> => ImplWrite.Contains(typeof(T));
+    public bool CanWrite(Type t) => ImplWrite.Contains(t);
 
     public WorldQueryEnumerator<Query<TRead,TWrite>> GetEnumerator() => new(this);
 }
@@ -112,8 +136,14 @@ public record struct FilteredQuery<TRead, TWrite, TFilter> : IFilteredEntityQuer
 
     public World World { get; set; }
 
-    public Type[] ImplRead => Read.ImplRead;
-    public Type[] ImplWrite => Write.ImplWrite;
+    public ImmutableHashSet<Type> ImplRead => Read.ImplRead;
+    public ImmutableHashSet<Type> ImplWrite => Write.ImplWrite;
+
+    
+    public bool CanRead<T>() where T : struct, IEquatable<T> => CanRead(typeof(T));
+    public bool CanRead(Type t) => (Read != null && ImplRead.Contains(t)) || (Write != null &&ImplWrite.Contains(t));
+    public bool CanWrite<T>() where T : struct, IEquatable<T> => ImplWrite.Contains(typeof(T));
+    public bool CanWrite(Type t) => ImplWrite.Contains(t);
 
     public WorldFilteredQueryEnumerator<FilteredQuery<TRead, TWrite, TFilter>> GetEnumerator() => new(this);
 
