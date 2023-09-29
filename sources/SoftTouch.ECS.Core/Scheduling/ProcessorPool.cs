@@ -9,5 +9,5 @@ namespace SoftTouch.ECS.Scheduling;
 
 public class ProcessorPool
 {
-    List<List<Processors.Processor>> processors;
+    List<List<Processor>> processors;
 }

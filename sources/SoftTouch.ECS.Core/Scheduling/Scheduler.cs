@@ -16,8 +16,7 @@ public class Scheduler
         Order = new();
     }
 
-    public void AddProcessor<T>(T processors)
-        where T : IProcessorTuple
+    public void AddProcessors(string stage, params Processor[] processors)
     {
 
     }
