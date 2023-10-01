@@ -17,10 +17,22 @@ public class GenericsGenerator : ISourceGenerator
         GenerateQueries(context);
         // GenerateWorldQueries(context);
         GenerateFilters(context);
+        //GenerateProcessorSetExtensions(context);
     }
 
+    private void GenerateProcessorSetExtensions(GeneratorExecutionContext context)
+    {
+        var code = new CodeWriter();
+        code
+            .WriteLine("using SoftTouch.ECS.Processors;")
+            .WriteLine("using SoftTouch.ECS.Querying;")
+            .WriteEmptyLines(2)
+            .WriteLine("namespace SoftTouch.ECS.Scheduling;")
+            .WriteEmptyLines(3)
+            .WriteLine("public static partial class ProcessorSetExtensions")
+            .OpenBlock();
 
-
+    }
 
     public static void GenerateQueries(GeneratorExecutionContext context)
     {
