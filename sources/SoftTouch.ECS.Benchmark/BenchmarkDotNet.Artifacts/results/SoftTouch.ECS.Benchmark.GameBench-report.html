@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>SoftTouch.ECS.Benchmark.GameBench-20231109-212223</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.12.1, OS=Windows 10.0.22621
+AMD Ryzen 5 3500U with Radeon Vega Mobile Gfx, 1 CPU, 8 logical and 4 physical cores
+.NET Core SDK=7.0.403
+  [Host]     : .NET Core 7.0.13 (CoreCLR 7.0.1323.51816, CoreFX 7.0.1323.51816), X64 RyuJIT
+  Job-TECXTQ : .NET Core 7.0.13 (CoreCLR 7.0.1323.51816, CoreFX 7.0.1323.51816), X64 RyuJIT
+</code></pre>
+<pre><code>IterationCount=15  LaunchCount=3  WarmupCount=10  
+</code></pre>
+
+<table>
+<thead><tr><th>        Method</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Gen 0</th><th>Gen 1</th><th>Gen 2</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>SingleParallelUpdate</td><td>529.7 &mu;s</td><td>17.51 &mu;s</td><td>33.32 &mu;s</td><td>0.9766</td><td>-</td><td>-</td><td>3856 B</td>
+</tr><tr><td>SingleSyncUpdate</td><td>718.0 &mu;s</td><td>14.17 &mu;s</td><td>26.27 &mu;s</td><td>-</td><td>-</td><td>-</td><td>185 B</td>
+</tr></tbody></table>
+</body>
+</html>

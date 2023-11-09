@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SoftTouch.ECS.Scheduling;
 
-public class ProcessorStageCollection : IList<ProcessorStage>
+public class ProcessorStageCollection
 {
     List<ProcessorStage> processorStages = new() { new("Startup") };
 
@@ -65,8 +65,4 @@ public class ProcessorStageCollection : IList<ProcessorStage>
         return processorStages.GetEnumerator();
     }
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
 }

@@ -13,10 +13,10 @@ public class Scheduler
         Stages = new();
     }
 
-    public void Run()
+    public void Run(bool parallel = true)
     {
         foreach (var stage in Stages)
-            stage.Run();
+            stage.Run(parallel);
     }
 
     public void Add(in ProcessorStage stage)

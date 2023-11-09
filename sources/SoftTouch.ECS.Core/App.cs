@@ -23,9 +23,9 @@ public partial class App
     }
 
 
-    public virtual void Update()
+    public virtual void Update(bool parallel = true)
     {
-        Schedule.Run();
+        Schedule.Run(parallel);
         World.ApplyUpdates();
     }
 }

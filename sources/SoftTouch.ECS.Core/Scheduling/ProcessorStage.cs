@@ -35,9 +35,13 @@ public struct ProcessorStage
                 break;
     }
 
-    public void Run()
+    public void Run(bool parallel = true)
     {
-        Parallel.ForEach(ProcessorGroups, group => group.Update());
+        if (parallel)
+            Parallel.ForEach(ProcessorGroups, static group => group.Update());
+        else
+            foreach (var g in ProcessorGroups)
+                g.Update();
     }
 
     public OrderedStage After(string other) => new() { Order = StageOrder.After, Stage = this, Other = other };
