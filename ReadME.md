@@ -192,11 +192,11 @@ let app = new App()
 let startup (commands : Commands) =
     commands
     |> Commands.spawn
-    |> Commands.WithValue (NameComponent "hello")
+    |> Commands.WithValue (NameComponent "No Name")
     |> ignore
     
 
-let nameSystem (entities : Query<Read<NameComponent>>) : unit =
+let nameSystem (entities : Query<Write<NameComponent>>) : unit =
     for entity in entities do
         entity.Get<NameComponent>().Name
         |> printfn "original name is : %s"
@@ -208,11 +208,12 @@ let nameSystem (entities : Query<Read<NameComponent>>) : unit =
         entity.Get<NameComponent>()
         |> printfn "Changed to %A"
 
-
+let x = 0;
 
 app
 |> Processor.AddStartup startup
 |> Processor.Add nameSystem
+|> App.update
 |> App.update
 |> (fun app -> app.World)
 |> World.getEntity 0 
