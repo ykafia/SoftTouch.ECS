@@ -14,7 +14,11 @@ var app =
             Console.WriteLine(age.Get<int>());
     })
     .AddProcessor<MyProcessor>();
+foreach(var t in  MyProcessor.StaticRelatedTypes)
+    Console.WriteLine($"MyProcessor is related to type : {t.Name}");
+// foreach(var e in )
 
+app.AddProcessors<MyProcessor>("Main");
 app.Update();
 var x = 0;
 

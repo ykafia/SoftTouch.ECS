@@ -9,7 +9,6 @@ namespace SoftTouch.ECS.Storage;
 
 public partial class Archetype
 {
-    object myLocker = new object();
     public static Archetype CreateEmpty(World w) => new(new List<ComponentBase>(), w);
 
     public World World { get; init; }
@@ -70,18 +69,15 @@ public partial class Archetype
 
     internal void SetEntityComponent<T>(in EntityId entity, in T component) where T : struct, IEquatable<T>
     {
-        lock (myLocker)
+        var array = GetComponentArray<T>();
+        if (EntityLookup.TryGetValue(entity, out var idx))
         {
-            var array = GetComponentArray<T>();
-            if (EntityLookup.TryGetValue(entity, out var idx))
-            {
-                array[idx] = component;
-            }
-            else
-            {
-                array.Add(component);
-                EntityLookup.Set(World[entity].Index, array.Count - 1);
-            }
+            array[idx] = component;
+        }
+        else
+        {
+            array.Add(component);
+            EntityLookup.Set(World[entity].Index, array.Count - 1);
         }
     }
 
@@ -92,10 +88,7 @@ public partial class Archetype
     }
     public void SetComponent<T>(int index, in T component) where T : struct, IEquatable<T>
     {
-        lock (myLocker)
-        {
-            GetComponentArray<T>()[index] = component;
-        }
+        GetComponentArray<T>()[index] = component;
     }
 
     internal void AddEntity(EntityId idx) => EntityLookup.Add(idx);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SoftTouch.ECS.Scheduling;
 
 namespace SoftTouch.ECS;
 
@@ -14,10 +15,13 @@ public partial class App
     public List<Processors.Processor> Processors { get; init; }
     public List<Processors.Processor> StartupProcessors { get; init; }
 
+    public Scheduler Schedule { get; init; }
+
     public App()
     {
         World = new();
         Processors = new();
+        Schedule = new();
         StartupProcessors = new();
         IsRunning = false;
     }
@@ -36,7 +40,7 @@ public partial class App
         if (!IsRunning)
             Start();
 
-        foreach(var p in Processors)
+        foreach (var p in Processors)
             p.Update();
         World.ApplyUpdates();
     }

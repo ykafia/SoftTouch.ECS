@@ -15,6 +15,6 @@ internal class EventTaskScheduler : TaskScheduler
 
     protected override IEnumerable<Task> GetScheduledTasks()
     {
-        return null;
+        return null!;
     }
 }

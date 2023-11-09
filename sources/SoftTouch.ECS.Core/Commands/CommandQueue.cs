@@ -7,7 +7,6 @@ public partial class WorldCommands
 {
     World world;
     Queue<ComponentUpdate> updates;
-    private object locker = new();
 
     public WorldCommands(World world)
     {
@@ -17,14 +16,13 @@ public partial class WorldCommands
 
     public void Enqueue(ComponentUpdate update)
     {
-        lock(locker) 
-            updates.Enqueue(update);
+        updates.Enqueue(update);
     }
 
 
     public void ExecuteUpdates()
     {
-        while(updates.TryDequeue(out var e))
+        while (updates.TryDequeue(out var e))
         {
             e.UpdateRecord();
         }

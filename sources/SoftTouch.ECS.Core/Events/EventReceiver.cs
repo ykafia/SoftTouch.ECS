@@ -117,7 +117,7 @@ public sealed class EventReceiver : EventReceiverBase<bool>
     /// <returns></returns>
     public int TryReceiveAll()
     {
-        return InternalTryReceiveAll(null);
+        return InternalTryReceiveAll(null!);
     }
 
     /// <summary>

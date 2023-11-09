@@ -1,15 +1,12 @@
-﻿using SoftTouch.ECS.Processors;
+﻿using CommunityToolkit.HighPerformance.Buffers;
+using SoftTouch.ECS.Processors;
 using SoftTouch.ECS.Querying;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using SoftTouch.ECS.Scheduling;
 namespace SoftTouch.ECS;
 
 public partial class App
 {
+
     public App AddProcessor(Processor processor)
     {
         processor.World = World;

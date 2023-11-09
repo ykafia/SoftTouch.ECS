@@ -40,7 +40,7 @@ namespace SoftTouch.ECS.ProcessorGenerators
                 .Where(t => t?.BaseType?.Name != "Processor")
                 .ToList();
 
-            context.AddSource("listProcessors.g.cs", $"/*{string.Join("\n", processors.Select(p => p.Name + "-" + p.BaseType.Name))}*/");
+            context.AddSource("listProcessors.g.cs", $"/*{string.Join("\n", processors.Select(p => p.Name + "-" + p.BaseType?.Name))}*/");
 
             foreach (var processor in processors)
             {
@@ -53,7 +53,7 @@ namespace SoftTouch.ECS.ProcessorGenerators
 
                 var processorInterface = declaration?.BaseList?.Types.First().Type as GenericNameSyntax;
                 var world = processorInterface?.TypeArgumentList.Arguments.First() as IdentifierNameSyntax;
-                var queries = processorInterface.TypeArgumentList.Arguments.OfType<GenericNameSyntax>().ToList();
+                var queries = processorInterface?.TypeArgumentList.Arguments.OfType<GenericNameSyntax>().ToList();
 
                 if (world == null)
                 {
@@ -63,7 +63,7 @@ namespace SoftTouch.ECS.ProcessorGenerators
 
 
 
-                foreach (var import in declaration.SyntaxTree.GetRoot().ChildNodes().OfType<UsingDirectiveSyntax>())
+                foreach (var import in declaration?.SyntaxTree.GetRoot().ChildNodes().OfType<UsingDirectiveSyntax>() ?? Enumerable.Empty<UsingDirectiveSyntax>())
                     writer.Write(import.ToFullString());
 
                 writer.WriteEmptyLines(1);
@@ -74,8 +74,8 @@ namespace SoftTouch.ECS.ProcessorGenerators
                     .WriteLine(processor.Name)
                     .OpenBlock();
 
-                writer.Write("public ").Write(world.Identifier.ToString()).WriteLine(" World { get; set; }");
-                for (int i = 0; i < queries.Count; i++)
+                writer.Write("public ").Write(world?.Identifier.ToString() ?? "").WriteLine(" World { get; set; }");
+                for (int i = 0; i < queries?.Count; i++)
                 {
                     if (queries[i] != null && queries[i].Identifier != null)
                         writer.Write("public ").Write(queries[i].ToString()).Write(" ").Write(queries[i].Identifier.ToString()).Write($"{i + 1}").WriteLine(" { get; set; }");
@@ -83,11 +83,11 @@ namespace SoftTouch.ECS.ProcessorGenerators
 
                 writer
                     .Write("public void WithWorld(")
-                    .Write(world.Identifier.ToString())
+                    .Write(world?.Identifier.ToString() ?? "")
                     .WriteLine(" w)")
                     .OpenBlock();
                 writer.WriteLine("World = w;");
-                for (int i = 0; i < queries.Count; i++)
+                for (int i = 0; i < queries?.Count; i++)
                 {
                     writer.Write("Query").Write($"{i + 1}").WriteLine(" = new();");
                     writer.Write("Query").Write($"{i + 1}").WriteLine(".WithWorld(w);");
@@ -96,12 +96,10 @@ namespace SoftTouch.ECS.ProcessorGenerators
 
                 context.AddSource($"{processor.Name}.gen.cs", writer.ToString());
             }
-            var x = 0;
-
         }
 
 
-        public void FindTypeDeclarations(GeneratorExecutionContext context, string name, SyntaxNode node, List<ClassDeclarationSyntax> types, string nsp = null)
+        public void FindTypeDeclarations(GeneratorExecutionContext context, string name, SyntaxNode node, List<ClassDeclarationSyntax> types, string nsp = null!)
         {
             if (node is NamespaceDeclarationSyntax nds)
             {

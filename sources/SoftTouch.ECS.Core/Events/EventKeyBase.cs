@@ -33,7 +33,7 @@ public class EventKeyBase<T> : IDisposable
 
     internal IDisposable Connect(EventReceiverBase<T> target)
     {
-        return broadcastBlock.LinkTo(target.BufferBlock);
+        return broadcastBlock.LinkTo(target.BufferBlock!);
     }
 
     protected void InternalBroadcast(T data)

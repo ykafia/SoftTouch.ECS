@@ -38,8 +38,10 @@ public record struct Query<TComp> : IEntityQuery
         var comp = new TComp();
         if (comp is IReadComponent read)
             Read = read;
-        else if (comp is IWriteComponent write)
+        else Read = null!;
+        if (comp is IWriteComponent write)
             Write = write;
+        else Write = null!;
     }
 
     public static IReadComponent Read { get; }
@@ -68,8 +70,11 @@ public record struct FilteredQuery<TComp, TFilter> : IFilteredEntityQuery
         var comp = new TComp();
         if (comp is IReadComponent read)
             Read = read;
-        else if (comp is IWriteComponent write)
+        else Read = null!;
+        if (comp is IWriteComponent write)
             Write = write;
+        else Write = null!;
+
         Filters = new TFilter();
     }
 

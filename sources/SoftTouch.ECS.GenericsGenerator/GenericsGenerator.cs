@@ -18,6 +18,68 @@ public class GenericsGenerator : ISourceGenerator
         // GenerateWorldQueries(context);
         GenerateFilters(context);
         //GenerateProcessorSetExtensions(context);
+        GenerateProcessorCreators(context);
+    }
+
+    public void GenerateProcessorCreators(GeneratorExecutionContext context)
+    {
+        var code = new CodeWriter();
+        code
+            .WriteLine("using CommunityToolkit.HighPerformance.Buffers;")
+            .WriteLine("using SoftTouch.ECS.Processors;")
+            .WriteLine("using SoftTouch.ECS.Querying;")
+            .WriteLine("using SoftTouch.ECS.Scheduling;")
+            .WriteEmptyLines(2)
+            .WriteLine("namespace SoftTouch.ECS.Scheduling;")
+            .WriteEmptyLines(3)
+            .WriteLine("public partial class App")
+            .OpenBlock();
+
+        for(int i = 0; i < 16; i++)
+        {
+            var range = Enumerable.Range(1, i + 1);
+            code
+                .WriteLine($"public App AddProcessors<{range.Select(x => $"P{x}")}>(string name)");
+            foreach(var r in range)
+                code.WriteLine($"    where P{r} : Processor, new()");
+            code
+                .OpenBlock()
+                .WriteLine("using var merge = new MergeStage")
+                .OpenBlock()
+                .WriteLine("Name = name,")
+                .Write($"Processors = MemoryOwner<Processor>.Allocate({i+1}, AllocationMode.Clear)")
+                .CloseBlock();
+            foreach(var r in range)
+                code.WriteLine($"merge.Processors.Span[{r-1}] = new P{r}(){{World = World}};");
+            code
+                .WriteLine("Schedule.Add(merge);")
+                .WriteLine("return this;")
+                .CloseBlock();
+        }
+        for (int i = 0; i < 16; i++)
+        {
+            var range = Enumerable.Range(1, i + 1);
+            code
+                .WriteLine($"public App AddProcessors(string name, {range.Select(x => $"Processor p{x}")})");
+            code
+                .OpenBlock()
+                .WriteLine("using var merge = new MergeStage")
+                .OpenBlock()
+                .WriteLine("Name = name,")
+                .Write($"Processors = MemoryOwner<Processor>.Allocate({i + 1}, AllocationMode.Clear)")
+                .CloseBlock();
+            foreach (var r in range)
+            {
+                code.WriteLine($"p{r}.World = World;");
+                code.WriteLine($"merge.Processors.Span[{r - 1}] = p{r};");
+            }
+            code
+                .WriteLine("Schedule.Add(merge);")
+                .WriteLine("return this;")
+                .CloseBlock();
+        }
+        code.CloseAllBlocks();
+        context.AddSource("App.g.cs",code.ToString());
     }
 
     private void GenerateProcessorSetExtensions(GeneratorExecutionContext context)

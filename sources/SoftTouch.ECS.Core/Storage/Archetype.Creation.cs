@@ -9,7 +9,11 @@ namespace SoftTouch.ECS.Storage;
 
 public partial class Archetype
 {
-    public Archetype() { }
+    public Archetype() 
+    { 
+        World = null!;
+        EntityLookup = new();
+    }
 
     public static Archetype Create<T1>(
             World world, 
