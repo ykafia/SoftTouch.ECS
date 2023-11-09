@@ -15,21 +15,34 @@ public class StartupProcessor : Processor<Resource<WorldCommands>>
     }
     public override void Update()
     {
+        Random rand = new Random();
         WorldCommands commands = Query;
-        commands.Spawn(1, new NameComponent("toto"));
-        commands.Spawn(8, new NameComponent("john"));
-        commands.Spawn(12, new NameComponent("jane"));
+        for(int i = 0; i < 1000; i++)
+        {
+            commands.Spawn(rand.Next(1,100), new NameComponent($"john n°{i}"));
+        }
     }
 }
 
-public class MyProcessor : Processor<Query<Read<int, NameComponent>>>
+public class WriteAge : Processor<Query<Read<int>>>
 {
-    public MyProcessor() : base(null!) { }
+    public WriteAge() : base(null!) { }
     public override void Update()
     {
         foreach(var entity in Query)
         {
-            Console.WriteLine($"Person with age {entity.Get<int>()} has for name {entity.Get<NameComponent>().Name}");
+            Console.WriteLine($"There's a person that is {entity.Get<int>()} years old");
+        }
+    }
+}
+public class SayHello : Processor<Query<Read<NameComponent>>>
+{
+    public SayHello() : base(null!) { }
+    public override void Update()
+    {
+        foreach (var entity in Query)
+        {
+            Console.WriteLine($"Hello {entity.Get<NameComponent>().Name}!");
         }
     }
 }

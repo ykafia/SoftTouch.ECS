@@ -22,26 +22,22 @@ public struct ProcessorStage
     public void Add<TProcessor>(TProcessor p)
         where TProcessor : Processor
     {
-        foreach(var group in ProcessorGroups)
-            if(group.TryAdd(p))
+        foreach (var group in ProcessorGroups)
+            if (group.TryAdd(p))
                 return;
         ProcessorGroups.Add(new ProcessorGroup().With(p));
     }
     public void Remove<TProcessor>(TProcessor p)
         where TProcessor : Processor
     {
-        foreach(var group in ProcessorGroups)
-            if(group.TryRemove(p))
+        foreach (var group in ProcessorGroups)
+            if (group.TryRemove(p))
                 break;
     }
 
     public void Run()
     {
-        tasks.Clear();
-        foreach(var g in ProcessorGroups)
-            if(g.Count > 0)
-                tasks.Add(Task.Run(g.Update));
-        Task.WhenAll(tasks).Wait();
+        Parallel.ForEach(ProcessorGroups, group => group.Update());
     }
 
     public OrderedStage After(string other) => new() { Order = StageOrder.After, Stage = this, Other = other };

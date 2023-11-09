@@ -160,13 +160,70 @@ public class MyFirstProcessor : Processor<Query<Read<Name,Transform>>>
 }
 ```
 
+### Scheduling (WIP)
 
+The implementation offers a processor scheduler. Processors can be declared in ordered stages, you can execute logic for input events before the game logic by creating stages and ordering them.
 
-### Future of the API
+Processors with disjoint queries (i.e. that queries completely different components) are grouped together in stages in order to be run in parallel.
 
-So far the query api has been stabilized, i don't think it'll change much more. 
-My focus will shift on the `System`/`Processor` scheduler, to make sure processors can be run on parallel without too much data race.
+```csharp
 
+var app =
+    new App()
+    // This startup processor will be run during the `Startup` stage
+    .AddStartupProcessor<StartupProcessor>()
+    // These processors will be run during the default `Main` stage, you can specify the stage by adding the optional string parameter name
+    .AddProcessor<SayHello>()
+    .AddProcessor<WriteAge>();
+
+// Upon update, SayHello and WriteAge will run in parallel since they both query different types in the database.
+app.Update();
+
+```
+
+Given these processors :
+
+```csharp
+public class StartupProcessor : Processor<Resource<WorldCommands>>
+{
+    public StartupProcessor() : base(null!)
+    {
+
+    }
+    public override void Update()
+    {
+        Random rand = new Random();
+        WorldCommands commands = Query;
+        for(int i = 0; i < 1000; i++)
+        {
+            commands.Spawn(rand.Next(1,100), new NameComponent($"john n°{i}"));
+        }
+    }
+}
+
+public class WriteAge : Processor<Query<Read<int>>>
+{
+    public WriteAge() : base(null!) { }
+    public override void Update()
+    {
+        foreach(var entity in Query)
+        {
+            Console.WriteLine($"There's a person that is {entity.Get<int>()} years old");
+        }
+    }
+}
+public class SayHello : Processor<Query<Read<NameComponent>>>
+{
+    public SayHello() : base(null!) { }
+    public override void Update()
+    {
+        foreach (var entity in Query)
+        {
+            Console.WriteLine($"Hello {entity.Get<NameComponent>().Name}!");
+        }
+    }
+}
+```
 
 ## F# API
 
