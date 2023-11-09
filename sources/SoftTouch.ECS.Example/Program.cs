@@ -8,17 +8,17 @@ using SoftTouch.ECS.Querying;
 var app =
     new App()
     .AddStartupProcessor<StartupProcessor>()
-    .AddStartupProcessor(static (Query<Read<int>> ages) =>
-    {
-        foreach (var age in ages)
-            Console.WriteLine(age.Get<int>());
-    })
+    .AddProcessor(
+        static (Query<Read<int>> ages) =>
+        {
+            Console.WriteLine("Checking ages");
+            foreach (var age in ages)
+                Console.WriteLine(age.Get<int>());
+        }, 
+        name: "Init"
+    )
     .AddProcessor<MyProcessor>();
-foreach(var t in  MyProcessor.StaticRelatedTypes)
-    Console.WriteLine($"MyProcessor is related to type : {t.Name}");
 // foreach(var e in )
-
-app.AddProcessors<MyProcessor>("Main");
 app.Update();
 var x = 0;
 

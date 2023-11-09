@@ -6,11 +6,17 @@ namespace SoftTouch.ECS.Scheduling;
 
 public class Scheduler
 {
-    public List<ProcessorStage> Stages { get; }
+    public ProcessorStageCollection Stages { get; }
 
     public Scheduler()
     {
         Stages = new();
+    }
+
+    public void Run()
+    {
+        foreach (var stage in Stages)
+            stage.Run();
     }
 
     public void Add(in ProcessorStage stage)
@@ -29,7 +35,7 @@ public class Scheduler
                     s.Add(processor);
                 return;
             }
-        var newStage = new ProcessorStage();
+        var newStage = new ProcessorStage("Main");
         foreach (var processor in stage.Processors.Span)
             newStage.Add(processor);
         Add(newStage);

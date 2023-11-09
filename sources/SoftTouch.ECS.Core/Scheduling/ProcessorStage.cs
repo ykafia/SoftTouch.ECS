@@ -12,7 +12,10 @@ public struct ProcessorStage
     public ProcessorStage(string name)
     {
         Name = name;
-        ProcessorGroups = new();
+        ProcessorGroups = new()
+        {
+            new()
+        };
         tasks = new(8);
     }
 
@@ -21,7 +24,8 @@ public struct ProcessorStage
     {
         foreach(var group in ProcessorGroups)
             if(group.TryAdd(p))
-                break;
+                return;
+        ProcessorGroups.Add(new ProcessorGroup().With(p));
     }
     public void Remove<TProcessor>(TProcessor p)
         where TProcessor : Processor
@@ -31,11 +35,15 @@ public struct ProcessorStage
                 break;
     }
 
-    public void Update()
+    public void Run()
     {
         tasks.Clear();
         foreach(var g in ProcessorGroups)
-            tasks.Add(Task.Run(g.Update));
+            if(g.Count > 0)
+                tasks.Add(Task.Run(g.Update));
         Task.WhenAll(tasks).Wait();
     }
+
+    public OrderedStage After(string other) => new() { Order = StageOrder.After, Stage = this, Other = other };
+    public OrderedStage Before(string other) => new() { Order = StageOrder.Before, Stage = this, Other = other };
 }

@@ -77,6 +77,10 @@ namespace SoftTouch.ECS.Generators.Shared
         {
             return Dedent().WriteLine("}");
         }
+        public CodeWriter CloseBlockWith(string c)
+        {
+            return Dedent().WriteLine("}" + c);
+        }
         public CodeWriter CloseAllBlocks()
         {
             for(int i = 0; i < indentation; i++)

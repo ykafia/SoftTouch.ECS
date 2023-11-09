@@ -6,74 +6,74 @@ namespace SoftTouch.ECS;
 
 public partial class App
 {
-
-    public App AddProcessor(Processor processor)
+    public App AddProcessor(Processor processor, string name = "Main")
     {
         processor.World = World;
-        Processors.Add(processor);
+        AddProcessors(name, processor);
         return this;
     }
     public App AddStartupProcessor(Processor processor)
     {
         processor.World = World;
-        StartupProcessors.Add(processor);
+        processor.RunAndDisable = true;
+        AddProcessors("Startup", processor);
         return this;
     }
-    public App AddProcessor<T>()
+    public App AddProcessor<T>(string name = "Main")
         where T : Processor, new()
     {
-        Processors.Add(new T() { World = World });
+        AddProcessors(name, new T() { World = World });
         return this;
     }
 
     public App AddStartupProcessor<T>()
         where T : Processor, new()
     {
-        StartupProcessors.Add(new T() { World = World });
+        AddProcessors("Startup", new T() { World = World, RunAndDisable = true});
         return this;
     }
 
-    public App AddProcessor<Q>(UpdaterFunc<Q> func)
+    public App AddProcessor<Q>(UpdaterFunc<Q> func, string name = "Main")
         where Q : struct, IWorldQuery
     {
-        Processors.Add(new DelegateProcessor<Q>(func) { World = World });
+        AddProcessors(name, new DelegateProcessor<Q>(func) { World = World });
         return this;
     }
-    public App AddProcessor<Q1, Q2>(UpdaterFunc<Q1, Q2> func)
+    public App AddProcessor<Q1, Q2>(UpdaterFunc<Q1, Q2> func, string name = "Main")
         where Q1 : struct, IWorldQuery
         where Q2 : struct, IWorldQuery
     {
-        Processors.Add(new DelegateProcessor<Q1, Q2>(func) { World = World });
+        AddProcessors(name, new DelegateProcessor<Q1, Q2>(func) { World = World });
         return this;
     }
-    public App AddProcessor<Q1, Q2, Q3>(UpdaterFunc<Q1, Q2, Q3> func)
+    public App AddProcessor<Q1, Q2, Q3>(UpdaterFunc<Q1, Q2, Q3> func, string name = "Main")
         where Q1 : struct, IWorldQuery
         where Q2 : struct, IWorldQuery
         where Q3 : struct, IWorldQuery
     {
-        Processors.Add(new DelegateProcessor<Q1, Q2, Q3>(func) { World = World });
+        AddProcessors(name, new DelegateProcessor<Q1, Q2, Q3>(func) { World = World });
         return this;
     }
-    public App AddProcessor<Q1, Q2, Q3, Q4>(UpdaterFunc<Q1, Q2, Q3, Q4> func)
+    public App AddProcessor<Q1, Q2, Q3, Q4>(UpdaterFunc<Q1, Q2, Q3, Q4> func, string name = "Main")
         where Q1 : struct, IWorldQuery
         where Q2 : struct, IWorldQuery
         where Q3 : struct, IWorldQuery
         where Q4 : struct, IWorldQuery
     {
-        Processors.Add(new DelegateProcessor<Q1, Q2, Q3, Q4>(func) { World = World });
+        AddProcessors(name, new DelegateProcessor<Q1, Q2, Q3, Q4>(func) { World = World });
         return this;
     }
     public App AddStartupProcessor<Q>(UpdaterFunc<Q> func)
         where Q : struct, IWorldQuery
     {
-        StartupProcessors.Add(new DelegateProcessor<Q>(func) { World = World });
+        AddProcessors("Startup", new DelegateProcessor<Q>(func) { World = World, RunAndDisable = true });
         return this;
     }
     public App AddStartupProcessor<Q1, Q2>(UpdaterFunc<Q1, Q2> func)
         where Q1 : struct, IWorldQuery
         where Q2 : struct, IWorldQuery
     {
-        StartupProcessors.Add(new DelegateProcessor<Q1, Q2>(func) { World = World });
+        AddProcessors("Startup", new DelegateProcessor<Q1, Q2>(func) { World = World, RunAndDisable = true });
         return this;
     }
     public App AddStartupProcessor<Q1, Q2, Q3>(UpdaterFunc<Q1, Q2, Q3> func)
@@ -81,7 +81,7 @@ public partial class App
         where Q2 : struct, IWorldQuery
         where Q3 : struct, IWorldQuery
     {
-        StartupProcessors.Add(new DelegateProcessor<Q1, Q2, Q3>(func) { World = World });
+        AddProcessors("Startup", new DelegateProcessor<Q1, Q2, Q3>(func) { World = World, RunAndDisable = true });
         return this;
     }
     public App AddStartupProcessor<Q1, Q2, Q3, Q4>(UpdaterFunc<Q1, Q2, Q3, Q4> func)
@@ -90,7 +90,7 @@ public partial class App
         where Q3 : struct, IWorldQuery
         where Q4 : struct, IWorldQuery
     {
-        StartupProcessors.Add(new DelegateProcessor<Q1, Q2, Q3, Q4>(func) { World = World });
+        AddProcessors("Startup", new DelegateProcessor<Q1, Q2, Q3, Q4>(func) { World = World, RunAndDisable = true });
         return this;
     }
 

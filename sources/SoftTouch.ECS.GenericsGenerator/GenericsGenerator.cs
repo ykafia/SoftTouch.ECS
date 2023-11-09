@@ -30,7 +30,7 @@ public class GenericsGenerator : ISourceGenerator
             .WriteLine("using SoftTouch.ECS.Querying;")
             .WriteLine("using SoftTouch.ECS.Scheduling;")
             .WriteEmptyLines(2)
-            .WriteLine("namespace SoftTouch.ECS.Scheduling;")
+            .WriteLine("namespace SoftTouch.ECS;")
             .WriteEmptyLines(3)
             .WriteLine("public partial class App")
             .OpenBlock();
@@ -39,7 +39,7 @@ public class GenericsGenerator : ISourceGenerator
         {
             var range = Enumerable.Range(1, i + 1);
             code
-                .WriteLine($"public App AddProcessors<{range.Select(x => $"P{x}")}>(string name)");
+                .WriteLine($"public App AddProcessors<{string.Join(", ", range.Select(x => $"P{x}"))}>(string name)");
             foreach(var r in range)
                 code.WriteLine($"    where P{r} : Processor, new()");
             code
@@ -47,8 +47,8 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine("using var merge = new MergeStage")
                 .OpenBlock()
                 .WriteLine("Name = name,")
-                .Write($"Processors = MemoryOwner<Processor>.Allocate({i+1}, AllocationMode.Clear)")
-                .CloseBlock();
+                .WriteLine($"Processors = MemoryOwner<Processor>.Allocate({i+1}, AllocationMode.Clear)")
+                .CloseBlockWith(";");
             foreach(var r in range)
                 code.WriteLine($"merge.Processors.Span[{r-1}] = new P{r}(){{World = World}};");
             code
@@ -60,14 +60,14 @@ public class GenericsGenerator : ISourceGenerator
         {
             var range = Enumerable.Range(1, i + 1);
             code
-                .WriteLine($"public App AddProcessors(string name, {range.Select(x => $"Processor p{x}")})");
+                .WriteLine($"public App AddProcessors(string name, {string.Join(", ", range.Select(x => $"Processor p{x}"))})");
             code
                 .OpenBlock()
                 .WriteLine("using var merge = new MergeStage")
                 .OpenBlock()
                 .WriteLine("Name = name,")
-                .Write($"Processors = MemoryOwner<Processor>.Allocate({i + 1}, AllocationMode.Clear)")
-                .CloseBlock();
+                .WriteLine($"Processors = MemoryOwner<Processor>.Allocate({i + 1}, AllocationMode.Clear)")
+                .CloseBlockWith(";");
             foreach (var r in range)
             {
                 code.WriteLine($"p{r}.World = World;");
