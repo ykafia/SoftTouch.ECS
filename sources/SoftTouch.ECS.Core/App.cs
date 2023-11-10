@@ -28,4 +28,9 @@ public partial class App
         Schedule.Run(parallel);
         World.ApplyUpdates();
     }
+    public virtual void UpdateNoWorldUpdates(bool parallel = true)
+    {
+        Schedule.Run(parallel);
+        //World.ApplyUpdates();
+    }
 }

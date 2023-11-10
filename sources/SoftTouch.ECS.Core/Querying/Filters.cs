@@ -9,16 +9,16 @@ namespace SoftTouch.ECS.Querying;
 
 public interface IFilterQuery
 {
-    public abstract static ImmutableSortedSet<Type> WithTypes { get; }
-    public abstract static ImmutableSortedSet<Type> WithoutTypes { get; }
+    public abstract static TypeSet WithTypes { get; }
+    public abstract static TypeSet WithoutTypes { get; }
 
-    public ImmutableSortedSet<Type> ImplWithTypes { get; }
-    public ImmutableSortedSet<Type> ImplWithoutTypes { get; }
+    public TypeSet ImplWithTypes { get; }
+    public TypeSet ImplWithoutTypes { get; }
 }
 public interface IFilter
 {
-    public abstract static ImmutableSortedSet<Type> WithTypes { get; }
-    public abstract static ImmutableSortedSet<Type> WithoutTypes { get; }
+    public abstract static TypeSet WithTypes { get; }
+    public abstract static TypeSet WithoutTypes { get; }
 }
 
 public interface IHasFilter : IFilter { }
@@ -27,36 +27,36 @@ public interface IWithoutFilter : IFilter { }
 public record Has<T>() : IFilter
     where T : struct, IEquatable<T>
 {
-    public static ImmutableSortedSet<Type> WithTypes { get; } = ImmutableSortedSet.Create(typeof(T));
-    public static ImmutableSortedSet<Type> WithoutTypes => ImmutableSortedSet<Type>.Empty;
+    public static TypeSet WithTypes { get; } = TypeSet.Create(typeof(T));
+    public static TypeSet WithoutTypes => TypeSet.Empty;
 }
 
 public record Without<T>() : IFilter
     where T : IEquatable<T>
 {
-    public static ImmutableSortedSet<Type> WithTypes => ImmutableSortedSet<Type>.Empty;
-    public static ImmutableSortedSet<Type> WithoutTypes { get; } = ImmutableSortedSet.Create(typeof(T));
+    public static TypeSet WithTypes => TypeSet.Empty;
+    public static TypeSet WithoutTypes { get; } = TypeSet.Create(typeof(T));
 }
 
 public record Filter<T>() : IFilterQuery
     where T : IFilter
 {
-    public static ImmutableSortedSet<Type> WithTypes { get; } = T.WithTypes; 
-    public static ImmutableSortedSet<Type> WithoutTypes { get; } = T.WithoutTypes;
+    public static TypeSet WithTypes { get; } = T.WithTypes; 
+    public static TypeSet WithoutTypes { get; } = T.WithoutTypes;
 
-    public ImmutableSortedSet<Type> ImplWithTypes => WithTypes;
-    public ImmutableSortedSet<Type> ImplWithoutTypes => WithoutTypes;
+    public TypeSet ImplWithTypes => WithTypes;
+    public TypeSet ImplWithoutTypes => WithoutTypes;
 }
 
 public record Filter<THas, TWithout>() : IFilterQuery
     where THas : IFilter
     where TWithout : IFilter
 {
-    public static ImmutableSortedSet<Type> WithTypes { get; } = THas.WithTypes;
-    public static ImmutableSortedSet<Type> WithoutTypes { get; } = TWithout.WithoutTypes;
+    public static TypeSet WithTypes { get; } = THas.WithTypes;
+    public static TypeSet WithoutTypes { get; } = TWithout.WithoutTypes;
 
-    public ImmutableSortedSet<Type> ImplWithTypes => WithTypes;
-    public ImmutableSortedSet<Type> ImplWithoutTypes => WithoutTypes;
+    public TypeSet ImplWithTypes => WithTypes;
+    public TypeSet ImplWithoutTypes => WithoutTypes;
 }
 
 

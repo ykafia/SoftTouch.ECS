@@ -53,8 +53,12 @@ public abstract class Processor<Q> : Processor, IProcessorRelation
         var hash = new HashSet<Type>();
         var q1 = new Q();
         if (q1 is IEntityQuery eq1)
-            foreach (var t in eq1.ImplWrite.Concat(eq1.ImplRead))
+        {
+            foreach (var t in eq1.ImplWrite)
                 hash.Add(t);
+            foreach (var t in eq1.ImplRead)
+                hash.Add(t);
+        }
         StaticRelatedTypes = hash.ToImmutableList();
     }
     public Q Query => new() { World = World };
@@ -73,11 +77,19 @@ public abstract class Processor<Q1, Q2> : Processor
         var q1 = new Q1();
         var q2 = new Q2();
         if (q1 is IEntityQuery eq1)
-            foreach (var t in eq1.ImplWrite.Concat(eq1.ImplRead))
+        {
+            foreach (var t in eq1.ImplWrite)
                 hash.Add(t);
+            foreach (var t in eq1.ImplRead)
+                hash.Add(t);
+        }
         if (q2 is IEntityQuery eq2)
-            foreach (var t in eq2.ImplWrite.Concat(eq2.ImplRead))
+        {
+            foreach (var t in eq2.ImplWrite)
                 hash.Add(t);
+            foreach (var t in eq2.ImplRead)
+                hash.Add(t);
+        }
         StaticRelatedTypes = hash.ToImmutableList();
     }
 
@@ -103,14 +115,26 @@ public abstract class Processor<Q1, Q2, Q3> : Processor
         var q2 = new Q2();
         var q3 = new Q3();
         if (q1 is IEntityQuery eq1)
-            foreach (var t in eq1.ImplWrite.Concat(eq1.ImplRead))
+        {
+            foreach (var t in eq1.ImplWrite)
                 hash.Add(t);
+            foreach (var t in eq1.ImplRead)
+                hash.Add(t);
+        }
         if (q2 is IEntityQuery eq2)
-            foreach (var t in eq2.ImplWrite.Concat(eq2.ImplRead))
+        {
+            foreach (var t in eq2.ImplWrite)
                 hash.Add(t);
+            foreach (var t in eq2.ImplRead)
+                hash.Add(t);
+        }
         if (q3 is IEntityQuery eq3)
-            foreach (var t in eq3.ImplWrite.Concat(eq3.ImplRead))
+        {
+            foreach (var t in eq3.ImplWrite)
                 hash.Add(t);
+            foreach (var t in eq3.ImplRead)
+                hash.Add(t);
+        }
         StaticRelatedTypes = hash.ToImmutableList();
     }
 
@@ -138,17 +162,33 @@ public abstract class Processor<Q1, Q2, Q3, Q4> : Processor
         var q3 = new Q3();
         var q4 = new Q4();
         if (q1 is IEntityQuery eq1)
-            foreach (var t in eq1.ImplWrite.Concat(eq1.ImplRead))
+        {
+            foreach (var t in eq1.ImplWrite)
                 hash.Add(t);
+            foreach (var t in eq1.ImplRead)
+                hash.Add(t);
+        }
         if (q2 is IEntityQuery eq2)
-            foreach (var t in eq2.ImplWrite.Concat(eq2.ImplRead))
+        {
+            foreach (var t in eq2.ImplWrite)
                 hash.Add(t);
+            foreach (var t in eq2.ImplRead)
+                hash.Add(t);
+        }
         if (q3 is IEntityQuery eq3)
-            foreach (var t in eq3.ImplWrite.Concat(eq3.ImplRead))
+        {
+            foreach (var t in eq3.ImplWrite)
                 hash.Add(t);
+            foreach (var t in eq3.ImplRead)
+                hash.Add(t);
+        }
         if (q4 is IEntityQuery eq4)
-            foreach (var t in eq4.ImplWrite.Concat(eq4.ImplRead))
+        {
+            foreach (var t in eq4.ImplWrite)
                 hash.Add(t);
+            foreach (var t in eq4.ImplRead)
+                hash.Add(t);
+        }
         StaticRelatedTypes = hash.ToImmutableList();
     }
 

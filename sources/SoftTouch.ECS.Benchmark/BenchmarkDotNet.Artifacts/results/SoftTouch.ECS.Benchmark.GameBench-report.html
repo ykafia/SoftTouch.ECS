@@ -2,7 +2,7 @@
 <html lang='en'>
 <head>
 <meta charset='utf-8' />
-<title>SoftTouch.ECS.Benchmark.GameBench-20231109-212223</title>
+<title>SoftTouch.ECS.Benchmark.GameBench-20231110-014224</title>
 
 <style type="text/css">
 	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
@@ -17,16 +17,17 @@ BenchmarkDotNet=v0.12.1, OS=Windows 10.0.22621
 AMD Ryzen 5 3500U with Radeon Vega Mobile Gfx, 1 CPU, 8 logical and 4 physical cores
 .NET Core SDK=7.0.403
   [Host]     : .NET Core 7.0.13 (CoreCLR 7.0.1323.51816, CoreFX 7.0.1323.51816), X64 RyuJIT
-  Job-TECXTQ : .NET Core 7.0.13 (CoreCLR 7.0.1323.51816, CoreFX 7.0.1323.51816), X64 RyuJIT
+  Job-ZHTRHW : .NET Core 7.0.13 (CoreCLR 7.0.1323.51816, CoreFX 7.0.1323.51816), X64 RyuJIT
 </code></pre>
-<pre><code>IterationCount=15  LaunchCount=3  WarmupCount=10  
+<pre><code>IterationCount=5  LaunchCount=1  WarmupCount=5  
 </code></pre>
 
 <table>
-<thead><tr><th>        Method</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Gen 0</th><th>Gen 1</th><th>Gen 2</th><th>Allocated</th>
+<thead><tr><th>                 Method</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Gen 0</th><th>Gen 1</th><th>Gen 2</th><th>Allocated</th>
 </tr>
-</thead><tbody><tr><td>SingleParallelUpdate</td><td>529.7 &mu;s</td><td>17.51 &mu;s</td><td>33.32 &mu;s</td><td>0.9766</td><td>-</td><td>-</td><td>3856 B</td>
-</tr><tr><td>SingleSyncUpdate</td><td>718.0 &mu;s</td><td>14.17 &mu;s</td><td>26.27 &mu;s</td><td>-</td><td>-</td><td>-</td><td>185 B</td>
+</thead><tbody><tr><td>SingleParallelUpdate</td><td>621.7 &mu;s</td><td>15.20 &mu;s</td><td>2.35 &mu;s</td><td>-</td><td>-</td><td>-</td><td>1 B</td>
+</tr><tr><td>SingleParallelUpdateNoWUpdate</td><td>632.4 &mu;s</td><td>37.31 &mu;s</td><td>5.77 &mu;s</td><td>-</td><td>-</td><td>-</td><td>1 B</td>
+</tr><tr><td>SingleSyncUpdate</td><td>716.0 &mu;s</td><td>301.41 &mu;s</td><td>78.28 &mu;s</td><td>-</td><td>-</td><td>-</td><td>-</td>
 </tr></tbody></table>
 </body>
 </html>

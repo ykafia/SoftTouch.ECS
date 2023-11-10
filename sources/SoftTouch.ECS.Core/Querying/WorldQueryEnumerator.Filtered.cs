@@ -57,7 +57,7 @@ public ref struct WorldFilteredQueryEnumerator<Q>
 {
     Q query;
     World world => query.World;
-    IEnumerator<KeyValuePair<ArchetypeID, Archetype>> enumerator;
+    ArchetypeList.Enumerator enumerator;
     Archetype currentArchetype => enumerator.Current.Value;
 
     bool inArch;
@@ -101,10 +101,19 @@ public ref struct WorldFilteredQueryEnumerator<Q>
     {
         if (id.Types == null)
             return false;
-        return
-            query.ImplRead.IsQuerySubsetOf(id.Types)
-            && query.ImplWrite.IsQuerySubsetOf(id.Types)
-            && Q.Filters.ImplWithTypes.IsQuerySubsetOf(id.Types)
-            && !Q.Filters.ImplWithoutTypes.IsQuerySubsetOf(id.Types);
+
+        if (id.Types.Length == 0)
+        {
+            return Q.Write != null && query.ImplWrite.Count == 0
+                && Q.Read != null && query.ImplRead.Count == 0;
+        }
+        else
+        {
+            return
+                query.ImplRead.IsQuerySubsetOf(id.Types)
+                && query.ImplWrite.IsQuerySubsetOf(id.Types)
+                && Q.Filters.ImplWithTypes.IsQuerySubsetOf(id.Types)
+                && !Q.Filters.ImplWithoutTypes.IsQuerySubsetOf(id.Types);
+        }
     }
 }

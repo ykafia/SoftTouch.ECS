@@ -12,4 +12,5 @@ var app =
     .AddProcessor<WriteAge>();
 // foreach(var e in )
 app.Update();
+app.Update();
 var x = 0;

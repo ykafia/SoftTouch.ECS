@@ -55,18 +55,22 @@ namespace SoftTouch.ECS
             var stor = Archetypes.Values;
             foreach (var arch in Archetypes.Values)
             {
-                foreach (var x in stor
-                    .Where(x => x.ID.IsAddedType(arch.ID))
-                    .Select(other => { arch.TypeExcept(other, out var types); return (types[0], other);}))
+                foreach (var x in stor)
                 {
-                    arch.Edges.Add[x.Item1] = x.other;
+                    if(x.ID.IsAddedType(arch.ID))
+                    {
+                        arch.TypeExcept(x, out var types); 
+                        arch.Edges.Add[types[0]] = x;
+                    }
+                    
                 }
-                foreach (var x in stor
-                    .Where(x => x.ID.IsRemovedType(arch.ID))
-                    .Select(other => { arch.TypeExcept(other, out var types); return (types[0], other);})
-                )
+                foreach (var x in stor)
                 {
-                    arch.Edges.Remove[x.Item1] = x.other;
+                    if (x.ID.IsAddedType(arch.ID))
+                    {
+                        arch.TypeExcept(x, out var types);
+                        arch.Edges.Add[types[0]] = x;
+                    }
                 }
             }
         }

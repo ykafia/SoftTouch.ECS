@@ -12,10 +12,15 @@ public struct ArchetypeID : IComparable
     static int GetNext() => ++globalId;
 
     public readonly int Id;
-    public readonly Type[] Types;
+    public readonly Type[] Types = Array.Empty<Type>();
     public readonly Span<Type> Span => Types.AsSpan();
 
     public int Count => Types.Length;
+
+    public ArchetypeID()
+    {
+        Types = Array.Empty<Type>();
+    }
     public ArchetypeID(params Type[] types)
     {
         Types = types;
@@ -83,9 +88,7 @@ public struct ArchetypeID : IComparable
     public override bool Equals(object? obj)
     {
         return obj is ArchetypeID iD &&
-               Id == iD.Id &&
-               EqualityComparer<Type[]>.Default.Equals(Types, iD.Types) &&
-               Count == iD.Count;
+               this == iD;
     }
 
     public override int GetHashCode()
@@ -128,11 +131,29 @@ public struct ArchetypeID : IComparable
 
     public static bool operator ==(ArchetypeID left, ArchetypeID right)
     {
-        return left.Equals(right);
+        var check = true;
+        if(left.Types.Length == 0 || right.Types.Length == 0)
+        {
+            if (left.Types.Length == right.Types.Length)
+                return true;
+            else return false;
+        }
+        foreach(var lt in left.Types)
+        {
+            check = check && right.Types.Contains(lt);
+        }
+        check = check && left.Types.Length == right.Types.Length;
+        return check;
     }
 
     public static bool operator !=(ArchetypeID left, ArchetypeID right)
     {
-        return !(left == right);
+        var check = true;
+        foreach (var lt in left.Types)
+        {
+            check = check && right.Types.Contains(lt);
+        }
+        check = check && left.Types.Length == right.Types.Length;
+        return !check;
     }
 }

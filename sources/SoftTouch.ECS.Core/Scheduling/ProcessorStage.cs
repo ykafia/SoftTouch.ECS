@@ -1,7 +1,20 @@
+using CommunityToolkit.HighPerformance.Helpers;
 using SoftTouch.ECS.Processors;
 
 namespace SoftTouch.ECS.Scheduling;
 
+public readonly struct GroupUpdater : IAction
+{
+    private readonly List<ProcessorGroup> _groups;
+    public GroupUpdater(List<ProcessorGroup> groups)
+    {
+        _groups = groups;
+    }
+    public void Invoke(int i)
+    {
+        _groups[i].Update();
+    }
+}
 
 public struct ProcessorStage
 {
@@ -37,11 +50,14 @@ public struct ProcessorStage
 
     public void Run(bool parallel = true)
     {
-        if (parallel)
-            Parallel.ForEach(ProcessorGroups, static group => group.Update());
-        else
-            foreach (var g in ProcessorGroups)
-                g.Update();
+        if (ProcessorGroups.Count > 0)
+        {
+            if (parallel && ProcessorGroups.Count >= 2 && ProcessorGroups[0].Count > 0)
+                ParallelHelper.For(..ProcessorGroups.Count, new GroupUpdater(ProcessorGroups));
+            else
+                foreach (var g in ProcessorGroups)
+                    g.Update();
+        }
     }
 
     public OrderedStage After(string other) => new() { Order = StageOrder.After, Stage = this, Other = other };

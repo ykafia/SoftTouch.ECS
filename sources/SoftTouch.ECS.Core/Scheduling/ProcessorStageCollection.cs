@@ -60,7 +60,7 @@ public class ProcessorStageCollection
         return false;
     }
 
-    public IEnumerator<ProcessorStage> GetEnumerator()
+    public List<ProcessorStage>.Enumerator GetEnumerator()
     {
         return processorStages.GetEnumerator();
     }

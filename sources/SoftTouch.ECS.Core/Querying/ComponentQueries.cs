@@ -9,11 +9,11 @@ namespace SoftTouch.ECS.Querying;
 
 public interface IComponentQuery 
 {
-    public static abstract ImmutableSortedSet<Type> TypesRead { get; }
-    public static abstract ImmutableSortedSet<Type> TypesWrite { get; }
+    public static abstract TypeSet TypesRead { get; }
+    public static abstract TypeSet TypesWrite { get; }
 
-    public ImmutableSortedSet<Type> ImplRead { get; }
-    public ImmutableSortedSet<Type> ImplWrite { get; }
+    public TypeSet ImplRead { get; }
+    public TypeSet ImplWrite { get; }
 }
 public interface IReadComponent : IComponentQuery { }
 public interface IWriteComponent : IComponentQuery { }
@@ -22,19 +22,19 @@ public interface IWriteComponent : IComponentQuery { }
 public record Read<T>() : IReadComponent
     where T : struct
 {
-    public static ImmutableSortedSet<Type> TypesRead { get; } = ImmutableSortedSet.Create(Comparer<Type>.Create(static (a,b) => a.Name.CompareTo(b.Name)),typeof(T));
-    public static ImmutableSortedSet<Type> TypesWrite { get; } = ImmutableSortedSet<Type>.Empty;
+    public static TypeSet TypesRead { get; } = TypeSet.Create(typeof(T));
+    public static TypeSet TypesWrite { get; } = TypeSet.Empty;
 
-    public ImmutableSortedSet<Type> ImplRead => TypesRead;
-    public ImmutableSortedSet<Type> ImplWrite => TypesWrite;
+    public TypeSet ImplRead => TypesRead;
+    public TypeSet ImplWrite => TypesWrite;
 }
 
 public record Write<T>() : IWriteComponent
     where T : struct
 {
-    public static ImmutableSortedSet<Type> TypesRead { get; } = ImmutableSortedSet<Type>.Empty;
-    public static ImmutableSortedSet<Type> TypesWrite { get; } = ImmutableSortedSet.Create(Comparer<Type>.Create(static (a,b) => a.Name.CompareTo(b.Name)),typeof(T));
+    public static TypeSet TypesRead { get; } = TypeSet.Empty;
+    public static TypeSet TypesWrite { get; } = TypeSet.Create(typeof(T));
 
-    public ImmutableSortedSet<Type> ImplRead => TypesRead;
-    public ImmutableSortedSet<Type> ImplWrite => TypesWrite;
+    public TypeSet ImplRead => TypesRead;
+    public TypeSet ImplWrite => TypesWrite;
 }

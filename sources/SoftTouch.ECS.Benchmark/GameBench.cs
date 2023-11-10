@@ -50,7 +50,7 @@ public class SayHello : Processor<Query<Read<NameComponent>, Write<float>>>
 }
 
 [MemoryDiagnoser]
-[SimpleJob(launchCount: 3, warmupCount: 10, targetCount: 15)]
+[SimpleJob(launchCount: 1, warmupCount: 5, targetCount: 5)]
 public class GameBench
 {
     App app;
@@ -71,8 +71,14 @@ public class GameBench
         app.Update();
     }
     [Benchmark]
+    public void SingleParallelUpdateNoWUpdate()
+    {
+        app.UpdateNoWorldUpdates();
+    }
+    [Benchmark]
     public void SingleSyncUpdate()
     {
         app.Update(false);
     }
+
 }
