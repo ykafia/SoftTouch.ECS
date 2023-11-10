@@ -1,35 +1,29 @@
 using CommunityToolkit.HighPerformance.Helpers;
 using SoftTouch.ECS.Processors;
+using System.Runtime.InteropServices;
 
 namespace SoftTouch.ECS.Scheduling;
 
-public readonly struct GroupUpdater : IAction
+public readonly struct GroupUpdater : IRefAction<ProcessorGroup>
 {
-    private readonly List<ProcessorGroup> _groups;
-    public GroupUpdater(List<ProcessorGroup> groups)
+    public void Invoke(ref ProcessorGroup item)
     {
-        _groups = groups;
-    }
-    public void Invoke(int i)
-    {
-        _groups[i].Update();
+        item.Update();
     }
 }
 
 public struct ProcessorStage
 {
     public string Name { get; set; }
-    public List<ProcessorGroup> ProcessorGroups { get; }
-    List<Task> tasks;
+    public ProcessorGroupCollection ProcessorGroups { get; }
+
+    //List<Task> actions;
 
     public ProcessorStage(string name)
     {
         Name = name;
-        ProcessorGroups = new()
-        {
-            new()
-        };
-        tasks = new(8);
+        ProcessorGroups = new();
+        ProcessorGroups.Add(new());
     }
 
     public void Add<TProcessor>(TProcessor p)
@@ -50,10 +44,18 @@ public struct ProcessorStage
 
     public void Run(bool parallel = true)
     {
-        if (ProcessorGroups.Count > 0)
+        if (ProcessorGroups.Length > 0)
         {
-            if (parallel && ProcessorGroups.Count >= 2 && ProcessorGroups[0].Count > 0)
-                ParallelHelper.For(..ProcessorGroups.Count, new GroupUpdater(ProcessorGroups));
+            if (parallel && ProcessorGroups.Length == 1 && ProcessorGroups[0].Count > 0)
+            {
+                ProcessorGroups[0].Update();
+            }
+            else if (parallel && ProcessorGroups.Length == 2 && ProcessorGroups[0].Count == 0)
+            {
+                ProcessorGroups[1].Update();
+            }
+            else if (parallel && ProcessorGroups.Length > 2)
+                ParallelHelper.ForEach<ProcessorGroup,GroupUpdater>(ProcessorGroups.Memory);
             else
                 foreach (var g in ProcessorGroups)
                     g.Update();

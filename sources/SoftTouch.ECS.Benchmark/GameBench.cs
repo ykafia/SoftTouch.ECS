@@ -71,14 +71,28 @@ public class GameBench
         app.Update();
     }
     [Benchmark]
-    public void SingleParallelUpdateNoWUpdate()
+    public void TenParallelUpdate()
     {
-        app.UpdateNoWorldUpdates();
+        app.Update();
+        app.Update();
+        app.Update();
+        app.Update();
+        app.Update();
+        app.Update();
+        app.Update();
+        app.Update();
+        app.Update();
+        app.Update();
     }
-    [Benchmark]
-    public void SingleSyncUpdate()
-    {
-        app.Update(false);
-    }
+    //[Benchmark]
+    //public void SingleParallelUpdateNoWUpdate()
+    //{
+    //    app.UpdateNoWorldUpdates();
+    //}
+    //[Benchmark]
+    //public void SingleSyncUpdate()
+    //{
+    //    app.Update(false);
+    //}
 
 }
