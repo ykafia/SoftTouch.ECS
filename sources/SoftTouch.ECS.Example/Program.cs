@@ -16,9 +16,6 @@ var fps = 0d;
 var min = double.PositiveInfinity;
 while (true)
 {
-    s.Restart();
     app.Update();
-    s.Stop();
-    fps  = 1/s.Elapsed.TotalSeconds;
-    Console.Write($"\r{fps, 0:00000:F2}fps min : {min:0.##}          ");
+    Console.Write($"\r{app.AppTime.FramePerSecond,6:F2}  ");
 }

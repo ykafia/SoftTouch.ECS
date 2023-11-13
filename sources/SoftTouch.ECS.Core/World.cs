@@ -6,7 +6,7 @@ namespace SoftTouch.ECS
 {
     public sealed partial class World
     {
-
+        public AppTime? AppTime { get; }
         public WorldResources Resources = new();
         public List<Entity> Entities = new();
 
@@ -22,11 +22,16 @@ namespace SoftTouch.ECS
         public World()
         {
             Archetypes.Add(new(), Archetype.CreateEmpty(this));
-            Resources.Set(new WorldTimer());
+            Resources.Set(new WorldCommands(this));
+        }
+        public World(AppTime appTime)
+        {
+            AppTime = appTime;
+            Archetypes.Add(new(), Archetype.CreateEmpty(this));
             Resources.Set(new WorldCommands(this));
         }
 
-        
+
 
         internal Archetype GenerateArchetype(ArchetypeID types, IEnumerable<ComponentArray> components)
         {
@@ -57,12 +62,12 @@ namespace SoftTouch.ECS
             {
                 foreach (var x in stor)
                 {
-                    if(x.ID.IsAddedType(arch.ID))
+                    if (x.ID.IsAddedType(arch.ID))
                     {
-                        arch.TypeExcept(x, out var types); 
+                        arch.TypeExcept(x, out var types);
                         arch.Edges.Add[types[0]] = x;
                     }
-                    
+
                 }
                 foreach (var x in stor)
                 {
@@ -77,7 +82,7 @@ namespace SoftTouch.ECS
 
         public IEnumerable<Archetype> QueryArchetypes(ArchetypeID types)
         {
-            for (int i = 0; i< Archetypes.Count; i++)
+            for (int i = 0; i < Archetypes.Count; i++)
             {
                 if (Archetypes.Values[i].ID.IsSupersetOf(types.Span))
                     yield return Archetypes.Values[i];
