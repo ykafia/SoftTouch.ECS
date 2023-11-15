@@ -7,7 +7,7 @@ namespace SoftTouch.ECS.Querying;
 
 public interface IWorldQuery
 {
-    public World World { get; set; }
+    internal World World { get; set; }
 }
 
 public interface IEntityQuery : IWorldQuery

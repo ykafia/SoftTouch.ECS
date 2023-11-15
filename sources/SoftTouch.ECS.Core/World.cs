@@ -7,10 +7,10 @@ namespace SoftTouch.ECS
     public sealed partial class World
     {
         public AppTime? AppTime { get; }
-        public WorldResources Resources = new();
-        public List<Entity> Entities = new();
+        public WorldResources Resources { get; } = new();
+        internal List<Entity> Entities { get; } = new();
 
-        public ArchetypeList Archetypes = new();
+        internal ArchetypeList Archetypes = new();
 
         public WorldCommands Commands => Resources.Get<WorldCommands>();
 
@@ -30,8 +30,6 @@ namespace SoftTouch.ECS
             Archetypes.Add(new(), Archetype.CreateEmpty(this));
             Resources.Set(new WorldCommands(this));
         }
-
-
 
         internal Archetype GenerateArchetype(ArchetypeID types, IEnumerable<ComponentArray> components)
         {

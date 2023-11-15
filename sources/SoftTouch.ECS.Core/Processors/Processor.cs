@@ -17,7 +17,7 @@ public interface IProcessorRelation
 public abstract class Processor : IProcessorRelation
 {
 
-    public World World { get; set; }
+    internal World World { get; set; }
     public bool Enabled { get; set; }
     public bool RunAndDisable { get; set; }
     public static ImmutableList<Type> StaticRelatedTypes { get; internal set; } = ImmutableList.Create<Type>();
