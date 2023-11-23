@@ -17,10 +17,12 @@ public abstract class ComponentArray
     public abstract bool TryAdd<TOther>(TOther item) where TOther : struct, IEquatable<TOther>;
     public abstract bool TryRemove<TOther>(TOther item) where TOther : struct, IEquatable<TOther>;
     public abstract bool TryRemoveAt<TOther>(int index, out TOther item) where TOther : struct, IEquatable<TOther>;
-
+    public abstract void Clear();
     public abstract ComponentArray Create();
 
     public abstract void MoveTo(int index, ComponentArray componentArray);
+    public abstract void CopyTo(ComponentArray componentArray);
+    public abstract ComponentArray Clone();
 }
 
 public class ComponentArray<T> : ComponentArray
@@ -56,6 +58,15 @@ public class ComponentArray<T> : ComponentArray
         if (_owner.Length < Count + size)
         {
             var nbuff = MemoryOwner<T>.Allocate((int)BitOperations.RoundUpToPowerOf2((uint)(Count + size)), AllocationMode.Clear);
+            _owner.Span.CopyTo(nbuff.Span);
+            _owner = nbuff;
+        }
+    }
+    void ExpandTo(int fullsize)
+    {
+        if (_owner.Length < fullsize)
+        {
+            var nbuff = MemoryOwner<T>.Allocate((int)BitOperations.RoundUpToPowerOf2((uint)fullsize), AllocationMode.Clear);
             _owner.Span.CopyTo(nbuff.Span);
             _owner = nbuff;
         }
@@ -151,4 +162,26 @@ public class ComponentArray<T> : ComponentArray
 
     public override ComponentArray Create() => new ComponentArray<T>();
 
+    public override void Clear()
+    {
+        Span.Clear();
+        Count = 0;
+    }
+
+    public override void CopyTo(ComponentArray componentArray)
+    {
+        if(componentArray is ComponentArray<T> other)
+        {
+            other.ExpandTo(Count);
+            other.Count = Count;
+            Span.CopyTo(other.Span);
+        }
+    }
+
+    public override ComponentArray Clone()
+    {
+        var clone = new ComponentArray<T>();
+        CopyTo(clone);
+        return clone;
+    }
 }

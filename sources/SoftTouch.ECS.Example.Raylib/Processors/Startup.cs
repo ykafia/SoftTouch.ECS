@@ -12,6 +12,8 @@ public class Startup() : Processor<Commands>(null!)
 {
     public override void Update()
     {
+        InitWindow(800, 600, "MyGame");
+        SetWindowState(ConfigFlags.FLAG_WINDOW_UNDECORATED);
         Query.Spawn().With(new Camera3D()
         {
             Position = new(10),
@@ -34,21 +36,20 @@ public class Startup() : Processor<Commands>(null!)
         // Set shader value: ambient light level
         int ambientLoc = GetShaderLocation(shader, "ambient");
         SetShaderValue(shader, ambientLoc, [0.1f, 0.1f, 0.1f, 1.0f], ShaderUniformDataType.SHADER_UNIFORM_VEC4);
-        
-        unsafe {cube.Materials[0].Shader = shader;}
 
-        Query.Spawn().With(cube).With<Transform>();
-        Query.Spawn().With(cube).With<Transform>();
-        Query.Spawn().With(cube).With<Transform>();
-        Query.Spawn().With(cube).With<Transform>();
+        unsafe { cube.Materials[0].Shader = shader; }
+
+        Query.Spawn().With(cube);
+        Query.Spawn().With(cube);
+        Query.Spawn().With(cube);
+        Query.Spawn().With(cube);
 
 
 
-        Query.Spawn().With(Util.CreateLight(LightType.LIGHT_POINT, new(2,1,2), Vector3.Zero, Color.YELLOW, shader));
-        Query.Spawn().With(Util.CreateLight(LightType.LIGHT_POINT, new(-2,1,2), Vector3.Zero, Color.RED, shader));
-        Query.Spawn().With(Util.CreateLight(LightType.LIGHT_POINT, new(-2,1,-2), Vector3.Zero, Color.GREEN, shader));
-        Query.Spawn().With(Util.CreateLight(LightType.LIGHT_POINT, new(-2,1,2), Vector3.Zero, Color.BLUE, shader));
+        Query.Spawn().With(Util.CreateLight(LightType.LIGHT_POINT, new(2, 1, 2), Vector3.Zero, Color.YELLOW, shader));
+        Query.Spawn().With(Util.CreateLight(LightType.LIGHT_POINT, new(-2, 1, 2), Vector3.Zero, Color.RED, shader));
+        Query.Spawn().With(Util.CreateLight(LightType.LIGHT_POINT, new(-2, 1, -2), Vector3.Zero, Color.GREEN, shader));
+        Query.Spawn().With(Util.CreateLight(LightType.LIGHT_POINT, new(-2, 1, 2), Vector3.Zero, Color.BLUE, shader));
 
-        
     }
 }

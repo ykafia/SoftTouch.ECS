@@ -23,7 +23,11 @@ public class Scheduler
     {
         foreach(var s in Stages)
             if(s.Name == stage.Name)
-                throw new Exception($"Stage with name {stage.Name} already exists");
+            {
+                foreach(var g in stage.ProcessorGroups)
+                    foreach(var p in g)
+                        s.Add(p);
+            }
         Stages.Add(stage);
     }
     public void Add(in MergeStage stage)

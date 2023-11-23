@@ -18,6 +18,8 @@ public partial class App
 
     public Scheduler Schedule { get; init; }
 
+    public SubApp? SubApp { get; set; }
+
     public App()
     {
         AppTime = new();
@@ -32,6 +34,7 @@ public partial class App
         AppTime.Update();
         Schedule.Run(parallel);
         World.ApplyUpdates();
+        SubApp?.App.Update();
     }
     public virtual void UpdateNoWorldUpdates(bool parallel = true)
     {

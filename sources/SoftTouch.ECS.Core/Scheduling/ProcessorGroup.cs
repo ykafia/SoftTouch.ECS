@@ -88,4 +88,6 @@ public struct ProcessorGroup
             }
         }
     }
+
+    public List<Processor>.Enumerator GetEnumerator() => Processors.GetEnumerator();
 }

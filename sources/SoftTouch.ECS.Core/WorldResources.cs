@@ -15,7 +15,7 @@ public class WorldResources
         resources = new Dictionary<Type, object>();
     }
 
-    public void Set<T>(T obj) where T : class
+    internal void Set<T>(T obj) where T : class
     {
         resources[typeof(T)] = obj;
     }

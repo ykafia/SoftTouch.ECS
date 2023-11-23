@@ -9,7 +9,7 @@ namespace SoftTouch.ECS.Example.Rlib;
 
 
 
-public class CameraProcessor() : Processor<Query<Write<Camera3D>>>(null!)
+public class CameraUpdater() : Processor<Query<Write<Camera3D>>>(null!)
 {
     public override void Update()
     {

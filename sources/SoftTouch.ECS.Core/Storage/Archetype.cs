@@ -12,8 +12,8 @@ public partial class Archetype
     public static Archetype CreateEmpty(World w) => new(new List<ComponentBase>(), w);
 
     public World World { get; init; }
-    public Dictionary<Type, ComponentArray> Storage = new();
-    public EntityLookup EntityLookup { get; init; }
+    public Dictionary<Type, ComponentArray> Storage = [];
+    public EntityLookup EntityLookup { get; internal set; }
     public bool HasEntities => EntityLookup.Count > 0;
 
     public ArchetypeID ID = new();
@@ -107,8 +107,29 @@ public partial class Archetype
         return result.ToString();
     }
 
+    public void Clear()
+    {
+        foreach(var t in ID.Span)
+        {
+            Storage[t].Clear();
+        }
+        EntityLookup.Clear();
+    }
+
     public override int GetHashCode()
     {
         return ID.GetHashCode();
+    }
+
+    public Archetype Clone()
+    {
+        var clone = new Archetype
+        {
+            ID = ID
+        };
+        foreach (var t in ID.Types)
+            clone.Storage[t] = Storage[t].Clone();
+        clone.EntityLookup = EntityLookup.Clone();
+        return clone;
     }
 }

@@ -12,14 +12,14 @@ public struct ArchetypeID : IComparable
     static int GetNext() => ++globalId;
 
     public readonly int Id;
-    public readonly Type[] Types = Array.Empty<Type>();
+    public readonly Type[] Types = [];
     public readonly Span<Type> Span => Types.AsSpan();
 
     public int Count => Types.Length;
 
     public ArchetypeID()
     {
-        Types = Array.Empty<Type>();
+        Types = [];
     }
     public ArchetypeID(params Type[] types)
     {
@@ -73,7 +73,7 @@ public struct ArchetypeID : IComparable
             types = result;
         }
         else 
-            types = Array.Empty<Type>();
+            types = [];
     }
     public void Intersect(ArchetypeID other, out Type[] types)
     {

@@ -9,8 +9,8 @@ namespace SoftTouch.ECS.Storage;
 
 public class EntityLookup
 {
-    public Dictionary<EntityId, int> ArchetypeIndices = new();
-    public Dictionary<int, EntityId> EntityIndices = new();
+    public Dictionary<EntityId, int> ArchetypeIndices = [];
+    public Dictionary<int, EntityId> EntityIndices = [];
 
     public int Count => ArchetypeIndices.Count;
 
@@ -61,5 +61,20 @@ public class EntityLookup
     public int GetEntityId(int eIdx)
     {
         return EntityIndices[eIdx];
+    }
+
+    public void Clear()
+    {
+        ArchetypeIndices.Clear();
+        EntityIndices.Clear();
+    }
+
+    public EntityLookup Clone()
+    {
+        return new()
+        {
+            EntityIndices = new(EntityIndices),
+            ArchetypeIndices = new(ArchetypeIndices)
+        };
     }
 }
