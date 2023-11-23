@@ -36,10 +36,10 @@ var renderApp =
     .AddProcessors("EndDraw", new EndDraw());
 
 app.SubApp = new(renderApp, ExtractData);
+Raylib.InitWindow(800, 600, "MyGame");
 
-app.Update();
 
-while(!Raylib.WindowShouldClose())
+while (!Raylib.WindowShouldClose())
 {
     app.Update();
 }

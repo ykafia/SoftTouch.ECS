@@ -12,7 +12,7 @@ public class Startup() : Processor<Commands>(null!)
 {
     public override void Update()
     {
-        InitWindow(800, 600, "MyGame");
+        
         SetWindowState(ConfigFlags.FLAG_WINDOW_UNDECORATED);
         Query.Spawn().With(new Camera3D()
         {
