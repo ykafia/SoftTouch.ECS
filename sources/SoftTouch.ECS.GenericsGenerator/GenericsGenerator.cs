@@ -110,7 +110,7 @@ public class GenericsGenerator : ISourceGenerator
             var generics = Enumerable.Range(1, i).Select(x => "T" + x);
             code
                 .WriteLine($"public record struct Read<{string.Join(", ", generics)}>() : IReadComponent")
-                .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct, IEquatable<{x}>")))
+                .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
                 .OpenBlock()
                 .WriteLine($"public static TypeSet TypesRead {{ get; }} = TypeSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
                 .WriteLine($"public static TypeSet TypesWrite {{ get; }} = TypeSet.Empty;")
@@ -122,7 +122,7 @@ public class GenericsGenerator : ISourceGenerator
 
             code
                 .WriteLine($"public record struct Write<{string.Join(", ", generics)}>() : IWriteComponent")
-                .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct, IEquatable<{x}>")))
+                .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
                 .OpenBlock()
                 .WriteLine($"public static TypeSet TypesRead {{ get; }} = TypeSet.Empty;")
                 .WriteLine($"public static TypeSet TypesWrite {{ get; }} = TypeSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
@@ -159,9 +159,9 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine("public TypeSet ImplRead => Read == null ?  TypeSet.Empty : Read.ImplRead;")
                 .WriteLine("public TypeSet ImplWrite => Write == null ?  TypeSet.Empty : Write.ImplWrite;")
                 .WriteLine($"public WorldQueryEnumerator<Query<{string.Join(", ", generics)}>> GetEnumerator() => new(this);")
-                .WriteLine("public bool CanRead<T>() where T : struct, IEquatable<T> => CanRead(typeof(T));")
+                .WriteLine("public bool CanRead<T>() where T : struct => CanRead(typeof(T));")
                 .WriteLine("public bool CanRead(Type t) => (Read != null && ImplRead.Contains(t)) || (Write != null &&ImplWrite.Contains(t));")
-                .WriteLine("public bool CanWrite<T>() where T : struct, IEquatable<T> => ImplWrite.Contains(typeof(T));")
+                .WriteLine("public bool CanWrite<T>() where T : struct => ImplWrite.Contains(typeof(T));")
                 .WriteLine("public bool CanWrite(Type t) => ImplWrite.Contains(t);")
                 .WriteEmptyLines(2)
                 .WriteLine("static Query()")
@@ -192,9 +192,9 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine("public TypeSet ImplRead => Read == null ?  TypeSet.Empty : Read.ImplRead;")
                 .WriteLine("public TypeSet ImplWrite => Write == null ?  TypeSet.Empty : Write.ImplWrite;")
                 .WriteLine($"public WorldFilteredQueryEnumerator<FilteredQuery<{string.Join(", ", generics)}, TFilter>> GetEnumerator() => new(this);")
-                .WriteLine("public bool CanRead<T>() where T : struct, IEquatable<T> => CanRead(typeof(T));")
+                .WriteLine("public bool CanRead<T>() where T : struct => CanRead(typeof(T));")
                 .WriteLine("public bool CanRead(Type t) => (Read != null && ImplRead.Contains(t)) || (Write != null &&ImplWrite.Contains(t));")
-                .WriteLine("public bool CanWrite<T>() where T : struct, IEquatable<T> => ImplWrite.Contains(typeof(T));")
+                .WriteLine("public bool CanWrite<T>() where T : struct => ImplWrite.Contains(typeof(T));")
                 .WriteLine("public bool CanWrite(Type t) => ImplWrite.Contains(t);")
                 .WriteEmptyLines(2)
                 .WriteLine("static FilteredQuery()")
@@ -232,7 +232,7 @@ public class GenericsGenerator : ISourceGenerator
             var generics = Enumerable.Range(1, i).Select(x => "T" + x);
             code
                 .WriteLine($"public record Has<{string.Join(", ", generics)}>() : IFilter")
-                .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct, IEquatable<{x}>")))
+                .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
                 .OpenBlock()
                 .WriteLine($"public static TypeSet WithTypes {{ get; }} = TypeSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
                 .WriteLine($"public static TypeSet WithoutTypes {{ get; }} =  TypeSet.Empty;")
@@ -244,7 +244,7 @@ public class GenericsGenerator : ISourceGenerator
 
             code
                 .WriteLine($"public record Without<{string.Join(", ", generics )}>() : IFilter")
-                .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct, IEquatable<{x}>")))
+                .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
                 .OpenBlock()
                 .WriteLine($"public static TypeSet WithoutTypes {{ get; }} = TypeSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
                 .WriteLine($"public static TypeSet WithTypes {{ get; }} = TypeSet.Empty;")

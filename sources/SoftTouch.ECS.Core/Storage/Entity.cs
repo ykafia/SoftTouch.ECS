@@ -33,25 +33,25 @@ public struct Entity
 
 
 
-    public void Set<T>(in T cmp) where T : struct, IEquatable<T>
+    public void Set<T>(in T cmp) where T : struct
         => Archetype.SetComponent(ArchetypeIndex,in cmp);
 
-    public T Get<T>() where T : struct, IEquatable<T>
+    public T Get<T>() where T : struct
         => Archetype.GetComponentArray<T>()[ArchetypeIndex];
 
     public bool Has<T>()
         => Archetype.Storage.ContainsKey(typeof(T));
 
-    public void Add<T>(in T c) where T : struct, IEquatable<T>
+    public void Add<T>(in T c) where T : struct
     {
         World.AddArchetypeUpdate(new ComponentAdd<T>(c, in this));
     }
-    public void Remove<T>() where T : struct, IEquatable<T>
+    public void Remove<T>() where T : struct
     {
         World.AddArchetypeUpdate(new ComponentRemove<T>(in this));
     }
 
-    internal void AddComponent<T>(in T c) where T : struct, IEquatable<T>
+    internal void AddComponent<T>(in T c) where T : struct
     {
         var arrays = Archetype.Storage;
 

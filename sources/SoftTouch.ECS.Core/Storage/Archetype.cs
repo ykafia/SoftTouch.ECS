@@ -54,20 +54,20 @@ public partial class Archetype
     }
 
 
-    private Span<T> GetComponentSpan<T>() where T : struct, IEquatable<T>
+    private Span<T> GetComponentSpan<T>() where T : struct
     {
         return ((ComponentArray<T>)Storage[typeof(T)]).Span;
     }
-    internal ComponentArray<T> GetComponentArray<T>() where T : struct, IEquatable<T>
+    internal ComponentArray<T> GetComponentArray<T>() where T : struct
     {
         return (ComponentArray<T>)Storage[typeof(T)];
     }
-    public void GetComponent<T>(int i, out T c) where T : struct, IEquatable<T>
+    public void GetComponent<T>(int i, out T c) where T : struct
     {
         c = GetComponentArray<T>()[i];
     }
 
-    internal void SetEntityComponent<T>(in EntityId entity, in T component) where T : struct, IEquatable<T>
+    internal void SetEntityComponent<T>(in EntityId entity, in T component) where T : struct
     {
         var array = GetComponentArray<T>();
         if (EntityLookup.TryGetValue(entity, out var idx))
@@ -86,7 +86,7 @@ public partial class Archetype
         if (EntityLookup.Count > 0)
             EntityLookup.Remove(idx);
     }
-    public void SetComponent<T>(int index, in T component) where T : struct, IEquatable<T>
+    public void SetComponent<T>(int index, in T component) where T : struct
     {
         GetComponentArray<T>()[index] = component;
     }

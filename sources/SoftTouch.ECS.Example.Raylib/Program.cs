@@ -2,6 +2,7 @@
 using System.Numerics;
 using Raylib_cs;
 using SoftTouch.ECS.Example.RaylibUtilities;
+using SoftTouch.ECS.Example.Rlib;
 Console.WriteLine("Hello, World!");
 
 
@@ -23,14 +24,6 @@ Camera3D camera = new()
 
 var plane = Raylib.LoadModelFromMesh(Raylib.GenMeshPlane(10,10,10,10));
 var cube = Raylib.LoadModelFromMesh(Raylib.GenMeshCube(1, 1, 1));
-
-Matrix4x4[] transforms = new Matrix4x4[1000];
-transforms.AsSpan().Fill(Matrix4x4.Identity);
-Random rand = new();
-for (int i = 0; i < 1000; i++)
-{
-    transforms[i] = Raymath.MatrixTranslate(10 * (rand.NextSingle() - 0.5f), 10 * (rand.NextSingle() - 0.5f), 10 * (rand.NextSingle() - 0.5f));
-}
 
 var shader = Raylib.LoadShader("GLSL/lighting.vert", "GLSL/lighting.frag");
 

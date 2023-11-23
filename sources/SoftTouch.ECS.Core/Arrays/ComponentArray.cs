@@ -24,7 +24,7 @@ public abstract class ComponentArray
 }
 
 public class ComponentArray<T> : ComponentArray
-    where T : struct, IEquatable<T>
+    where T : struct
 {
     MemoryOwner<T> _owner;
     public Span<T> Span => _owner.Span[..Count];

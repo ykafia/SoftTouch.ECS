@@ -23,26 +23,33 @@ public ref struct QueryEntity<Q>
     }
 
     public T Get<T>()
-        where T : struct, IEquatable<T>
+        where T : struct
     {
         if (!query.CanRead(typeof(T)))
             throw new ArgumentException($"Cannot read from type {typeof(T).Name}");
         archetype.GetComponent<T>(archetypeIndex, out var result);
         return result;
     }
+    public ref T GetRef<T>()
+        where T : struct
+    {
+        if (!query.CanWrite(typeof(T)))
+            throw new ArgumentException($"Cannot read from type {typeof(T).Name}");
+        return ref archetype.GetComponentArray<T>().Span[archetypeIndex];
+    }
     public void Set<T>(in T value)
-        where T : struct, IEquatable<T>
+        where T : struct
     {
         if (!query.CanWrite(typeof(T)))
             throw new ArgumentException($"Cannot read from type {typeof(T).Name}");
         archetype.SetComponent(archetypeIndex,value);
     }
 
-    public void Add<T>(in T c) where T : struct, IEquatable<T>
+    public void Add<T>(in T c) where T : struct
     {
         query.World.AddArchetypeUpdate(new ComponentAdd<T>(c, new(archetype.EntityLookup.LookUp(archetypeIndex), archetype)));
     }
-    public void Remove<T>() where T : struct, IEquatable<T>
+    public void Remove<T>() where T : struct
     {
         query.World.AddArchetypeUpdate(new ComponentRemove<T>(new(archetype.EntityLookup.LookUp(archetypeIndex), archetype)));
     }

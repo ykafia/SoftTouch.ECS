@@ -24,7 +24,7 @@ public ref struct FilteredQueryEntity<Q>
     }
 
     public T Get<T>()
-        where T : struct, IEquatable<T>
+        where T : struct
     {
         if(!query.CanRead(typeof(T)))
             throw new ArgumentException($"Cannot read from type {typeof(T).Name}");
@@ -32,18 +32,18 @@ public ref struct FilteredQueryEntity<Q>
         return result;
     }
     public void Set<T>(T value)
-        where T : struct, IEquatable<T>
+        where T : struct
     {
         if (!query.CanWrite(typeof(T)))
             throw new ArgumentException($"Cannot read from type {typeof(T).Name}");
         archetype.SetComponent(archetype.EntityLookup[archetypeIndex], value);
     }
 
-    public void Add<T>(in T c) where T : struct, IEquatable<T>
+    public void Add<T>(in T c) where T : struct
     {
         query.World.AddArchetypeUpdate(new ComponentAdd<T>(c, new(archetype.EntityLookup.LookUp(archetypeIndex), archetype)));
     }
-    public void Remove<T>() where T : struct, IEquatable<T>
+    public void Remove<T>() where T : struct
     {
         query.World.AddArchetypeUpdate(new ComponentRemove<T>(new(archetype.EntityLookup.LookUp(archetypeIndex), archetype)));
     }
