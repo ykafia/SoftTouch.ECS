@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 
 namespace SoftTouch.ECS.Storage;
 
-public class EntityLookup
+public struct EntityLookup
 {
     public Dictionary<EntityId, int> ArchetypeIndices = [];
     public Dictionary<int, EntityId> EntityIndices = [];
 
-    public int Count => ArchetypeIndices.Count;
+    public readonly int Count => ArchetypeIndices.Count;
 
-    public EntityLookup() { }
 
     public EntityLookup(Dictionary<EntityId,int> indices)
     {
@@ -22,54 +21,47 @@ public class EntityLookup
         EntityIndices = ArchetypeIndices.ToDictionary(x => x.Value, x => x.Key);
     }
 
-    public EntityId this[int e]
-    {
-        get { return EntityIndices[e]; }
-    }
-    public int this[in EntityId e]
+    public readonly EntityId this[int e] => EntityIndices[e];
+
+    public readonly int this[in EntityId e]
     {
         get { return ArchetypeIndices[e]; }
         set { ArchetypeIndices[e] = value; EntityIndices[value] = e; }
     }
 
-    public void Add(in EntityId e)
+    public readonly void Add(in EntityId e)
     {
         ArchetypeIndices.Add(e, ArchetypeIndices.Count);
         EntityIndices.Add(ArchetypeIndices.Count, e);
     }
-    public void Remove(in EntityId e)
+    public readonly void Remove(in EntityId e)
     {
         EntityIndices.Remove(ArchetypeIndices.Count - 1);
         ArchetypeIndices.Remove(e);
     }
 
-    public bool TryGetValue(in EntityId id, out int index)
+    public readonly bool TryGetValue(in EntityId id, out int index)
     {
         return ArchetypeIndices.TryGetValue(id, out index);
     }
-    public EntityId LookUp(int archId)
+    public readonly EntityId LookUp(int archId)
     {
         return EntityIndices[archId];
     }
-    public void Set(in EntityId id, int value)
+    public readonly void Set(in EntityId id, int value)
     {
         ArchetypeIndices[id] = value;
         EntityIndices.Remove(value);
         EntityIndices[value] = id;
     }
 
-    public int GetEntityId(int eIdx)
-    {
-        return EntityIndices[eIdx];
-    }
-
-    public void Clear()
+    public readonly void Clear()
     {
         ArchetypeIndices.Clear();
         EntityIndices.Clear();
     }
 
-    public EntityLookup Clone()
+    public readonly EntityLookup Clone()
     {
         return new()
         {

@@ -3,9 +3,11 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using static System.MemoryExtensions;
+using System.Diagnostics;
 
 namespace SoftTouch.ECS.Storage;
 
+[DebuggerDisplay("{TypesToString}")]
 public struct ArchetypeID : IComparable
 {
     static int globalId = 0;
@@ -156,4 +158,5 @@ public struct ArchetypeID : IComparable
         check = check && left.Types.Length == right.Types.Length;
         return !check;
     }
+    internal readonly string TypesToString => $"[{string.Join(", ", Types.Select(x => x.Name))}]";
 }

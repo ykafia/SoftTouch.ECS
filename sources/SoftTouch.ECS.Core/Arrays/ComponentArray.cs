@@ -10,6 +10,7 @@ using CommunityToolkit.HighPerformance.Buffers;
 
 namespace SoftTouch.ECS.Arrays;
 
+[DebuggerDisplay("ComponentsArray<{ComponentType.Name.ToString()}>[{Count}]")]
 public abstract class ComponentArray
 {
     public abstract Type ComponentType { get; }
@@ -24,7 +25,7 @@ public abstract class ComponentArray
     public abstract void CopyTo(ComponentArray componentArray);
     public abstract ComponentArray Clone();
 }
-
+[DebuggerDisplay("ComponentsArray<{typeof(T)}>[{Count}]")]
 public class ComponentArray<T> : ComponentArray
     where T : struct
 {

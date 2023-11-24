@@ -41,7 +41,6 @@ namespace SoftTouch.ECS
             }
             else
                 return Archetypes[types];
-
         }
         internal Archetype GenerateArchetype(ArchetypeID types, List<ComponentBase> components)
         {

@@ -18,7 +18,7 @@ public partial class WorldCommands
             world.Archetypes[id] = Archetype.CreateEmpty(world);
             world.Entities.Add(new Entity(world.Entities.Count, world.Archetypes[id]));
         }
-        return world.Entities[world.Entities.Count - 1];
+        return world.Entities[^1];
     }
     public EntityCommands Spawn<T1>(in T1 component1)
             where T1 : struct, IEquatable<T1>
