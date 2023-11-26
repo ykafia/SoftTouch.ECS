@@ -6,4 +6,7 @@ using System.Threading.Tasks;
 
 namespace SoftTouch.ECS.Storage;
 
-public readonly record struct EntityId(int Id);
+public readonly record struct EntityId(int Id)
+{
+    public static implicit operator int(EntityId eid) => eid.Id;
+}
