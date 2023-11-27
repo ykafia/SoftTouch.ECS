@@ -24,7 +24,7 @@ public partial class WorldCommands
     {
         while (updates.TryDequeue(out var e))
         {
-            e.UpdateRecord();
+            e.Update(this);
         }
     }
 }

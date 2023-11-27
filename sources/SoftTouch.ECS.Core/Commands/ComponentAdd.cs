@@ -9,11 +9,11 @@ public class ComponentAdd<T> : ComponentUpdate where T : struct
     public ComponentAdd(in T val, in Entity e)
     {
         Value = val;
-        EntityRecord = e;
+        Entity = e;
     }
 
-    public override void UpdateRecord()
+    public override void Update(WorldCommands commands)
     {
-        EntityRecord.AddComponent(Value);
+        Entity.AddComponent(Value);
     }
 }

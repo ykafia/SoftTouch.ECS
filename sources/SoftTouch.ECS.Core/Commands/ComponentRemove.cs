@@ -7,11 +7,11 @@ public class ComponentRemove<T> : ComponentUpdate where T : struct
     public Type ToRemove => typeof(T);
     public ComponentRemove(in Entity e)
     {
-        EntityRecord = e;
+        Entity = e;
     }
 
-    public override void UpdateRecord()
+    public override void Update(WorldCommands commands)
     {
-        EntityRecord.RemoveComponent<T>();
+        Entity.RemoveComponent<T>();
     }
 }

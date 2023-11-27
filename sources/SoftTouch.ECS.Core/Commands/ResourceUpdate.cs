@@ -9,11 +9,11 @@ public class ResourceUpdate<T> : ComponentUpdate where T : struct, IEquatable<T>
     public ResourceUpdate(in T val, Entity e)
     {
         Value = val;
-        EntityRecord = e;
+        Entity = e;
     }
 
-    public override void UpdateRecord()
+    public override void Update()
     {
-        EntityRecord.AddComponent(Value);
+        Entity.AddComponent(Value);
     }
 }

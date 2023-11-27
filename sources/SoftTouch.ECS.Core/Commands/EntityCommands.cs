@@ -7,18 +7,11 @@ using System.Threading.Tasks;
 
 namespace SoftTouch.ECS;
 
-public struct EntityCommands
+public readonly struct EntityCommands(Entity e, WorldCommands commands)
 {
-    Entity entity;
+    readonly Entity entity = e;
+    readonly WorldCommands commands = commands;
 
-    public EntityCommands(in Entity e)
-    {
-        entity = e;
-    }
-
-    public static implicit operator EntityCommands(Entity e) => new(e);
-    public static implicit operator Entity(EntityCommands commands) => commands.entity;
-    
     public EntityCommands With<T1>(in T1 component1)
         where T1 : struct
     {
@@ -31,4 +24,5 @@ public struct EntityCommands
         entity.Add(default(T1));
         return this;
     }
+
 }
