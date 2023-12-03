@@ -142,11 +142,14 @@ module QueryEntity =
 module Entity =
     
     let Get<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType and 'T :> IEquatable<'T>> (e : Entity) =
-        e.Get<'T>()
+        raise(NotImplementedException())
+        //e.Get<'T>()
     let Set<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType and 'T :> IEquatable<'T>> (cmp : 'T) (e : Entity) =
-        e.Set<'T>(&cmp)
+        raise(NotImplementedException())
+        //e.Set<'T>(&cmp)
     let Has<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType and 'T :> IEquatable<'T>> (e : Entity) =
-        e.Get<'T>()
+        raise(NotImplementedException())
+        //e.Get<'T>()
 
 module Processor =
 

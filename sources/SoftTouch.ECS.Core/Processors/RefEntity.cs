@@ -18,15 +18,17 @@ public ref struct RefEntity<T1>
         this.world = world;
     }
 
-    public void Set<T>(in T component) where T : struct, IEquatable<T>
-        => world[id].Set(in component);
+    //public void Set<T>(in T component) where T : struct, IEquatable<T>
+    //    => world[id].Set(in component);
 
-    public T Get<T>() where T : struct, IEquatable<T>
-        => world[id].Get<T>();
+    //public T Get<T>() where T : struct, IEquatable<T>
+    //    => world[id].Get<T>();
 
     public void Deconstruct(out T1 comp1)
     {
-        comp1 = world[id].Get<T1>();
+        throw new NotImplementedException();
+
+        //comp1 = world[id].Get<T1>();
     }
 }
 
@@ -43,19 +45,20 @@ public ref struct RefEntity<T1, T2>
         this.world = world;
     }
 
-    public void Set<T>(in T component) where T : struct, IEquatable<T>
-        => world[id].Set(in component);
+    //public void Set<T>(in T component) where T : struct, IEquatable<T>
+    //    => world[id].Set(in component);
 
-    public T Get<T>() where T : struct, IEquatable<T>
-        => world[id].Get<T>();
+    //public T Get<T>() where T : struct, IEquatable<T>
+    //    => world[id].Get<T>();
 
     public void Deconstruct(
             out T1 comp1,
             out T2 comp2
         )
     {
-        comp1 = world[id].Get<T1>();
-        comp2 = world[id].Get<T2>();
+        throw new NotImplementedException();
+        //comp1 = world[id].Get<T1>();
+        //comp2 = world[id].Get<T2>();
     }
 }
 
@@ -73,11 +76,11 @@ public ref struct RefEntity<T1, T2, T3>
         this.world = world;
     }
 
-    public void Set<T>(in T component) where T : struct, IEquatable<T>
-        => world[id].Set(in component);
+    //public void Set<T>(in T component) where T : struct, IEquatable<T>
+    //    => world[id].Set(in component);
 
-    public T Get<T>() where T : struct, IEquatable<T>
-        => world[id].Get<T>();
+    //public T Get<T>() where T : struct, IEquatable<T>
+    //    => world[id].Get<T>();
 
     public void Deconstruct(
             out T1 comp1,
@@ -85,9 +88,10 @@ public ref struct RefEntity<T1, T2, T3>
             out T3 comp3
         )
     {
-        comp1 = world[id].Get<T1>();
-        comp2 = world[id].Get<T2>();
-        comp3 = world[id].Get<T3>();
+        throw new NotImplementedException();
+        //comp1 = world[id].Get<T1>();
+        //comp2 = world[id].Get<T2>();
+        //comp3 = world[id].Get<T3>();
     }
 }
 
@@ -106,11 +110,11 @@ public ref struct RefEntity<T1, T2, T3, T4>
         this.world = world;
     }
 
-    public void Set<T>(in T component) where T : struct, IEquatable<T>
-        => world[id].Set(in component);
+    //public void Set<T>(in T component) where T : struct, IEquatable<T>
+    //    => world[id].Set(in component);
 
-    public T Get<T>() where T : struct, IEquatable<T>
-        => world[id].Get<T>();
+    //public T Get<T>() where T : struct, IEquatable<T>
+    //    => world[id].Get<T>();
 
     public void Deconstruct(
             out T1 comp1,
@@ -119,10 +123,11 @@ public ref struct RefEntity<T1, T2, T3, T4>
             out T4 comp4
         )
     {
-        comp1 = world[id].Get<T1>();
-        comp2 = world[id].Get<T2>();
-        comp3 = world[id].Get<T3>();
-        comp4 = world[id].Get<T4>();
+        throw new NotImplementedException();
+        //comp1 = world[id].Get<T1>();
+        //comp2 = world[id].Get<T2>();
+        //comp3 = world[id].Get<T3>();
+        //comp4 = world[id].Get<T4>();
     }
 }
 
@@ -142,11 +147,11 @@ public ref struct RefEntity<T1, T2, T3, T4, T5>
         this.world = world;
     }
 
-    public void Set<T>(in T component) where T : struct, IEquatable<T>
-        => world[id].Set(in component);
+    //public void Set<T>(in T component) where T : struct, IEquatable<T>
+    //    => world[id].Set(in component);
 
-    public T Get<T>() where T : struct, IEquatable<T>
-        => world[id].Get<T>();
+    //public T Get<T>() where T : struct, IEquatable<T>
+    //    => world[id].Get<T>();
 
     public void Deconstruct(
             out T1 comp1,
@@ -156,11 +161,13 @@ public ref struct RefEntity<T1, T2, T3, T4, T5>
             out T5 comp5
         )
     {
-        comp1 = world[id].Get<T1>();
-        comp2 = world[id].Get<T2>();
-        comp3 = world[id].Get<T3>();
-        comp4 = world[id].Get<T4>();
-        comp5 = world[id].Get<T5>();
+        throw new NotImplementedException();
+
+        //comp1 = world[id].Get<T1>();
+        //comp2 = world[id].Get<T2>();
+        //comp3 = world[id].Get<T3>();
+        //comp4 = world[id].Get<T4>();
+        //comp5 = world[id].Get<T5>();
     }
 }
 public ref struct RefEntity<T1, T2, T3, T4, T5, T6>
@@ -180,11 +187,11 @@ public ref struct RefEntity<T1, T2, T3, T4, T5, T6>
         this.world = world;
     }
 
-    public void Set<T>(in T component) where T : struct, IEquatable<T>
-        => world[id].Set(in component);
+    //public void Set<T>(in T component) where T : struct, IEquatable<T>
+    //    => world[id].Set(in component);
 
-    public T Get<T>() where T : struct, IEquatable<T>
-        => world[id].Get<T>();
+    //public T Get<T>() where T : struct, IEquatable<T>
+    //    => world[id].Get<T>();
 
     public void Deconstruct(
             out T1 comp1,
@@ -195,12 +202,14 @@ public ref struct RefEntity<T1, T2, T3, T4, T5, T6>
             out T6 comp6
         )
     {
-        comp1 = world[id].Get<T1>();
-        comp2 = world[id].Get<T2>();
-        comp3 = world[id].Get<T3>();
-        comp4 = world[id].Get<T4>();
-        comp5 = world[id].Get<T5>();
-        comp6 = world[id].Get<T6>();
+        throw new NotImplementedException();
+
+        //comp1 = world[id].Get<T1>();
+        //comp2 = world[id].Get<T2>();
+        //comp3 = world[id].Get<T3>();
+        //comp4 = world[id].Get<T4>();
+        //comp5 = world[id].Get<T5>();
+        //comp6 = world[id].Get<T6>();
     }
 }
 public ref struct RefEntity<T1, T2, T3, T4, T5, T6, T7>
@@ -221,11 +230,11 @@ public ref struct RefEntity<T1, T2, T3, T4, T5, T6, T7>
         this.world = world;
     }
 
-    public void Set<T>(in T component) where T : struct, IEquatable<T>
-        => world[id].Set(in component);
+    //public void Set<T>(in T component) where T : struct, IEquatable<T>
+    //    => world[id].Set(in component);
 
-    public T Get<T>() where T : struct, IEquatable<T>
-        => world[id].Get<T>();
+    //public T Get<T>() where T : struct, IEquatable<T>
+    //    => world[id].Get<T>();
 
     public void Deconstruct(
             out T1 comp1,
@@ -237,13 +246,15 @@ public ref struct RefEntity<T1, T2, T3, T4, T5, T6, T7>
             out T7 comp7
         )
     {
-        comp1 = world[id].Get<T1>();
-        comp2 = world[id].Get<T2>();
-        comp3 = world[id].Get<T3>();
-        comp4 = world[id].Get<T4>();
-        comp5 = world[id].Get<T5>();
-        comp6 = world[id].Get<T6>();
-        comp7 = world[id].Get<T7>();
+        throw new NotImplementedException();
+
+        //comp1 = world[id].Get<T1>();
+        //comp2 = world[id].Get<T2>();
+        //comp3 = world[id].Get<T3>();
+        //comp4 = world[id].Get<T4>();
+        //comp5 = world[id].Get<T5>();
+        //comp6 = world[id].Get<T6>();
+        //comp7 = world[id].Get<T7>();
     }
 }
 
@@ -266,11 +277,11 @@ public ref struct RefEntity<T1, T2, T3, T4, T5, T6, T7, T8>
         this.world = world;
     }
 
-    public void Set<T>(in T component) where T : struct, IEquatable<T>
-        => world[id].Set(in component);
+    //public void Set<T>(in T component) where T : struct, IEquatable<T>
+    //    => world[id].Set(in component);
 
-    public T Get<T>() where T : struct, IEquatable<T>
-        => world[id].Get<T>();
+    //public T Get<T>() where T : struct, IEquatable<T>
+    //    => world[id].Get<T>();
 
     public void Deconstruct(
             out T1 comp1,
@@ -283,13 +294,14 @@ public ref struct RefEntity<T1, T2, T3, T4, T5, T6, T7, T8>
             out T8 comp8
         )
     {
-        comp1 = world[id].Get<T1>();
-        comp2 = world[id].Get<T2>();
-        comp3 = world[id].Get<T3>();
-        comp4 = world[id].Get<T4>();
-        comp5 = world[id].Get<T5>();
-        comp6 = world[id].Get<T6>();
-        comp7 = world[id].Get<T7>();
-        comp8 = world[id].Get<T8>();
+        throw new NotImplementedException();
+        //comp1 = world[id].Get<T1>();
+        //comp2 = world[id].Get<T2>();
+        //comp3 = world[id].Get<T3>();
+        //comp4 = world[id].Get<T4>();
+        //comp5 = world[id].Get<T5>();
+        //comp6 = world[id].Get<T6>();
+        //comp7 = world[id].Get<T7>();
+        //comp8 = world[id].Get<T8>();
     }
 }

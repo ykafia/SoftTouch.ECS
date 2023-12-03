@@ -41,5 +41,5 @@ app
 |> (fun app -> app.World)
 |> World.getEntity 0 
 |> Entity.Get<NameComponent>
-|> fun x -> x.Name
-|> printfn "Hello %s"
+//|> fun x -> x.Name
+//|> printfn "Hello %s"

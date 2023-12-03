@@ -10,20 +10,35 @@ public class ComponentBox<TComp>() : ComponentBox
     where TComp : struct
 {
     static ObjectPool<ComponentBox<TComp>> pool = ObjectPool.Create<ComponentBox<TComp>>();
-    public static ComponentBox<TComp> Create(TComp? component = null)
-        => pool.Get()
-    
+    public static ComponentBox<TComp> Create(in TComp? component = null)
+    {
+        var result = pool.Get();
+        if (component != null)
+            result.Value = component.Value;
+        return result;
+    }
+
     public TComp Value { get; set; }
 
 }
 
-public class ComponentUpdates
+public class ComponentUpdates : IResettable
 {
-    public GenerationalEntity Entity { get; set; }
-    List<ComponentBox> Removals = [];
-    List<ComponentBox> Adds = [];
-    public void Update(WorldCommands commands)
-    {
+    static ObjectPool<ComponentUpdates> pool = ObjectPool.Create<ComponentUpdates>();
 
+    public static ComponentUpdates Get() => pool.Get();
+
+    public GenerationalEntity Entity { get; set; }
+    public List<ComponentBox> Removals { get; } = [];
+    public List<ComponentBox> Adds { get; } = [];
+
+    public void Return() => pool.Return(this);
+
+    public bool TryReset()
+    {
+        Entity = new();
+        Removals.Clear();
+        Adds.Clear();
+        return true;
     }
 }

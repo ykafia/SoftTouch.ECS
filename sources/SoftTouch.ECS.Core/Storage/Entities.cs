@@ -9,7 +9,7 @@ namespace SoftTouch.ECS.Storage;
 /// When an entity is freed, the ID is added to the FreeIds.
 /// When an entity is finally spawned, PendingIds is emptied.
 /// </summary>
-public struct Entities()
+public class Entities()
 {
     public List<EntityMeta> Meta { get; set; } = [];
     public List<int> PendingIds { get; set; } = [];

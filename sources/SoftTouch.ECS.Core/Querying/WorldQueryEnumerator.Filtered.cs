@@ -41,11 +41,13 @@ public ref struct FilteredQueryEntity<Q>
 
     public void Add<T>(in T c) where T : struct
     {
-        query.World.AddArchetypeUpdate(new ComponentAdd<T>(c, new(archetype.EntityLookup.LookUp(archetypeIndex), archetype)));
+        throw new NotImplementedException();
+        //query.World.AddArchetypeUpdate(new ComponentAdd<T>(c, new(archetype.EntityLookup.LookUp(archetypeIndex), archetype)));
     }
     public void Remove<T>() where T : struct
     {
-        query.World.AddArchetypeUpdate(new ComponentRemove<T>(new(archetype.EntityLookup.LookUp(archetypeIndex), archetype)));
+        throw new NotImplementedException();
+        //query.World.AddArchetypeUpdate(new ComponentRemove<T>(new(archetype.EntityLookup.LookUp(archetypeIndex), archetype)));
     }
 }
 

@@ -15,13 +15,15 @@ public readonly struct EntityCommands(GenerationalEntity e, WorldCommands comman
     public EntityCommands With<T1>(in T1 component1)
         where T1 : struct
     {
-        entity.Add(component1);
+        //entity.Add(component1);
+        throw new NotImplementedException();
         return this;
     }
     public EntityCommands With<T1>()
         where T1 : struct
     {
-        entity.Add(default(T1));
+        //entity.Add(default(T1));
+        throw new NotImplementedException();
         return this;
     }
 

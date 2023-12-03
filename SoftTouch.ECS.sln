@@ -25,7 +25,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftTouch.ECS.ProcessorGene
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftTouch.ECS.Shared", "sources\SoftTouch.ECS.Shared\SoftTouch.ECS.Shared.csproj", "{C86FE0C1-1420-48FE-92E0-583B075183E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftTouch.ECS.Example.Raylib", "sources\SoftTouch.ECS.Example.Raylib\SoftTouch.ECS.Example.Raylib.csproj", "{A97FAB05-C381-4BA3-8C92-8AD67CC85228}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftTouch.ECS.Example.Raylib", "sources\SoftTouch.ECS.Example.Raylib\SoftTouch.ECS.Example.Raylib.csproj", "{A97FAB05-C381-4BA3-8C92-8AD67CC85228}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DesignIdeas", "DesignIdeas", "{9E01085F-F7C3-4709-9121-C7AAFD4AFE9F}"
+	ProjectSection(SolutionItems) = preProject
+		EntityIndexPooling.md = EntityIndexPooling.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
