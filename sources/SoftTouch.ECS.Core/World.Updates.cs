@@ -7,7 +7,7 @@ namespace SoftTouch.ECS
 {
     public partial class World
     {
-        internal void AddArchetypeUpdate(ComponentUpdate component) => Resources.Get<WorldCommands>().Enqueue(component);
+        internal void AddArchetypeUpdate(ComponentUpdate component) => Resources.Get<WorldCommands>().Add(component);
         internal void ApplyUpdates() => Resources.Get<WorldCommands>().ExecuteUpdates();
 
     }

@@ -10,6 +10,7 @@ public sealed partial class World
     public AppTime? AppTime { get; }
     public WorldResources Resources { get; } = new();
     internal List<Entity> Entities { get; } = [];
+    internal Entities GEntities { get; } = new();
 
     internal ArchetypeList Archetypes = new();
 

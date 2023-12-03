@@ -3,20 +3,22 @@ using SoftTouch.ECS.Storage;
 namespace SoftTouch.ECS;
 
 
-public partial class WorldCommands
+public record struct EntityUpdates(GenerationalEntity Entity, List<ComponentUpdate> Updates, bool IsSpawn = false);
+
+public partial class WorldCommands(World world)
 {
-    World world;
-    Queue<ComponentUpdate> updates;
+    readonly World world = world;
+    readonly List<EntityUpdates> updates = [];
 
-    public WorldCommands(World world)
+    public void Add(ComponentUpdate update, bool isSpawn = false)
     {
-        this.world = world;
-        updates = new();
-    }
-
-    public void Enqueue(ComponentUpdate update)
-    {
-        updates.Enqueue(update);
+        foreach(var e in updates)
+            if(e.Entity == update.Entity)
+            {
+                e.Updates.Add(update);
+                return;
+            }
+        updates.Add(new(update.Entity, [update], isSpawn));
     }
 
 

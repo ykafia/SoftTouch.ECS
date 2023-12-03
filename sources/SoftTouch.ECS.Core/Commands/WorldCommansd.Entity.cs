@@ -28,7 +28,7 @@ public partial class WorldCommands
         {
             var entity = new Entity(world.Entities.Count, arch);
             world.Entities.Add(entity);
-            Enqueue(new ComponentAdd<T1>(in component1, in entity));
+            Add(new ComponentAdd<T1>(in component1, in entity));
         }
         else
         {
@@ -50,8 +50,8 @@ public partial class WorldCommands
         {
             var entity = new Entity(world.Entities.Count, arch);
             world.Entities.Add(entity);
-            Enqueue(new ComponentAdd<T1>(in component1, in entity));
-            Enqueue(new ComponentAdd<T2>(in component2, in entity));
+            Add(new ComponentAdd<T1>(in component1, in entity));
+            Add(new ComponentAdd<T2>(in component2, in entity));
         }
         else
         {
@@ -74,9 +74,9 @@ public partial class WorldCommands
         {
             var entity = new Entity(world.Entities.Count, arch);
             world.Entities.Add(entity);
-            Enqueue(new ComponentAdd<T1>(in component1, in entity));
-            Enqueue(new ComponentAdd<T2>(in component2, in entity));
-            Enqueue(new ComponentAdd<T3>(in component3, in entity));
+            Add(new ComponentAdd<T1>(in component1, in entity));
+            Add(new ComponentAdd<T2>(in component2, in entity));
+            Add(new ComponentAdd<T3>(in component3, in entity));
         }
         else
         {
@@ -101,10 +101,10 @@ public partial class WorldCommands
         {
             var entity = new Entity(world.Entities.Count, arch);
             world.Entities.Add(entity);
-            Enqueue(new ComponentAdd<T1>(in component1, in entity));
-            Enqueue(new ComponentAdd<T2>(in component2, in entity));
-            Enqueue(new ComponentAdd<T3>(in component3, in entity));
-            Enqueue(new ComponentAdd<T4>(in component4, in entity));
+            Add(new ComponentAdd<T1>(in component1, in entity));
+            Add(new ComponentAdd<T2>(in component2, in entity));
+            Add(new ComponentAdd<T3>(in component3, in entity));
+            Add(new ComponentAdd<T4>(in component4, in entity));
         }
         else
         {
@@ -131,11 +131,11 @@ public partial class WorldCommands
         {
             var entity = new Entity(world.Entities.Count, arch);
             world.Entities.Add(entity);
-            Enqueue(new ComponentAdd<T1>(in component1, in entity));
-            Enqueue(new ComponentAdd<T2>(in component2, in entity));
-            Enqueue(new ComponentAdd<T3>(in component3, in entity));
-            Enqueue(new ComponentAdd<T4>(in component4, in entity));
-            Enqueue(new ComponentAdd<T5>(in component5, in entity));
+            Add(new ComponentAdd<T1>(in component1, in entity));
+            Add(new ComponentAdd<T2>(in component2, in entity));
+            Add(new ComponentAdd<T3>(in component3, in entity));
+            Add(new ComponentAdd<T4>(in component4, in entity));
+            Add(new ComponentAdd<T5>(in component5, in entity));
         }
         else
         {
@@ -164,12 +164,12 @@ public partial class WorldCommands
         {
             var entity = new Entity(world.Entities.Count, arch);
             world.Entities.Add(entity);
-            Enqueue(new ComponentAdd<T1>(in component1, in entity));
-            Enqueue(new ComponentAdd<T2>(in component2, in entity));
-            Enqueue(new ComponentAdd<T3>(in component3, in entity));
-            Enqueue(new ComponentAdd<T4>(in component4, in entity));
-            Enqueue(new ComponentAdd<T5>(in component5, in entity));
-            Enqueue(new ComponentAdd<T6>(in component6, in entity));
+            Add(new ComponentAdd<T1>(in component1, in entity));
+            Add(new ComponentAdd<T2>(in component2, in entity));
+            Add(new ComponentAdd<T3>(in component3, in entity));
+            Add(new ComponentAdd<T4>(in component4, in entity));
+            Add(new ComponentAdd<T5>(in component5, in entity));
+            Add(new ComponentAdd<T6>(in component6, in entity));
         }
         else
         {
@@ -200,13 +200,13 @@ public partial class WorldCommands
         {
             var entity = new Entity(world.Entities.Count, arch);
             world.Entities.Add(entity);
-            Enqueue(new ComponentAdd<T1>(in component1, in entity));
-            Enqueue(new ComponentAdd<T2>(in component2, in entity));
-            Enqueue(new ComponentAdd<T3>(in component3, in entity));
-            Enqueue(new ComponentAdd<T4>(in component4, in entity));
-            Enqueue(new ComponentAdd<T5>(in component5, in entity));
-            Enqueue(new ComponentAdd<T6>(in component6, in entity));
-            Enqueue(new ComponentAdd<T7>(in component7, in entity));
+            Add(new ComponentAdd<T1>(in component1, in entity));
+            Add(new ComponentAdd<T2>(in component2, in entity));
+            Add(new ComponentAdd<T3>(in component3, in entity));
+            Add(new ComponentAdd<T4>(in component4, in entity));
+            Add(new ComponentAdd<T5>(in component5, in entity));
+            Add(new ComponentAdd<T6>(in component6, in entity));
+            Add(new ComponentAdd<T7>(in component7, in entity));
         }
         else
         {

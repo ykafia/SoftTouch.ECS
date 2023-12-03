@@ -132,4 +132,6 @@ public partial class Archetype
         clone.EntityLookup = EntityLookup.Clone();
         return clone;
     }
+
+    
 }

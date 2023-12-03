@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace SoftTouch.ECS;
 
-public readonly struct EntityCommands(Entity e, WorldCommands commands)
+public readonly struct EntityCommands(GenerationalEntity e, WorldCommands commands)
 {
-    readonly Entity entity = e;
+    readonly GenerationalEntity entity = e;
     readonly WorldCommands commands = commands;
 
     public EntityCommands With<T1>(in T1 component1)
