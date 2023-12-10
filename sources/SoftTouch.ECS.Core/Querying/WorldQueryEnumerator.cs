@@ -22,25 +22,17 @@ public ref struct QueryEntity<Q>
         this.query = query;
     }
 
-    public T Get<T>()
+    public ref T Get<T>()
         where T : struct
     {
-        if (!query.CanRead(typeof(T)))
-            throw new ArgumentException($"Cannot read from type {typeof(T).Name}");
-        archetype.GetComponent<T>(archetypeIndex, out var result);
-        return result;
-    }
-    public ref T GetRef<T>()
-        where T : struct
-    {
-        if (!query.CanWrite(typeof(T)))
+        if (!query.HasAccessTo<T>())
             throw new ArgumentException($"Cannot read from type {typeof(T).Name}");
         return ref archetype.GetComponentArray<T>().Span[archetypeIndex];
     }
     public void Set<T>(in T value)
         where T : struct
     {
-        if (!query.CanWrite(typeof(T)))
+        if (!query.HasAccessTo<T>())
             throw new ArgumentException($"Cannot read from type {typeof(T).Name}");
         archetype.SetComponent(archetypeIndex,value);
     }
@@ -107,18 +99,14 @@ public ref struct WorldQueryEnumerator<Q>
 
     public bool MatchArch(ArchetypeID id)
     {
-        if (id.Types == null)
+        if (id.Types == null && id.Types?.Length == 0)
             return false;
-        if (id.Types.Length == 0)
-        {
-            return Q.Write != null && query.ImplWrite.Count == 0
-                && Q.Read != null && query.ImplRead.Count == 0;
-        }
         else
         {
-            return
-                Q.Write != null && query.ImplWrite.IsQuerySubsetOf(id.Types)
-                || Q.Read != null && query.ImplRead.IsQuerySubsetOf(id.Types);
+            foreach(var t in Q.Types)
+                if(!id.Types.Contains(t))
+                    return false;
+            return true;
         }
     }
 }

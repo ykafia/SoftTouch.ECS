@@ -4,7 +4,7 @@
 
 //namespace SoftTouch.ECS.Shared.Processors
 //{
-//    public class IteratorNameProcessor : Processor<Query<Read<NameComponent, HealthComponent>>>
+//    public class IteratorNameProcessor : Processor<Query<NameComponent, HealthComponent>>
 //    {
 //        public IteratorNameProcessor(World world) : base(world)
 //        {

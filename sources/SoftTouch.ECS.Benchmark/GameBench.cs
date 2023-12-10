@@ -26,7 +26,7 @@ public class StartupProcessor : Processor<Resource<WorldCommands>>
     }
 }
 
-public class WriteAge : Processor<Query<Write<int>>>
+public class WriteAge : Processor<Query<int>>
 {
     public WriteAge() : base(null!) { }
     public override void Update()
@@ -37,7 +37,7 @@ public class WriteAge : Processor<Query<Write<int>>>
         }
     }
 }
-public class SayHello : Processor<Query<Read<NameComponent>, Write<float>>>
+public class SayHello : Processor<Query<NameComponent,float>>
 {
     public SayHello() : base(null!) { }
     public override void Update()

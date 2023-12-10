@@ -6,7 +6,7 @@ using SoftTouch.ECS.Querying;
 
 namespace SoftTouch.ECS.Example;
 
-public class HealthProcessor : Processor<Query<Read<HealthComponent>>>
+public class HealthProcessor : Processor<Query<HealthComponent>>
 {
     Random rand = new Random();
 
@@ -23,7 +23,7 @@ public class HealthProcessor : Processor<Query<Read<HealthComponent>>>
     }
 }
 
-//public class PlayerProcessor : Processor<Query<Write<NameComponent, HealthComponent>>>
+//public class PlayerProcessor : Processor<Query<NameComponent, HealthComponent>>
 //{
 //    Random rand = new Random();
 
@@ -41,7 +41,7 @@ public class HealthProcessor : Processor<Query<Read<HealthComponent>>>
 //}
 
 
-public class AsyncProcessor : Processor<Query<Read<int>>>
+public class AsyncProcessor : Processor<Query<int>>
 {
     public AsyncProcessor(World world) : base(world)
     {

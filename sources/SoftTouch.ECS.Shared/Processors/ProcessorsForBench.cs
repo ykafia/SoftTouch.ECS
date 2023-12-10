@@ -5,7 +5,7 @@ using SoftTouch.ECS.Shared.Components;
 
 namespace SoftTouch.ECS.Shared.Processors;
 
-public class Processor1 : Processor<Query<Read<HealthComponent>>>
+public class Processor1 : Processor<Query<HealthComponent>>
 {
     Random rand = new Random();
 
@@ -21,7 +21,7 @@ public class Processor1 : Processor<Query<Read<HealthComponent>>>
         // }
     }
 }
-public class Processor2 : Processor<Query<Read<HealthComponent>>>
+public class Processor2 : Processor<Query<HealthComponent>>
 {
     Random rand = new Random();
 
@@ -37,7 +37,7 @@ public class Processor2 : Processor<Query<Read<HealthComponent>>>
         // }
     }
 }
-//public class Processor3 : Processor<Query<Read<NameComponent, HealthComponent>>>
+//public class Processor3 : Processor<Query<NameComponent, HealthComponent>>
 //{
 //    Random rand = new Random();
 

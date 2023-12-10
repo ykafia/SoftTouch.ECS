@@ -12,16 +12,9 @@ public interface IWorldQuery
 
 public interface IEntityQuery : IWorldQuery
 {
-    public abstract static IReadComponent Read { get; }
-    public abstract static IWriteComponent Write { get; }
-
-    public TypeSet ImplRead { get; }
-    public TypeSet ImplWrite { get; }
-
-    public bool CanRead<T>() where T : struct, IEquatable<T>;
-    public bool CanWrite<T>() where T : struct, IEquatable<T>;
-    public bool CanRead(Type t);
-    public bool CanWrite(Type t);
+    public abstract static Type[] Types { get; }
+    public Type[] ImplTypes { get; }
+    public bool HasAccessTo<T>();
 }
 
 public interface IFilteredEntityQuery : IEntityQuery
@@ -30,128 +23,30 @@ public interface IFilteredEntityQuery : IEntityQuery
 }
 
 public record struct Query<TComp> : IEntityQuery
-    where TComp : IComponentQuery, new()
+    where TComp : struct
 {
 
-    static Query()
-    {
-        var comp = new TComp();
-        if (comp is IReadComponent read)
-            Read = read;
-        else Read = null!;
-        if (comp is IWriteComponent write)
-            Write = write;
-        else Write = null!;
-    }
-
-    public static IReadComponent Read { get; }
-    public static IWriteComponent Write { get; }
-
+    public static Type[] Types { get; } = [typeof(TComp)];
+    public readonly Type[] ImplTypes => Types;
     public World World { get; set; }
 
-
-    public TypeSet ImplRead => Read == null ?  TypeSet.Empty : Read.ImplRead;
-    public TypeSet ImplWrite => Write == null ?  TypeSet.Empty : Write.ImplWrite;
-
-    public bool CanRead<T>() where T : struct, IEquatable<T> => CanRead(typeof(T));
-    public bool CanRead(Type t) => (Read != null && ImplRead.Contains(t)) || (Write != null && ImplWrite.Contains(t));
-    public bool CanWrite<T>() where T : struct, IEquatable<T> => ImplWrite.Contains(typeof(T));
-    public bool CanWrite(Type t) => ImplWrite.Contains(t);
+    public readonly bool HasAccessTo<T>() => typeof(T) == typeof(TComp);
 
 
-    public WorldQueryEnumerator<Query<TComp>> GetEnumerator() => new(this);
+    public readonly WorldQueryEnumerator<Query<TComp>> GetEnumerator() => new(this);
 }
 public record struct FilteredQuery<TComp, TFilter> : IFilteredEntityQuery
-    where TComp : IComponentQuery, new()
+    where TComp : struct
     where TFilter : IFilterQuery, new()
 {
-    static FilteredQuery()
-    {
-        var comp = new TComp();
-        if (comp is IReadComponent read)
-            Read = read;
-        else Read = null!;
-        if (comp is IWriteComponent write)
-            Write = write;
-        else Write = null!;
-
-        Filters = new TFilter();
-    }
-
-    public static IReadComponent Read { get; }
-    public static IWriteComponent Write { get; }
-    public static IFilterQuery Filters { get; }
+    public static Type[] Types { get; } = [typeof(TComp)];
+    public readonly Type[] ImplTypes => Types;
+    public static IFilterQuery Filters { get; } = new TFilter();
 
     public World World { get; set; }
-
-    public TypeSet ImplRead => Read == null ? TypeSet.Empty : Read.ImplRead;
-    public TypeSet ImplWrite => Write == null ? TypeSet.Empty : Write.ImplWrite;
-
-    public bool CanRead<T>() where T : struct, IEquatable<T> => CanRead(typeof(T));
-    public bool CanRead(Type t) => (Read != null && ImplRead.Contains(t)) || (Write != null && ImplWrite.Contains(t));
-    public bool CanWrite<T>() where T : struct, IEquatable<T> => ImplWrite.Contains(typeof(T));
-    public bool CanWrite(Type t) => ImplWrite.Contains(t);
 
     public WorldFilteredQueryEnumerator<FilteredQuery<TComp, TFilter>> GetEnumerator() => new(this);
+
+    public readonly bool HasAccessTo<T>()
+        => typeof(T) == typeof(TComp);
 }
-
-
-public record struct Query<TRead, TWrite> : IEntityQuery
-    where TRead : IReadComponent, new()
-    where TWrite : IWriteComponent, new()
-{
-
-    static Query()
-    {
-        Read = new TRead();
-        Write = new TWrite();
-    }
-
-    public static IReadComponent Read { get; }
-    public static IWriteComponent Write { get; }
-
-    public World World { get; set; }
-
-
-    public TypeSet ImplRead => Read == null ? TypeSet.Empty : Read.ImplRead;
-    public TypeSet ImplWrite => Write == null ? TypeSet.Empty : Write.ImplWrite;
-
-    public bool CanRead<T>() where T : struct, IEquatable<T> => CanRead(typeof(T));
-    public bool CanRead(Type t) => (Read != null && ImplRead.Contains(t)) || (Write != null && ImplWrite.Contains(t));
-    public bool CanWrite<T>() where T : struct, IEquatable<T> => ImplWrite.Contains(typeof(T));
-    public bool CanWrite(Type t) => ImplWrite.Contains(t);
-
-    public WorldQueryEnumerator<Query<TRead,TWrite>> GetEnumerator() => new(this);
-}
-public record struct FilteredQuery<TRead, TWrite, TFilter> : IFilteredEntityQuery
-    where TRead : IReadComponent, new()
-    where TWrite : IWriteComponent, new()
-    where TFilter : IFilterQuery, new()
-{
-    static FilteredQuery()
-    {
-        Read = new TRead();
-        Write = new TWrite();
-        Filters = new TFilter();
-    }
-
-    public static IReadComponent Read { get; }
-    public static IWriteComponent Write { get; }
-    public static IFilterQuery Filters { get; }
-
-    public World World { get; set; }
-
-    public TypeSet ImplRead => Read == null ? TypeSet.Empty : Read.ImplRead;
-    public TypeSet ImplWrite => Write == null ? TypeSet.Empty : Write.ImplWrite;
-
-    
-    public bool CanRead<T>() where T : struct, IEquatable<T> => CanRead(typeof(T));
-    public bool CanRead(Type t) => (Read != null && ImplRead.Contains(t)) || (Write != null &&ImplWrite.Contains(t));
-    public bool CanWrite<T>() where T : struct, IEquatable<T> => ImplWrite.Contains(typeof(T));
-    public bool CanWrite(Type t) => ImplWrite.Contains(t);
-
-    public WorldFilteredQueryEnumerator<FilteredQuery<TRead, TWrite, TFilter>> GetEnumerator() => new(this);
-
-}
-
-

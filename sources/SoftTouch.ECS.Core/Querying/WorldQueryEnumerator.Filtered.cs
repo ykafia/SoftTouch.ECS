@@ -23,18 +23,17 @@ public ref struct FilteredQueryEntity<Q>
         this.query = query;
     }
 
-    public T Get<T>()
+    public ref T Get<T>()
         where T : struct
     {
-        if(!query.CanRead(typeof(T)))
+        if(!query.HasAccessTo<T>())
             throw new ArgumentException($"Cannot read from type {typeof(T).Name}");
-        archetype.GetComponent<T>(archetype.EntityLookup[archetypeIndex], out var result);
-        return result;
+        return ref archetype.GetComponentArray<T>().Span[archetype.EntityLookup[archetypeIndex]];
     }
     public void Set<T>(T value)
         where T : struct
     {
-        if (!query.CanWrite(typeof(T)))
+        if (!query.HasAccessTo<T>())
             throw new ArgumentException($"Cannot read from type {typeof(T).Name}");
         archetype.SetComponent(archetype.EntityLookup[archetypeIndex], value);
     }
@@ -101,21 +100,20 @@ public ref struct WorldFilteredQueryEnumerator<Q>
 
     public bool MatchArch(ArchetypeID id)
     {
-        if (id.Types == null)
+        if (id.Types == null && id.Types?.Length == 0)
             return false;
-
-        if (id.Types.Length == 0)
-        {
-            return Q.Write != null && query.ImplWrite.Count == 0
-                && Q.Read != null && query.ImplRead.Count == 0;
-        }
         else
         {
-            return
-                query.ImplRead.IsQuerySubsetOf(id.Types)
-                && query.ImplWrite.IsQuerySubsetOf(id.Types)
-                && Q.Filters.ImplWithTypes.IsQuerySubsetOf(id.Types)
-                && !Q.Filters.ImplWithoutTypes.IsQuerySubsetOf(id.Types);
+            foreach (var t in Q.Types)
+                if (!id.Types.Contains(t))
+                    return false;
+            foreach(var t in Q.Filters.ImplWithTypes)
+                if (!id.Types.Contains(t))
+                    return false;
+            foreach (var t in Q.Filters.ImplWithoutTypes)
+                if (id.Types.Contains(t))
+                    return false;
+            return true;
         }
     }
 }

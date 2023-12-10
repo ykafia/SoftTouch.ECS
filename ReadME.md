@@ -69,7 +69,7 @@ public class MyStartupProcessor : Processor<Commands, Resource<MyResource>>
     }
 }
 
-public class MyFirstProcessor : Processor<Query<Read<Name>,Write<Transform>>>
+public class MyFirstProcessor : Processor<Query<Name,Transform>>
 {
     public override void Update()
     {
@@ -85,7 +85,7 @@ Or create a static function
 
 ```csharp
 
-public static void MyFirstSystem(Query<Write<Name,Transform>> entities)
+public static void MyFirstSystem(Query<Name,Transform> entities)
 {
     // Here goes your logic
 }
@@ -100,7 +100,7 @@ app.AddStartupProcessor<MyStartupProcessor>();
 // world.AddProcessor(new MyFirstProcessor());
 
 app.AddProcessor(
-    (Query<Read<Name,Transform>> q1) => MyFirstSystem(q1)
+    (Query<Name,Transform> q1) => MyFirstSystem(q1)
 );
 
 for(int i = 0; i < 100; i++)
@@ -123,7 +123,7 @@ You can also add a component to an entity and the world will wait for the end of
 As a bare bone implementation, you could iterate over those `Archetype`s yourself and select which entities you want to work with like so :
 
 ```csharp
-public class MyFirstProcessor : Processor<Query<Read<Name,Transform>>>
+public class MyFirstProcessor : Processor<Query<Name,Transform>>
 {
     public override void Update()
     {
@@ -140,7 +140,7 @@ Processors have Query fields that contains helper methods and iterators to help 
 
 ```csharp
 // Here the processor queries over entities that have a Name and Transform components
-public class MyFirstProcessor : Processor<Query<Read<Name,Transform>>>
+public class MyFirstProcessor : Processor<Query<Name,Transform>>
 {
     public override void Update()
     {
@@ -212,7 +212,7 @@ public class WriteAge : Processor<Query<Read<int>>>
         }
     }
 }
-public class SayHello : Processor<Query<Read<NameComponent>>>
+public class SayHello : Processor<Query<NameComponent>>
 {
     public SayHello() : base(null!) { }
     public override void Update()
@@ -253,7 +253,7 @@ let startup (commands : Commands) =
     |> ignore
     
 
-let nameSystem (entities : Query<Write<NameComponent>>) : unit =
+let nameSystem (entities : Query<NameComponent>) : unit =
     for entity in entities do
         entity.Get<NameComponent>().Name
         |> printfn "original name is : %s"

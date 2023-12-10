@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace SoftTouch.ECS.Shared.Processors
 {
-    public class HealthProcessor : Processor<Query<Read<HealthComponent>>>
+    public class HealthProcessor : Processor<Query<HealthComponent>>
     {
         public HealthProcessor(World world) : base(world)
         {
@@ -20,7 +20,7 @@ namespace SoftTouch.ECS.Shared.Processors
             // }
         }
     }
-    public class HealthProcessorE : Processor<Query<Read<HealthComponent>>>
+    public class HealthProcessorE : Processor<Query<HealthComponent>>
     {
         public HealthProcessorE(World world) : base(world)
         {
@@ -35,7 +35,7 @@ namespace SoftTouch.ECS.Shared.Processors
             // }
         }
     }
-    public class HealthProcessorQ : Processor<Query<Read<HealthComponent>>>
+    public class HealthProcessorQ : Processor<Query<HealthComponent>>
     {
         public HealthProcessorQ(World world) : base(world)
         {
@@ -50,7 +50,7 @@ namespace SoftTouch.ECS.Shared.Processors
             //     }
         }
     }
-    public class HealthProcessorRO : Processor<Query<Read<ROHealthComponent>>>
+    public class HealthProcessorRO : Processor<Query<ROHealthComponent>>
     {
         public HealthProcessorRO(World world) : base(world)
         {
@@ -64,7 +64,7 @@ namespace SoftTouch.ECS.Shared.Processors
             // }
         }
     }
-    public class HealthProcessorQRO : Processor<Query<Read<ROHealthComponent>>>
+    public class HealthProcessorQRO : Processor<Query<ROHealthComponent>>
     {
         public HealthProcessorQRO(World world) : base(world)
         {
@@ -79,7 +79,7 @@ namespace SoftTouch.ECS.Shared.Processors
             //     }
         }
     }
-    public class HealthProcessorQS : Processor<Query<Read<HealthComponent>>>
+    public class HealthProcessorQS : Processor<Query<HealthComponent>>
     {
         public HealthProcessorQS(World world) : base(world)
         {
@@ -94,7 +94,7 @@ namespace SoftTouch.ECS.Shared.Processors
             // }
         }
     }
-    public class HealthProcessorQROS : Processor<Query<Read<ROHealthComponent>>>
+    public class HealthProcessorQROS : Processor<Query<ROHealthComponent>>
     {
         public HealthProcessorQROS(World world) : base(world)
         {

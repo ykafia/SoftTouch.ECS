@@ -35,22 +35,22 @@ public class GenericsGenerator : ISourceGenerator
             .WriteLine("public partial class App")
             .OpenBlock();
 
-        for(int i = 0; i < 16; i++)
+        for (int i = 0; i < 16; i++)
         {
             var range = Enumerable.Range(1, i + 1);
             code
                 .WriteLine($"public App AddProcessors<{string.Join(", ", range.Select(x => $"P{x}"))}>(string name)");
-            foreach(var r in range)
+            foreach (var r in range)
                 code.WriteLine($"    where P{r} : Processor, new()");
             code
                 .OpenBlock()
                 .WriteLine("using var merge = new MergeStage")
                 .OpenBlock()
                 .WriteLine("Name = name,")
-                .WriteLine($"Processors = MemoryOwner<Processor>.Allocate({i+1}, AllocationMode.Clear)")
+                .WriteLine($"Processors = MemoryOwner<Processor>.Allocate({i + 1}, AllocationMode.Clear)")
                 .CloseBlockWith(";");
-            foreach(var r in range)
-                code.WriteLine($"merge.Processors.Span[{r-1}] = new P{r}(){{World = World}};");
+            foreach (var r in range)
+                code.WriteLine($"merge.Processors.Span[{r - 1}] = new P{r}(){{World = World}};");
             code
                 .WriteLine("Schedule.Add(merge);")
                 .WriteLine("return this;")
@@ -79,21 +79,7 @@ public class GenericsGenerator : ISourceGenerator
                 .CloseBlock();
         }
         code.CloseAllBlocks();
-        context.AddSource("App.g.cs",code.ToString());
-    }
-
-    private void GenerateProcessorSetExtensions(GeneratorExecutionContext context)
-    {
-        var code = new CodeWriter();
-        code
-            .WriteLine("using SoftTouch.ECS.Processors;")
-            .WriteLine("using SoftTouch.ECS.Querying;")
-            .WriteEmptyLines(2)
-            .WriteLine("namespace SoftTouch.ECS.Scheduling;")
-            .WriteEmptyLines(3)
-            .WriteLine("public static partial class ProcessorSetExtensions")
-            .OpenBlock();
-
+        context.AddSource("App.g.cs", code.ToString());
     }
 
     public static void GenerateQueries(GeneratorExecutionContext context)
@@ -104,30 +90,76 @@ public class GenericsGenerator : ISourceGenerator
             .WriteEmptyLines(2)
             .WriteLine("namespace SoftTouch.ECS.Querying;")
             .WriteEmptyLines(3);
+
+
+        // for (int i = 2; i < 17; i++)
+        // {
+
+        //     var generics = Enumerable.Range(1, i).Select(x => "T" + x);
+        //     code
+        //         .WriteLine($"public record struct Read<{string.Join(", ", generics)}>() : IReadComponent")
+        //         .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
+        //         .OpenBlock()
+        //         .WriteLine($"public static TypeSet TypesRead {{ get; }} = TypeSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
+        //         .WriteLine($"public static TypeSet TypesWrite {{ get; }} = TypeSet.Empty;")
+        //         .WriteLine("public TypeSet ImplRead => TypesRead;")
+        //         .WriteLine("public TypeSet ImplWrite => TypesWrite;")
+        //         .CloseAllBlocks();
+
+        //     code.WriteEmptyLines(3);
+
+        //     code
+        //         .WriteLine($"public record struct Write<{string.Join(", ", generics)}>() : IWriteComponent")
+        //         .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
+        //         .OpenBlock()
+        //         .WriteLine($"public static TypeSet TypesRead {{ get; }} = TypeSet.Empty;")
+        //         .WriteLine($"public static TypeSet TypesWrite {{ get; }} = TypeSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
+        //         .WriteLine("public TypeSet ImplRead => TypesRead;")
+        //         .WriteLine("public TypeSet ImplWrite => TypesWrite;")
+        //         .CloseAllBlocks();
+
+        //     code.WriteEmptyLines(3);
+
+        // }
+
+        // context.AddSource("Queries.g.cs", code.ToString());
+
+
         for (int i = 2; i < 17; i++)
         {
 
             var generics = Enumerable.Range(1, i).Select(x => "T" + x);
             code
-                .WriteLine($"public record struct Read<{string.Join(", ", generics)}>() : IReadComponent")
+                .WriteLine($"public record struct Query<{string.Join(", ", generics)}>() : IEntityQuery")
                 .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
                 .OpenBlock()
-                .WriteLine($"public static TypeSet TypesRead {{ get; }} = TypeSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
-                .WriteLine($"public static TypeSet TypesWrite {{ get; }} = TypeSet.Empty;")
-                .WriteLine("public TypeSet ImplRead => TypesRead;")
-                .WriteLine("public TypeSet ImplWrite => TypesWrite;")
+                .WriteLine($"public static Type[] Types {{ get; }} = [{string.Join(", ", generics.Select(x => $"typeof({x})"))}];")
+                .WriteLine("public Type[] ImplTypes => Types;")
+                .WriteLine("public World World { get; set; }")
+                .WriteEmptyLines(1)
+                .WriteLine("public bool HasAccessTo<TComponent>()")
+                .WriteLine($"    =>{string.Join("||", generics.Select(x => $"typeof(TComponent) == typeof({x})"))};")
+                .WriteEmptyLines(1)
+                .WriteLine($"public WorldQueryEnumerator<Query<{string.Join(", ", generics)}>> GetEnumerator() => new(this);")
                 .CloseAllBlocks();
 
             code.WriteEmptyLines(3);
 
             code
-                .WriteLine($"public record struct Write<{string.Join(", ", generics)}>() : IWriteComponent")
+                .WriteLine($"public record struct FilteredQuery<{string.Join(", ", generics)}, TFilter>() : IFilteredEntityQuery")
                 .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
+                .WriteLine("    where TFilter : IFilterQuery, new()")
                 .OpenBlock()
-                .WriteLine($"public static TypeSet TypesRead {{ get; }} = TypeSet.Empty;")
-                .WriteLine($"public static TypeSet TypesWrite {{ get; }} = TypeSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
-                .WriteLine("public TypeSet ImplRead => TypesRead;")
-                .WriteLine("public TypeSet ImplWrite => TypesWrite;")
+                .WriteLine($"public static Type[] Types {{ get; }} = [{string.Join(", ", generics.Select(x => $"typeof({x})"))}];")
+                .WriteLine("public Type[] ImplTypes => Types;")
+                .WriteLine("public static IFilterQuery Filters { get; } = new TFilter();")
+                .WriteLine("public World World { get; set; }")
+                .WriteEmptyLines(1)
+                .WriteLine("public bool HasAccessTo<TComponent>()")
+                .WriteLine($"    =>{string.Join("||", generics.Select(x => $"typeof(TComponent) == typeof({x})"))}")
+                .WriteLine($"        && !Filters.ImplWithoutTypes.Contains(typeof(TComponent));")
+                .WriteEmptyLines(1)
+                .WriteLine($"public WorldFilteredQueryEnumerator<FilteredQuery<{string.Join(", ", generics)}, TFilter>> GetEnumerator() => new(this);")
                 .CloseAllBlocks();
 
             code.WriteEmptyLines(3);
@@ -138,85 +170,6 @@ public class GenericsGenerator : ISourceGenerator
 
     }
 
-    public static void GenerateWorldQueries(GeneratorExecutionContext context)
-    {
-        var code = new CodeWriter();
-        code.WriteLine("using CommunityToolkit.HighPerformance.Buffers;")
-            .WriteEmptyLines(2)
-            .WriteLine("namespace SoftTouch.ECS.Querying;")
-            .WriteEmptyLines(3);
-        for (int i = 2; i < 5; i++)
-        {
-
-            var generics = Enumerable.Range(1, i).Select(x => "TComp" + x);
-            code
-                .WriteLine($"public record struct Query<{string.Join(", ", generics)}>() : IEntityQuery")
-                .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : IComponentQuery, new()")))
-                .OpenBlock()
-                .WriteLine("public static IReadComponent Read { get; }")
-                .WriteLine("public static IWriteComponent Write { get; }")
-                .WriteLine("public World World { get; set; }")
-                .WriteLine("public TypeSet ImplRead => Read == null ?  TypeSet.Empty : Read.ImplRead;")
-                .WriteLine("public TypeSet ImplWrite => Write == null ?  TypeSet.Empty : Write.ImplWrite;")
-                .WriteLine($"public WorldQueryEnumerator<Query<{string.Join(", ", generics)}>> GetEnumerator() => new(this);")
-                .WriteLine("public bool CanRead<T>() where T : struct => CanRead(typeof(T));")
-                .WriteLine("public bool CanRead(Type t) => (Read != null && ImplRead.Contains(t)) || (Write != null &&ImplWrite.Contains(t));")
-                .WriteLine("public bool CanWrite<T>() where T : struct => ImplWrite.Contains(typeof(T));")
-                .WriteLine("public bool CanWrite(Type t) => ImplWrite.Contains(t);")
-                .WriteEmptyLines(2)
-                .WriteLine("static Query()")
-                .OpenBlock();
-
-            foreach (var t in generics)
-            {
-                code.WriteLine($"var comp{t} = new {t}();")
-                    .WriteLine($"if (comp{t} is IReadComponent read{t})")
-                    .WriteLine($"    Read = read{t};")
-                    .WriteLine($"else if (comp{t} is IWriteComponent write{t})")
-                    .WriteLine($"    Write = write{t};");
-
-            }
-            code.CloseAllBlocks();
-
-            code.WriteEmptyLines(3);
-
-            code
-                .WriteLine($"public record struct FilteredQuery<{string.Join(", ", generics)}, TFilter>() : IFilteredEntityQuery")
-                .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : IComponentQuery, new()")))
-                .WriteLine("    where TFilter : IFilterQuery, new()")
-                .OpenBlock()
-                .WriteLine("public static IReadComponent Read { get; }")
-                .WriteLine("public static IWriteComponent Write { get; }")
-                .WriteLine("public static IFilterQuery Filters { get; }")
-                .WriteLine("public World World { get; set; }")
-                .WriteLine("public TypeSet ImplRead => Read == null ?  TypeSet.Empty : Read.ImplRead;")
-                .WriteLine("public TypeSet ImplWrite => Write == null ?  TypeSet.Empty : Write.ImplWrite;")
-                .WriteLine($"public WorldFilteredQueryEnumerator<FilteredQuery<{string.Join(", ", generics)}, TFilter>> GetEnumerator() => new(this);")
-                .WriteLine("public bool CanRead<T>() where T : struct => CanRead(typeof(T));")
-                .WriteLine("public bool CanRead(Type t) => (Read != null && ImplRead.Contains(t)) || (Write != null &&ImplWrite.Contains(t));")
-                .WriteLine("public bool CanWrite<T>() where T : struct => ImplWrite.Contains(typeof(T));")
-                .WriteLine("public bool CanWrite(Type t) => ImplWrite.Contains(t);")
-                .WriteEmptyLines(2)
-                .WriteLine("static FilteredQuery()")
-                .OpenBlock();
-
-            foreach (var t in generics)
-            {
-                code.WriteLine($"var comp{t} = new {t}();")
-                    .WriteLine($"if (comp{t} is IReadComponent read{t})")
-                    .WriteLine($"    Read = read{t};")
-                    .WriteLine($"else if (comp{t} is IWriteComponent write{t})")
-                    .WriteLine($"    Write = write{t};")
-                    .WriteEmptyLines(1);
-
-            }
-            code.WriteLine("Filters = new TFilter();")
-                .CloseAllBlocks();
-        }
-
-        context.AddSource("WorldQueries.g.cs", code.ToString());
-
-    }
 
     public static void GenerateFilters(GeneratorExecutionContext context)
     {
@@ -243,7 +196,7 @@ public class GenericsGenerator : ISourceGenerator
             code.WriteEmptyLines(3);
 
             code
-                .WriteLine($"public record Without<{string.Join(", ", generics )}>() : IFilter")
+                .WriteLine($"public record Without<{string.Join(", ", generics)}>() : IFilter")
                 .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
                 .OpenBlock()
                 .WriteLine($"public static TypeSet WithoutTypes {{ get; }} = TypeSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")

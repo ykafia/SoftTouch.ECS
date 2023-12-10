@@ -19,7 +19,7 @@ let startup (commands : Commands) =
     |> ignore
     
 
-let nameSystem (entities : Query<Write<NameComponent>>) : unit =
+let nameSystem (entities : Query<NameComponent>) : unit =
     for entity in entities do
         entity.Get<NameComponent>().Name
         |> printfn "original name is : %s"
