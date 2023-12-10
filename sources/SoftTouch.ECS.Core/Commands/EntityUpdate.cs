@@ -1,3 +1,7 @@
+using CommunityToolkit.HighPerformance.Buffers;
+using SoftTouch.ECS.Arrays;
+using SoftTouch.ECS.Storage;
+
 namespace SoftTouch.ECS;
 
 
@@ -8,9 +12,29 @@ public enum EntityUpdateKind
     Despawn
 }
 
-public struct EntityUpdate()
+public record class EntityUpdate(EntityUpdateKind Kind, GenerationalEntity Entity)
 {
-    public List<ComponentBox> AddedComponents { get; set; } = [];
-    public List<ComponentBox> RemovedComponents { get; set; } = [];
-    public EntityUpdateKind Kind { get; set; } = EntityUpdateKind.Spawn;
+    public ReusableList<ComponentBox> AddedComponents { get; } = new();
+    public ReusableList<ComponentBox> RemovedComponents { get; } = new();
+
+    public void Add<T>(in T component) where T : struct
+    {
+        foreach(var e in AddedComponents.Span)
+            if(e is ComponentBox<T>)
+                return;
+        AddedComponents.Add(ComponentBox<T>.Create(component));
+    }
+
+    public void Remove<T>(in T component) where T : struct
+    {
+        foreach (var e in RemovedComponents.Span)
+            if (e is ComponentBox<T>)
+                return;
+        AddedComponents.Add(ComponentBox<T>.Create(component));
+    }
+    public void Dispose()
+    {
+        AddedComponents.Dispose();
+        RemovedComponents.Dispose();
+    }
 }

@@ -10,7 +10,7 @@ public sealed partial class World
     public AppTime? AppTime { get; }
     public WorldResources Resources { get; } = new();
     internal List<Entity> Entities { get; } = [];
-    internal Entities GEntities { get; } = new();
+    internal Entities GEntities { get; }
 
     internal ArchetypeList Archetypes = new();
 
@@ -25,6 +25,7 @@ public sealed partial class World
     {
         Archetypes.Add(new(), Archetype.CreateEmpty(this));
         Resources.Set(new WorldCommands(this));
+        GEntities = new(this);
     }
     public World(AppTime appTime)
     {
@@ -32,6 +33,7 @@ public sealed partial class World
         Resources.Set(AppTime);
         Archetypes.Add(new(), Archetype.CreateEmpty(this));
         Resources.Set(new WorldCommands(this));
+        GEntities = new(this);
     }
 
     internal Archetype GenerateArchetype(ArchetypeID types, IEnumerable<ComponentArray> components)
@@ -84,7 +86,7 @@ public sealed partial class World
     {
         for (int i = 0; i < Archetypes.Count; i++)
         {
-            if (Archetypes.Values[i].ID.IsSupersetOf(types.Span))
+            if (Archetypes.Values[i].ID.IsSupersetOf(types))
                 yield return Archetypes.Values[i];
         }
     }

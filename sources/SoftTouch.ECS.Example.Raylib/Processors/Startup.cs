@@ -14,7 +14,7 @@ public class Startup() : Processor<Commands>(null!)
     {
         
         SetWindowState(ConfigFlags.FLAG_WINDOW_UNDECORATED);
-        Query.Spawn().With(new Camera3D()
+        Query.Spawn(new Camera3D()
         {
             Position = new(10),
             FovY = 45,

@@ -93,10 +93,10 @@ module Commands =
         commands.Spawn()
 
     let spawnw (commands : WorldCommands) : EntityCommands =
-        commands.Spawn()
+        commands.SpawnEmpty()
 
     let spawnr (commands : Resource<WorldCommands>) : EntityCommands =
-        commands.Content.Spawn()
+        commands.Content.SpawnEmpty()
 
     let With<'T when 'T : struct and 'T : (new: unit -> 'T) and 'T :> System.ValueType and 'T :> IEquatable<'T>> (builder : EntityCommands) =
         builder.With<'T>()
@@ -106,7 +106,7 @@ module Commands =
         builder.With(&c)
 
 module World =
-    let spawn (world : World) : EntityCommands =
+    let spawn (world : World) : WorldCommands =
         world.Resources.Get<WorldCommands>().Spawn()
 
     let getEntity  (index : int32) (world : World) =

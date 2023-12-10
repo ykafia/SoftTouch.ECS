@@ -1,30 +1,28 @@
 ﻿using SoftTouch.ECS.Storage;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SoftTouch.ECS;
 
-public readonly struct EntityCommands(GenerationalEntity e, WorldCommands commands)
-{
-    readonly GenerationalEntity entity = e;
-    readonly WorldCommands commands = commands;
 
+public record EntityCommands(EntityUpdate Entity, WorldCommands Commands)
+{
     public EntityCommands With<T1>(in T1 component1)
         where T1 : struct
     {
-        //entity.Add(component1);
-        throw new NotImplementedException();
+        Entity.Add(component1);
         return this;
     }
     public EntityCommands With<T1>()
         where T1 : struct
     {
-        //entity.Add(default(T1));
-        throw new NotImplementedException();
+        Entity.Add(default(T1));
         return this;
     }
-
 }

@@ -13,11 +13,10 @@ public partial class Archetype
     public bool IsStrictSupersetOf(Archetype t) => ID.IsStrictSupersetOf(t.ID);
     public bool IsStrictSupersetOf(params Type[] types) => ID.IsStrictSupersetOf(new(types));
     public bool IsSupersetOf(Archetype t) => ID.IsSupersetOf(t.ID);
-    public bool IsSupersetOf(Span<Type> types) => ID.IsSupersetOf(types);
+    public bool IsSupersetOf(ArchetypeID types) => ID.IsSupersetOf(types);
     public bool IsStrictSubsetOf(Archetype t) => ID.IsStrictSubsetOf(t.ID);
-    public bool IsStrictSubsetOf(Span<Type> types) => ID.IsStrictSubsetOf(types);
+    public bool IsStrictSubsetOf(ArchetypeID types) => ID.IsStrictSubsetOf(types);
 
-    public void TypeIntersect(Archetype t, out Type[] types) => ID.Intersect(t.ID, out types);
     public void TypeExcept(Archetype t, out Type[] types) => ID.Except(t.ID, out types);
 
 

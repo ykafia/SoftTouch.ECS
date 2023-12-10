@@ -4,159 +4,91 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using static System.MemoryExtensions;
 using System.Diagnostics;
+using System.Collections.Immutable;
 
 namespace SoftTouch.ECS.Storage;
 
 [DebuggerDisplay("{TypesToString}")]
-public struct ArchetypeID : IComparable
+public readonly struct ArchetypeID
 {
-    static int globalId = 0;
-    static int GetNext() => ++globalId;
-
-    public readonly int Id;
-    public readonly Type[] Types = [];
-    public readonly Span<Type> Span => Types.AsSpan();
-
+    public Type[] Types { get; }
+    public ImmutableHashSet<Type> TypeSet { get; }
     public int Count => Types.Length;
+    public Span<Type> Span => Types.AsSpan();
 
-    public ArchetypeID()
-    {
-        Types = [];
-    }
     public ArchetypeID(params Type[] types)
     {
         Types = types;
-        Id = GetNext();
+        TypeSet = [..types];
     }
 
-    public bool IsStrictSupersetOf(ArchetypeID other)
-    {
-        if(Count <= other.Count) return false;
-        for(int i = 0; i< Types.Length; i++) {
-            if(!other.Types.Contains(Types[i]))
-                return false;
-        }
-        return true;
-    }
-    public bool IsSupersetOf(ArchetypeID other)
-    {
-        if(Count < other.Count) return false;
-        for(int i = 0; i< Types.Length; i++) {
-            if(!other.Types.Contains(Types[i]))
-                return false;
-        }
-        return true;
-    }
-    public bool IsAddedType(ArchetypeID other) => IsStrictSupersetOf(other) && Count == other.Count + 1;
-    public bool IsStrictSubsetOf(ArchetypeID other)
-    {
-        if(other.Count <= Count) return false;
-        for(int i = 0; i< other.Types.Length; i++) {
-            if(!Types.Contains(other.Types[i]))
-                return false;
-        }
-        return true;
-    }
-    public bool IsRemovedType(ArchetypeID other) => IsStrictSubsetOf(other) && Count == other.Count - 1;
+    public static implicit operator ArchetypeID(Type[] types) => new(types);
 
-    public void Except(ArchetypeID other, out Type[] types)
+    internal bool IsAddedType(ArchetypeID other)
+        => Types.Length == other.Types.Length + 1;
+
+    public bool Contains(Type t) => TypeSet.Contains(t);
+
+    internal bool IsSupersetOf(in ArchetypeID other)
+    {
+        foreach(var t in Types)
+        {
+            if(!other.Types.Contains(t))
+                return false;
+        }
+        return true;
+    }
+    internal readonly bool IsStrictSupersetOf(in ArchetypeID other)
+    {
+        if(Types.Length <= other.Types.Length)
+            return false;
+        foreach (var t in Types)
+        {
+            if (!other.Types.Contains(t))
+                return false;
+        }
+        return true;
+    }
+
+    internal bool IsSubsetOf(in ArchetypeID other)
+        => other.IsSupersetOf(in this);
+    internal bool IsStrictSubsetOf(in ArchetypeID other)
+        => other.IsStrictSupersetOf(in this);
+
+    internal void Except(ArchetypeID other, out Type[] types)
     {
         if (other.Types != null && Types != null && Types.Length > other.Types.Length)
         {
-            var size = Types.Length - other.Types.Length;   
+            var size = Types.Length - other.Types.Length;
             var result = new Type[size];
             var id = 0;
-            for(int i = 0; i < Types.Length; i++){
-                if(!other.Types.Contains(Types[i]))
+            for (int i = 0; i < Types.Length; i++)
+            {
+                if (!other.Types.Contains(Types[i]))
                 {
                     result[id] = Types[i];
                 }
             }
             types = result;
         }
-        else 
+        else
             types = [];
     }
-    public void Intersect(ArchetypeID other, out Type[] types)
-    {
-        if (other.Types != null && Types != null)
-        {
-            types = other.Types.Intersect(Types).ToArray();
-        }
-        else 
-            types = Array.Empty<Type>();
-    }
 
-    public override bool Equals(object? obj)
-    {
-        return obj is ArchetypeID iD &&
-               this == iD;
-    }
+    public override bool Equals([NotNullWhen(true)] object? obj)
+        => obj is ArchetypeID id && TypeSet.Intersect(id.TypeSet).Count == Count;
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Id, Types, Count);
-    }
+        if (Types == null) return 0;
 
-    public int CompareTo(object? obj)
-    {
-        if(obj is ArchetypeID aid)
-            return aid.Id.CompareTo(Id);
-        else 
-            throw new NotImplementedException();
-    }
+        unchecked
+        {
+            int hash = 17;
+            for (int i = 0; i < Types.Length; i++)
+                hash = hash * 31 + Types[i].GetHashCode();
 
-    internal bool IsSupersetOf(Span<Type> types)
-    {
-        if (Count <= types.Length) return false;
-        for (int i = 0; i < types.Length; i++)
-        {
-            if (!Types.Contains(types[i]))
-                return false;
+            return hash;
         }
-        return true;
     }
-
-    internal bool IsStrictSubsetOf(Span<Type> types)
-    {
-        if (types.Length <= Count) return false;
-        for (int i = 0; i < Count; i++)
-        {
-            var contains = false;
-            for (int j = 0; j < types.Length; j++)
-                if (types[j] == Types[i])
-                    contains = false;
-            if (!contains) return false;
-        }
-        return true;
-    }
-
-    public static bool operator ==(ArchetypeID left, ArchetypeID right)
-    {
-        var check = true;
-        if(left.Types.Length == 0 || right.Types.Length == 0)
-        {
-            if (left.Types.Length == right.Types.Length)
-                return true;
-            else return false;
-        }
-        foreach(var lt in left.Types)
-        {
-            check = check && right.Types.Contains(lt);
-        }
-        check = check && left.Types.Length == right.Types.Length;
-        return check;
-    }
-
-    public static bool operator !=(ArchetypeID left, ArchetypeID right)
-    {
-        var check = true;
-        foreach (var lt in left.Types)
-        {
-            check = check && right.Types.Contains(lt);
-        }
-        check = check && left.Types.Length == right.Types.Length;
-        return !check;
-    }
-    internal readonly string TypesToString => $"[{string.Join(", ", Types.Select(x => x.Name))}]";
 }

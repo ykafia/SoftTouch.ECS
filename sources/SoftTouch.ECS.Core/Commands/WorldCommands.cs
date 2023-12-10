@@ -5,10 +5,18 @@ namespace SoftTouch.ECS;
 public partial class WorldCommands(World world)
 {
     readonly World world = world;
-    readonly List<ComponentUpdates> updates = [];
+    readonly List<EntityUpdate> updates = [];
 
     public void ExecuteUpdates()
     {
-        throw new NotImplementedException();
+        foreach(var update in updates)
+        {
+            if(update.Kind == EntityUpdateKind.ComponentUpdate)
+            {
+                var entity = world.GEntities[update.Entity];
+
+                var id = entity.Location.Archetype.ID;
+            }
+        }
     }
 }
