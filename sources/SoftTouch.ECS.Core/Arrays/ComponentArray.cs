@@ -15,6 +15,7 @@ public abstract class ComponentArray
 {
     public abstract Type ComponentType { get; }
     public int Count { get; protected set; }
+    public abstract bool TryAdd(ComponentBox item);
     public abstract bool TryAdd<TOther>(TOther item) where TOther : struct, IEquatable<TOther>;
     public abstract bool TryRemove<TOther>(TOther item) where TOther : struct, IEquatable<TOther>;
     public abstract bool TryRemoveAt<TOther>(int index, out TOther item) where TOther : struct, IEquatable<TOther>;
@@ -185,5 +186,15 @@ public class ComponentArray<T> : ComponentArray
         var clone = new ComponentArray<T>();
         CopyTo(clone);
         return clone;
+    }
+
+    public override bool TryAdd(ComponentBox item)
+    {
+        if(item is ComponentBox<T> cb)
+        {
+            Add(cb.Value);
+            return true;
+        }
+        return false;
     }
 }

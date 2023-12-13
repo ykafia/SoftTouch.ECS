@@ -9,28 +9,27 @@ namespace SoftTouch.ECS.Storage;
 
 public partial class Archetype
 {
-    public static Archetype CreateEmpty(World w) => new(new List<ComponentBase>(), w);
+    public static Archetype CreateEmpty(World w) => new([], w);
 
     public World World { get; init; }
     public Dictionary<Type, ComponentArray> Storage = [];
     public Dictionary<int,int> EntityLookup { get; internal set; }
     public bool HasEntities => EntityLookup.Count > 0;
 
-    public ArchetypeID ID = new();
-
-    public ArchetypeEdges Edges = new();
+    public ArchetypeID ID;
 
     public int Length => EntityLookup.Count;
 
-    public Archetype(IEnumerable<ComponentBase> components, World w)
+    public Archetype(ArchetypeID aid, ReusableList<ComponentBox> components, World w)
     {
-        foreach (var c in components)
+        foreach (var c in components.Span)
         {
-            Storage[c.GetComponentType()] = c.EmptyArray();
+            Storage[c.ComponentType] = c.ToArray();
         }
-        ID = new ArchetypeID(components.Select(x => x.GetComponentType()).ToArray());
+        ID = aid;
         World = w;
-        EntityLookup = new();
+        EntityLookup = [];
+        components.Dispose();
     }
 
     public Archetype(IEnumerable<ComponentArray> componentArrays, World w)

@@ -36,52 +36,6 @@ public sealed partial class World
         GEntities = new(this);
     }
 
-    internal Archetype GenerateArchetype(ArchetypeID types, IEnumerable<ComponentArray> components)
-    {
-        if (!Archetypes.ContainsKey(types))
-        {
-            Archetypes.Add(types, new Archetype(components, this));
-            return Archetypes[types];
-        }
-        else
-            return Archetypes[types];
-    }
-    internal Archetype GenerateArchetype(ArchetypeID types, List<ComponentBase> components)
-    {
-        if (!Archetypes.ContainsKey(types))
-        {
-            Archetypes.Add(types, new Archetype(components, this));
-            return Archetypes[types];
-        }
-        else
-            return Archetypes[types];
-    }
-
-    public void BuildGraph()
-    {
-        var stor = Archetypes.Values;
-        foreach (var arch in Archetypes.Values)
-        {
-            foreach (var x in stor)
-            {
-                if (x.ID.IsAddedType(arch.ID))
-                {
-                    arch.TypeExcept(x, out var types);
-                    arch.Edges.Add[types[0]] = x;
-                }
-
-            }
-            foreach (var x in stor)
-            {
-                if (x.ID.IsAddedType(arch.ID))
-                {
-                    arch.TypeExcept(x, out var types);
-                    arch.Edges.Add[types[0]] = x;
-                }
-            }
-        }
-    }
-
     public IEnumerable<Archetype> QueryArchetypes(ArchetypeID types)
     {
         for (int i = 0; i < Archetypes.Count; i++)
@@ -143,6 +97,5 @@ public sealed partial class World
         {
             Archetypes[arch.ID] = arch.Clone();
         }
-        BuildGraph();
     }
 }

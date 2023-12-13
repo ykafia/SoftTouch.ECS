@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.ObjectPool;
+using SoftTouch.ECS.Arrays;
 using SoftTouch.ECS.Storage;
 
 namespace SoftTouch.ECS;
@@ -6,6 +7,8 @@ namespace SoftTouch.ECS;
 
 public abstract class ComponentBox
 {
+    public abstract Type ComponentType { get; }
+    public abstract ComponentArray ToArray();
     public abstract void Dispose();
 }
 
@@ -13,6 +16,9 @@ public class ComponentBox<TComp>() : ComponentBox
     where TComp : struct
 {
     static ObjectPool<ComponentBox<TComp>> pool = ObjectPool.Create<ComponentBox<TComp>>();
+
+    public override Type ComponentType { get; } = typeof(TComp);
+
     public static ComponentBox<TComp> Create(in TComp? component = null)
     {
         var result = pool.Get();
@@ -27,25 +33,12 @@ public class ComponentBox<TComp>() : ComponentBox
     {
         pool.Return(this);
     }
-}
 
-public class ComponentUpdates : IResettable
-{
-    static ObjectPool<ComponentUpdates> pool = ObjectPool.Create<ComponentUpdates>();
-
-    public static ComponentUpdates Get() => pool.Get();
-
-    public GenerationalEntity Entity { get; set; }
-    public List<ComponentBox> Removals { get; } = [];
-    public List<ComponentBox> Adds { get; } = [];
-
-    public void Return() => pool.Return(this);
-
-    public bool TryReset()
+    public override ComponentArray ToArray()
     {
-        Entity = new();
-        Removals.Clear();
-        Adds.Clear();
-        return true;
+        var result = new ComponentArray<TComp>();
+        result.Add(Value);
+        pool.Return(this);
+        return result;
     }
 }
