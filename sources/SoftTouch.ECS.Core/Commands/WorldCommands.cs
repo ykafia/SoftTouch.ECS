@@ -11,11 +11,20 @@ public partial class WorldCommands(World world)
     {
         foreach(var update in updates)
         {
-            if(update.Kind == EntityUpdateKind.ComponentUpdate)
+            if(update.Kind == EntityUpdateKind.Spawn)
             {
-                var entity = world.GEntities[update.Entity];
-
-                var id = entity.Location.Archetype.ID;
+                // world.GEntities[update.Entity].Generation = 
+            }
+            else if(update.Kind == EntityUpdateKind.Despawn)
+            {
+                // Remove all components
+                world.GEntities[update.Entity].Location.Archetype.RemoveEntity(update.Entity);
+                // Put the entity to FreeIds                
+                world.GEntities.SetFree(update.Entity);
+            }
+            else if (update.Kind == EntityUpdateKind.ComponentUpdate)
+            {
+                
             }
         }
     }

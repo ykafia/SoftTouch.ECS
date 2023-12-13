@@ -18,6 +18,7 @@ public abstract class ComponentArray
     public abstract bool TryAdd<TOther>(TOther item) where TOther : struct, IEquatable<TOther>;
     public abstract bool TryRemove<TOther>(TOther item) where TOther : struct, IEquatable<TOther>;
     public abstract bool TryRemoveAt<TOther>(int index, out TOther item) where TOther : struct, IEquatable<TOther>;
+    public abstract bool RemoveAt(int index);
     public abstract void Clear();
     public abstract ComponentArray Create();
 
@@ -102,7 +103,7 @@ public class ComponentArray<T> : ComponentArray
         }
         return false;
     }
-    public bool RemoveAt(int index)
+    public override bool RemoveAt(int index)
     {
         Span[(index + 1)..].CopyTo(Span[index..]);
         Count -= 1;

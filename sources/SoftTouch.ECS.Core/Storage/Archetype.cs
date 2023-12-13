@@ -13,7 +13,7 @@ public partial class Archetype
 
     public World World { get; init; }
     public Dictionary<Type, ComponentArray> Storage = [];
-    public EntityLookup EntityLookup { get; internal set; }
+    public Dictionary<int,int> EntityLookup { get; internal set; }
     public bool HasEntities => EntityLookup.Count > 0;
 
     public ArchetypeID ID = new();
@@ -41,17 +41,10 @@ public partial class Archetype
         };
         ID = new ArchetypeID(componentArrays.Select(x => x.ComponentType).ToArray());
         World = w;
-        EntityLookup = new();
+        EntityLookup = [];
     }
 
-    public int this[EntityId i]
-    {
-        get
-        {
-            EntityLookup.TryGetValue(in i, out var res);
-            return res;
-        }
-    }
+    public int this[in GenerationalEntity i] => EntityLookup[i];
 
 
     private Span<T> GetComponentSpan<T>() where T : struct
@@ -67,7 +60,7 @@ public partial class Archetype
         c = GetComponentArray<T>()[i];
     }
 
-    internal void SetEntityComponent<T>(in EntityId entity, in T component) where T : struct
+    internal void SetEntityComponent<T>(in GenerationalEntity entity, in T component) where T : struct
     {
         var array = GetComponentArray<T>();
         if (EntityLookup.TryGetValue(entity, out var idx))
@@ -77,21 +70,29 @@ public partial class Archetype
         else
         {
             array.Add(component);
-            EntityLookup.Set(World[entity].Index, array.Count - 1);
+            EntityLookup[entity] = array.Count - 1;
         }
     }
 
-    public void RemoveEntity(EntityId idx)
+    internal void RemoveEntity(in GenerationalEntity idx)
     {
         if (EntityLookup.Count > 0)
+        {
+            var cmpid = EntityLookup[idx];
+            foreach(var t in ID.Types)
+                Storage[t].RemoveAt(cmpid);
             EntityLookup.Remove(idx);
+        }
     }
     public void SetComponent<T>(int index, in T component) where T : struct
     {
         GetComponentArray<T>()[index] = component;
     }
 
-    internal void AddEntity(EntityId idx) => EntityLookup.Add(idx);
+    internal void AddEntity(in GenerationalEntity idx)
+    {
+        EntityLookup.Add(idx,Length);
+    }
 
     public override string ToString()
     {
@@ -129,7 +130,7 @@ public partial class Archetype
         };
         foreach (var t in ID.Types)
             clone.Storage[t] = Storage[t].Clone();
-        clone.EntityLookup = EntityLookup.Clone();
+        clone.EntityLookup = new(EntityLookup);
         return clone;
     }
 

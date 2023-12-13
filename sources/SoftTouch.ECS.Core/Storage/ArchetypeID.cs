@@ -29,7 +29,7 @@ public readonly struct ArchetypeID
 
     public bool Contains(Type t) => TypeSet.Contains(t);
 
-    internal bool IsSupersetOf(in ArchetypeID other)
+    public bool IsSupersetOf(in ArchetypeID other)
     {
         foreach(var t in Types)
         {
@@ -38,7 +38,7 @@ public readonly struct ArchetypeID
         }
         return true;
     }
-    internal readonly bool IsStrictSupersetOf(in ArchetypeID other)
+    public readonly bool IsStrictSupersetOf(in ArchetypeID other)
     {
         if(Types.Length <= other.Types.Length)
             return false;
@@ -50,12 +50,12 @@ public readonly struct ArchetypeID
         return true;
     }
 
-    internal bool IsSubsetOf(in ArchetypeID other)
+    public bool IsSubsetOf(in ArchetypeID other)
         => other.IsSupersetOf(in this);
-    internal bool IsStrictSubsetOf(in ArchetypeID other)
+    public bool IsStrictSubsetOf(in ArchetypeID other)
         => other.IsStrictSupersetOf(in this);
 
-    internal void Except(ArchetypeID other, out Type[] types)
+    public void Except(ArchetypeID other, out Type[] types)
     {
         if (other.Types != null && Types != null && Types.Length > other.Types.Length)
         {
@@ -75,8 +75,12 @@ public readonly struct ArchetypeID
             types = [];
     }
 
+    public static bool operator ==(ArchetypeID id1, ArchetypeID id2) => id1.Equals(id2);
+    public static bool operator !=(ArchetypeID id1, ArchetypeID id2) => !id1.Equals(id2);
     public override bool Equals([NotNullWhen(true)] object? obj)
-        => obj is ArchetypeID id && TypeSet.Intersect(id.TypeSet).Count == Count;
+    {
+        return obj is ArchetypeID id && IsSupersetOf(id) && IsSubsetOf(id);
+    }
 
     public override int GetHashCode()
     {
@@ -86,7 +90,7 @@ public readonly struct ArchetypeID
         {
             int hash = 17;
             for (int i = 0; i < Types.Length; i++)
-                hash = hash * 31 + Types[i].GetHashCode();
+                hash *= 31 + (Types[i].FullName ?? Types[i].Name).GetHashCode();
 
             return hash;
         }

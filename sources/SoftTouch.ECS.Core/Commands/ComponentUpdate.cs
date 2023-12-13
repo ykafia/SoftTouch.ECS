@@ -4,7 +4,10 @@ using SoftTouch.ECS.Storage;
 namespace SoftTouch.ECS;
 
 
-public abstract class ComponentBox;
+public abstract class ComponentBox
+{
+    public abstract void Dispose();
+}
 
 public class ComponentBox<TComp>() : ComponentBox
     where TComp : struct
@@ -20,6 +23,10 @@ public class ComponentBox<TComp>() : ComponentBox
 
     public TComp Value { get; set; }
 
+    public override void Dispose()
+    {
+        pool.Return(this);
+    }
 }
 
 public class ComponentUpdates : IResettable

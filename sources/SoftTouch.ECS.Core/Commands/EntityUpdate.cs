@@ -34,6 +34,10 @@ public record class EntityUpdate(EntityUpdateKind Kind, GenerationalEntity Entit
     }
     public void Dispose()
     {
+        foreach(var c in AddedComponents.Span)
+            c.Dispose();
+        foreach (var c in RemovedComponents.Span)
+            c.Dispose();
         AddedComponents.Dispose();
         RemovedComponents.Dispose();
     }

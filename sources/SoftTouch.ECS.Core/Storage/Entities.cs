@@ -18,10 +18,16 @@ public class Entities(World world)
 
     public EntityMeta this[int index] => Meta[index];
 
+
+    public void SetFree(in GenerationalEntity entity)
+    {
+        FreeIds.Add(entity.Index);
+    }
     public GenerationalEntity GetOrCreate()
     {
         if (FreeIds.Count > 0)
         {
+            // If there are free indices we use this free index but have to increment the generation.
             var id = FreeIds[0];
             FreeIds.RemoveAt(0);
             Meta[id] = Meta[id] with { Generation = Meta[id].Generation + 1 };
@@ -30,6 +36,7 @@ public class Entities(World world)
         }
         else
         {
+            // if there are no free indices that means we have to create a new one of generation 0
             var id = Meta.Count;
             ReservedIds.Add(id);
             return new(id, 0);

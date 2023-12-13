@@ -14,7 +14,7 @@ public struct Entity
     {
         get
         {
-            if (Archetype.EntityLookup.TryGetValue(in index, out var res))
+            if (Archetype.EntityLookup.TryGetValue(index, out var res))
                 return res;
             return -1;
         }
