@@ -7,27 +7,19 @@ using SoftTouch.ECS.Querying;
 using SoftTouch.ECS.Storage;
 using System.Diagnostics;
 
+var e = new Entity(1,0);
+var e1 = new Entity(1, 1);
+var e2 = new Entity(2, 2);
+var e2b = new Entity(2, 2);
 
-var myId = new ArchetypeID(typeof(int), typeof(float));
-var myOtherId = new ArchetypeID(typeof(float), typeof(int));
-var myOtherId2 = new ArchetypeID(typeof(float), typeof(int), typeof(long));
+Console.WriteLine(e2 == e2b);
+Console.WriteLine($"{e2.GetHashCode()} {e2b.GetHashCode()}");
 
-
-Console.WriteLine(myId == myOtherId);
-Console.WriteLine($"{myId.GetHashCode()} - {myOtherId.GetHashCode()}");
-Console.WriteLine(myId == myOtherId2);
-Console.WriteLine(myOtherId == myOtherId2);
-Console.WriteLine(myOtherId2.IsSupersetOf(myOtherId2));
-
-
-HashSet<ArchetypeID> ids = [
-    myId, myOtherId, myOtherId2
+HashSet<Entity> hash = [
+    e,e1, e2, e2b
 ];
-Console.WriteLine(ids.Count);
-foreach(var id in ids)
-{
-    Console.WriteLine(string.Join(", ", id.Types.Select(x => x.FullName ?? "")));
-}
+
+Console.WriteLine(hash.Count);
 
 // var app =
 //     new App()

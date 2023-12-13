@@ -35,9 +35,9 @@ public partial class WorldCommands(World world)
             else if(update.Kind == EntityUpdateKind.Despawn)
             {
                 // Remove all components
-                world.GEntities[update.Entity].Location.Archetype.RemoveEntity(update.Entity);
+                world.Entities[update.Entity].Location.Archetype.RemoveEntity(update.Entity);
                 // Put the entity to FreeIds                
-                world.GEntities.SetFree(update.Entity);
+                world.Entities.SetFree(update.Entity);
             }
             else if (update.Kind == EntityUpdateKind.ComponentUpdate)
             {

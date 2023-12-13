@@ -9,14 +9,13 @@ public sealed partial class World
 {
     public AppTime? AppTime { get; }
     public WorldResources Resources { get; } = new();
-    internal List<Entity> Entities { get; } = [];
-    internal Entities GEntities { get; }
+    internal Entities Entities { get; }
 
     internal ArchetypeList Archetypes = new();
 
     public WorldCommands Commands => Resources.Get<WorldCommands>();
 
-    public Entity this[int id]
+    public EntityMeta this[int id]
     {
         get => Entities[id];
     }
@@ -25,7 +24,7 @@ public sealed partial class World
     {
         Archetypes.Add(new(), Archetype.CreateEmpty(this));
         Resources.Set(new WorldCommands(this));
-        GEntities = new(this);
+        Entities = new(this);
     }
     public World(AppTime appTime)
     {
@@ -33,7 +32,7 @@ public sealed partial class World
         Resources.Set(AppTime);
         Archetypes.Add(new(), Archetype.CreateEmpty(this));
         Resources.Set(new WorldCommands(this));
-        GEntities = new(this);
+        Entities = new(this);
     }
 
     public IEnumerable<Archetype> QueryArchetypes(ArchetypeID types)

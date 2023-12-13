@@ -7,12 +7,8 @@ namespace SoftTouch.ECS;
 
 public partial class World
 {
-    internal void AddArchetypeUpdate(ComponentUpdates component)
+    internal void ApplyUpdates()
     {
-        throw new NotImplementedException();
-        //Resources.Get<WorldCommands>().Add(component);
+        Resources.Get<WorldCommands>().ExecuteUpdates();
     }
-    internal void ApplyUpdates() => Resources.Get<WorldCommands>().ExecuteUpdates();
-
-
 }

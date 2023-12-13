@@ -12,7 +12,7 @@ public enum EntityUpdateKind
     Despawn
 }
 
-public record class EntityUpdate(EntityUpdateKind Kind, GenerationalEntity Entity) : IDisposable
+public record class EntityUpdate(EntityUpdateKind Kind, Entity Entity) : IDisposable
 {
     public ReusableList<ComponentBox> AddedComponents { get; } = new();
     public ReusableList<ComponentBox> RemovedComponents { get; } = new();

@@ -19,11 +19,11 @@ public class Entities(World world)
     public EntityMeta this[int index] => Meta[index];
 
 
-    public void SetFree(in GenerationalEntity entity)
+    public void SetFree(in Entity entity)
     {
         FreeIds.Add(entity.Index);
     }
-    public GenerationalEntity GetOrCreate()
+    public Entity GetOrCreate()
     {
         if (FreeIds.Count > 0)
         {

@@ -43,7 +43,7 @@ public partial class Archetype
         EntityLookup = [];
     }
 
-    public int this[in GenerationalEntity i] => EntityLookup[i];
+    public int this[in Entity i] => EntityLookup[i];
 
 
     private Span<T> GetComponentSpan<T>() where T : struct
@@ -59,7 +59,7 @@ public partial class Archetype
         c = GetComponentArray<T>()[i];
     }
 
-    internal void SetEntityComponent<T>(in GenerationalEntity entity, in T component) where T : struct
+    internal void SetEntityComponent<T>(in Entity entity, in T component) where T : struct
     {
         var array = GetComponentArray<T>();
         if (EntityLookup.TryGetValue(entity, out var idx))
@@ -73,7 +73,7 @@ public partial class Archetype
         }
     }
 
-    internal void RemoveEntity(in GenerationalEntity idx)
+    internal void RemoveEntity(in Entity idx)
     {
         if (EntityLookup.Count > 0)
         {
@@ -88,7 +88,7 @@ public partial class Archetype
         GetComponentArray<T>()[index] = component;
     }
 
-    internal void AddEntity(in GenerationalEntity idx)
+    internal void AddEntity(in Entity idx)
     {
         EntityLookup.Add(idx,Length);
     }
