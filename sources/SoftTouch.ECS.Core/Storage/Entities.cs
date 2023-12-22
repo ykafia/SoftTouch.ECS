@@ -37,7 +37,8 @@ public class Entities(World world)
         else
         {
             // if there are no free indices that means we have to create a new one of generation 0
-            var id = Meta.Count;
+        
+            var id = Math.Max(Meta.Count, ReservedIds.Count > 0 ? ReservedIds.Max() + 1 : 0);
             ReservedIds.Add(id);
             return new(id, 0);
         }

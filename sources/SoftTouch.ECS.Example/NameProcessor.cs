@@ -33,6 +33,9 @@ public class WriteAge : Processor<Query<int>>
         {
             //Console.WriteLine($"There's a person that is {entity.Get<int>()} years old");
             entity.Set((entity.Get<int>() + 1) % 250);
+            var nb = entity.Get<int>();
+            if (nb == 211)
+                entity.Despawn();
         }
     }
 }

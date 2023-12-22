@@ -28,6 +28,12 @@ public partial class App
         IsRunning = false;
     }
 
+    public void Run()
+    {
+        IsRunning = true;
+        while(IsRunning)
+            Update();
+    }
 
     public virtual void Update(bool parallel = true)
     {

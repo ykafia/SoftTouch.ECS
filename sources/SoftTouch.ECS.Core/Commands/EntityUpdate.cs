@@ -34,10 +34,18 @@ public record class EntityUpdate(EntityUpdateKind Kind, Entity Entity) : IDispos
     }
     public void Dispose()
     {
-        foreach(var c in AddedComponents.Span)
-            c.Dispose();
-        foreach (var c in RemovedComponents.Span)
-            c.Dispose();
+        try
+        {
+            foreach (var c in AddedComponents.Span)
+                c.Dispose();
+        }catch (Exception) { }
+        try
+        {
+            foreach (var c in RemovedComponents.Span)
+                c.Dispose();
+        }
+        catch (Exception) { }
+
         AddedComponents.Dispose();
         RemovedComponents.Dispose();
     }

@@ -9,14 +9,14 @@ public partial class WorldCommands
     {
         var entity = world.Entities.GetOrCreate();
         var update = new EntityUpdate(EntityUpdateKind.Spawn, entity);
-        updates.Add(update);
+        Updates.Add(update);
         return this;
     }
     public EntityCommands SpawnEmpty()
     {
         var entity = world.Entities.GetOrCreate();
         var update = new EntityUpdate(EntityUpdateKind.Spawn, entity);
-        updates.Add(update);
+        Updates.Add(update);
         return new(update, this);
     }
     public WorldCommands Spawn<T1>(in T1 component1)
@@ -25,7 +25,7 @@ public partial class WorldCommands
         var entity = world.Entities.GetOrCreate();
         var update = new EntityUpdate(EntityUpdateKind.Spawn, entity);
         update.Add(in component1);
-        updates.Add(update);
+        Updates.Add(update);
         return this;
     }
 
@@ -40,7 +40,7 @@ public partial class WorldCommands
         var update = new EntityUpdate(EntityUpdateKind.Spawn, entity);
         update.Add(in component1);
         update.Add(in component2);
-        updates.Add(update);
+        Updates.Add(update);
         return this;
     }
     public WorldCommands Spawn<T1, T2, T3>(
@@ -57,7 +57,7 @@ public partial class WorldCommands
         update.Add(in component1);
         update.Add(in component2);
         update.Add(in component3);
-        updates.Add(update);
+        Updates.Add(update);
         return this;
     }
     public WorldCommands Spawn<T1, T2, T3, T4>(
@@ -77,7 +77,7 @@ public partial class WorldCommands
         update.Add(in component2);
         update.Add(in component3);
         update.Add(in component4);
-        updates.Add(update);
+        Updates.Add(update);
         return this;
     }
     public WorldCommands Spawn<T1, T2, T3, T4, T5>(
@@ -100,7 +100,7 @@ public partial class WorldCommands
         update.Add(in component3);
         update.Add(in component4);
         update.Add(in component5);
-        updates.Add(update);
+        Updates.Add(update);
         return this;
     }
     public WorldCommands Spawn<T1, T2, T3, T4, T5, T6>(
@@ -126,7 +126,7 @@ public partial class WorldCommands
         update.Add(in component4);
         update.Add(in component5);
         update.Add(in component6);
-        updates.Add(update);
+        Updates.Add(update);
         return this;
     }
     public WorldCommands Spawn<T1, T2, T3, T4, T5, T6, T7>(
@@ -155,7 +155,7 @@ public partial class WorldCommands
         update.Add(in component5);
         update.Add(in component6);
         update.Add(in component7);
-        updates.Add(update);
+        Updates.Add(update);
         return this;
     }
 
@@ -188,7 +188,7 @@ public partial class WorldCommands
         update.Add(in component6);
         update.Add(in component7);
         update.Add(in component8);
-        updates.Add(update);
+        Updates.Add(update);
         return this;
     }
     public WorldCommands Spawn<T1>()

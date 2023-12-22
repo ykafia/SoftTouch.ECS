@@ -5,13 +5,13 @@ using CommunityToolkit.HighPerformance.Buffers;
 namespace SoftTouch.ECS.Arrays;
 
 
-public struct ReusableList<T>(int capacity = 4)
+public class ReusableList<T>(int capacity = 4)
 {
     MemoryOwner<T> _array = MemoryOwner<T>.Allocate((int)BitOperations.RoundUpToPowerOf2((uint)capacity), AllocationMode.Clear);
     public int Length { get; private set; }
 
-    public readonly Span<T> Span => _array.Span[..Length];
-    public readonly Memory<T> Memory => _array.Memory[..Length];
+    public Span<T> Span => _array.Span[..Length];
+    public Memory<T> Memory => _array.Memory[..Length];
 
     void Expand(int size)
     {
@@ -28,11 +28,11 @@ public struct ReusableList<T>(int capacity = 4)
     public void Add(T item)
     {
         Expand(1);
-        Span[Length] = item;
+        _array.Span[Length] = item;
         Length+=1;
     }
 
-    public readonly void Dispose()
+    public void Dispose()
     {
         _array.Dispose();
     }
