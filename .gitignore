@@ -7,5 +7,5 @@ package/
 /.vs/SoftTouch.ECS/DesignTimeBuild
 /.vs/SoftTouch.ECS/FileContentIndex
 /.vs/SoftTouch.ECS/v17
-
+.mono/
 .fake
