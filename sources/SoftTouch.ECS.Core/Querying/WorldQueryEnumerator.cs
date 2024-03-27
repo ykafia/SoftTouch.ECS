@@ -105,8 +105,13 @@ public ref struct WorldQueryEnumerator<Q>
         }
 
         while (enumerator.MoveNext())
+        {
             if (MatchArch(enumerator.Current.Key))
+            {
+                inArch = true;
                 return true;
+            }
+        }
         
         return false;
     }

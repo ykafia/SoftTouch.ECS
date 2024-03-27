@@ -19,7 +19,7 @@ public class StartupProcessor : Processor<Resource<WorldCommands>>
         WorldCommands commands = Query;
         for (int i = 0; i < 2000; i++)
         {
-            commands.Spawn(rand.Next(1, 100), new NameComponent($"john n°{i}"), 0f);
+            commands.Spawn(i, new NameComponent($"john n°{i}"));
         }
     }
 }
@@ -32,9 +32,8 @@ public class WriteAge : Processor<Query<int>>
         foreach (var entity in Query)
         {
             //Console.WriteLine($"There's a person that is {entity.Get<int>()} years old");
-            entity.Set((entity.Get<int>() + 1) % 250);
             var nb = entity.Get<int>();
-            if (nb == 211)
+            if (nb == 5)
                 entity.Despawn();
         }
     }

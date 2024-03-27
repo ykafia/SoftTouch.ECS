@@ -61,10 +61,10 @@ public partial class WorldCommands(World world)
                 }
 
                 // Add the meta data
-
+#error Spawing here needs some rework, apparently i need to check if Meta is correctly filled and make sure to update the generation only when necessary
                 world.Entities.ReservedIds.Remove(update.Entity);
                 // If the entity is already existing, increment the generation
-                if (world.Entities.Meta.Count > update.Entity)
+                if (world.Entities.Meta.Count - 1 > update.Entity)
                     world.Entities.Meta[update.Entity] = world.Entities.Meta[update.Entity] with { Generation = update.Entity.Generation };
                 else if(update.Entity.Index == world.Entities.Meta.Count)
                     world.Entities.Meta.Add(new(){Generation = update.Entity.Generation});
@@ -74,7 +74,8 @@ public partial class WorldCommands(World world)
             else if (update.Kind == EntityUpdateKind.Despawn)
             {
                 // Remove all components
-                world.Entities[update.Entity].Location.Archetype.RemoveEntity(update.Entity);
+                var location = world.Entities[update.Entity].Location;
+                location.Archetype.RemoveEntity(update.Entity);
                 // Put the entity to FreeIds                
                 world.Entities.SetFree(update.Entity);
             }
@@ -82,7 +83,7 @@ public partial class WorldCommands(World world)
             {
                 throw new NotImplementedException();
             }
-            update.Dispose();
+            update.Dispose();   
         }
         Updates.Clear();
     }
