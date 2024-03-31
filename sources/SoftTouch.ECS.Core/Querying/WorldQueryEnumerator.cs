@@ -39,6 +39,8 @@ public ref struct QueryEntity<Q>
 
     public void Add<T>(in T c) where T : struct
     {
+        if(query.HasAccessTo<T>())
+            throw new Exception($"Cannot add component of type {typeof(T).Name}, component was already added");
         var idx = archetype.EntityLookup[archetypeIndex];
         var meta = archetype.World.Entities[idx];
         query.World.Commands.AddComponent(

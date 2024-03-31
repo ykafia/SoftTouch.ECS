@@ -22,6 +22,7 @@ public partial class WorldCommands(World world)
         }
         var update = new ArchUpdate(e);
         update.AddedComponents.Add(ComponentBox<T>.Create(component));
+        Updates.Add(update);
     }
     public void RemoveComponent<T>(in Entity e) where T : struct
     {
@@ -35,6 +36,7 @@ public partial class WorldCommands(World world)
         }
         var update = new ArchUpdate(e);
         update.RemovedComponents.Add(ComponentBox<T>.Create(default));
+        Updates.Add(update);
     }
 
     public void ExecuteUpdates()
@@ -150,8 +152,8 @@ public partial class WorldCommands(World world)
 
                     // Create the archetype id
                     var idArr = new Type[comps.Length];
-                    for (int i = 0; i < archUpdate.AddedComponents.Length; i++)
-                        idArr[i] = archUpdate.AddedComponents.Span[i].ComponentType;
+                    for (int i = 0; i < comps.Length; i++)
+                        idArr[i] = comps.Span[i].ComponentType;
                     var aid = new ArchetypeID(idArr);
                     newArch = new Archetype(aid, comps, world);
                     world.Archetypes.Add(aid, newArch);

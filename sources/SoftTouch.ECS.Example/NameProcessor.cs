@@ -41,7 +41,7 @@ public class WriteAge : Processor<Query<int>>
         }
     }
 }
-public class SayBye : Processor<Query<NameComponent>>
+public class SayBye : Processor<FilteredQuery<NameComponent, Filter<Without<int>>>>
 {
     public SayBye() : base(null!) { }
     public override void Update()
@@ -53,6 +53,10 @@ public class SayBye : Processor<Query<NameComponent>>
             {
                 Console.WriteLine($"Bye {entity.Get<NameComponent>().Name}.");
                 entity.Despawn();
+            }
+            else if (entity.Get<NameComponent>().Name == "Mary")
+            {
+                entity.Add(3);
             }
         }
     }

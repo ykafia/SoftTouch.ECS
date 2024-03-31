@@ -8,14 +8,14 @@ public partial class WorldCommands
     public WorldCommands Spawn()
     {
         var entity = world.Entities.GetOrCreate();
-        var update = new EntityUpdate(EntityUpdateKind.Spawn, entity);
+        var update = new SpawnEntity(entity);
         Updates.Add(update);
         return this;
     }
     public EntityCommands SpawnEmpty()
     {
         var entity = world.Entities.GetOrCreate();
-        var update = new EntityUpdate(EntityUpdateKind.Spawn, entity);
+        var update = new SpawnEntity(entity);
         Updates.Add(update);
         return new(update, this);
     }
@@ -23,7 +23,7 @@ public partial class WorldCommands
             where T1 : struct
     {
         var entity = world.Entities.GetOrCreate();
-        var update = new EntityUpdate(EntityUpdateKind.Spawn, entity);
+        var update = new SpawnEntity(entity);
         update.Add(in component1);
         Updates.Add(update);
         return this;
@@ -37,7 +37,7 @@ public partial class WorldCommands
         where T2 : struct
     {
         var entity = world.Entities.GetOrCreate();
-        var update = new EntityUpdate(EntityUpdateKind.Spawn, entity);
+        var update = new SpawnEntity(entity);
         update.Add(in component1);
         update.Add(in component2);
         Updates.Add(update);
@@ -53,7 +53,7 @@ public partial class WorldCommands
         where T3 : struct
     {
         var entity = world.Entities.GetOrCreate();
-        var update = new EntityUpdate(EntityUpdateKind.Spawn, entity);
+        var update = new SpawnEntity(entity);
         update.Add(in component1);
         update.Add(in component2);
         update.Add(in component3);
@@ -72,7 +72,7 @@ public partial class WorldCommands
         where T4 : struct
     {
         var entity = world.Entities.GetOrCreate();
-        var update = new EntityUpdate(EntityUpdateKind.Spawn, entity);
+        var update = new SpawnEntity(entity);
         update.Add(in component1);
         update.Add(in component2);
         update.Add(in component3);
@@ -94,7 +94,7 @@ public partial class WorldCommands
         where T5 : struct
     {
         var entity = world.Entities.GetOrCreate();
-        var update = new EntityUpdate(EntityUpdateKind.Spawn, entity);
+        var update = new SpawnEntity(entity);
         update.Add(in component1);
         update.Add(in component2);
         update.Add(in component3);
@@ -119,7 +119,7 @@ public partial class WorldCommands
         where T6 : struct
     {
         var entity = world.Entities.GetOrCreate();
-        var update = new EntityUpdate(EntityUpdateKind.Spawn, entity);
+        var update = new SpawnEntity(entity);
         update.Add(in component1);
         update.Add(in component2);
         update.Add(in component3);
@@ -147,7 +147,7 @@ public partial class WorldCommands
         where T7 : struct
     {
         var entity = world.Entities.GetOrCreate();
-        var update = new EntityUpdate(EntityUpdateKind.Spawn, entity);
+        var update = new SpawnEntity(entity);
         update.Add(in component1);
         update.Add(in component2);
         update.Add(in component3);
@@ -179,7 +179,7 @@ public partial class WorldCommands
         where T8 : struct
     {
         var entity = world.Entities.GetOrCreate();
-        var update = new EntityUpdate(EntityUpdateKind.Spawn, entity);
+        var update = new SpawnEntity(entity);
         update.Add(in component1);
         update.Add(in component2);
         update.Add(in component3);

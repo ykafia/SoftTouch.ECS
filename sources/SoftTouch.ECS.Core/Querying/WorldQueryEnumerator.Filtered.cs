@@ -64,7 +64,7 @@ public ref struct WorldFilteredQueryEnumerator<Q>
     bool inArch;
     int archIndex;
 
-    public QueryEntity<Q> Entity => new(currentArchetype, archIndex, query);
+    public QueryEntity<Q> Current => new(currentArchetype, archIndex, query);
 
     public WorldFilteredQueryEnumerator(Q query)
     {
