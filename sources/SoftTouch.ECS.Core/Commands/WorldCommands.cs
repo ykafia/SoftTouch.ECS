@@ -113,6 +113,33 @@ public partial class WorldCommands(World world)
             }
             else if (update.Kind == EntityUpdateKind.ComponentUpdate)
             {
+                var oldArch = world.Entities[update.Entity].Location.Archetype;
+                Archetype newArch = null!;
+                foreach (var a in world.Archetypes.Values)
+                {
+                    newArch = a;
+                    foreach (var t in update.AddedComponents.Span)
+                        if (!a.ID.Contains(t.ComponentType))
+                        {
+                            newArch = null!;
+                            break;
+                        }
+                    if (newArch != null)
+                        break;
+                }
+                if (newArch is null)
+                {
+                    throw new NotImplementedException();
+                    // var idArr = new Type[update.AddedComponents.Length];
+                    // for (int i = 0; i < update.AddedComponents.Length; i++)
+                    //     idArr[i] = update.AddedComponents.Span[i].ComponentType;
+                    // var aid = new ArchetypeID(idArr);
+                    // world.Archetypes.Add(aid, new Archetype(aid, update.AddedComponents, world));
+                    // newArch = world.Archetypes[aid];
+                    // var meta = new EntityMeta() { Generation = update.Entity.Generation, Location = new(newArch, 0) };
+                    // world.Entities.Meta.Add(meta);
+                    // newArch.AddEntity(update.Entity.Index);
+                }
                 throw new NotImplementedException();
             }
             update.Dispose();
