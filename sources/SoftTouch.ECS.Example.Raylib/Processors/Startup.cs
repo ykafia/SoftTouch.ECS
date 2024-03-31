@@ -14,14 +14,15 @@ public class Startup() : Processor<Commands>(null!)
     {
         
         SetWindowState(ConfigFlags.FLAG_WINDOW_UNDECORATED);
-        Query.Spawn(new Camera3D()
+        var camera = new Camera3D()
         {
             Position = new(10),
             FovY = 45,
             Projection = CameraProjection.CAMERA_PERSPECTIVE,
             Target = Vector3.Zero,
             Up = Vector3.UnitY
-        });
+        };
+        Query.Spawn(camera);
 
         var cube = LoadModelFromMesh(GenMeshCube(1, 1, 1));
 

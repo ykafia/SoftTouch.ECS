@@ -21,7 +21,7 @@ public partial struct Commands : IWorldQuery
 
     public WorldCommands Spawn<T1>(in T1 component1)
             where T1 : struct
-        => Spawn(component1);
+        => Content.Spawn(component1);
 
     public WorldCommands Spawn<T1, T2>(
             in T1 component1,
@@ -29,7 +29,7 @@ public partial struct Commands : IWorldQuery
         )
         where T1 : struct
         where T2 : struct
-        => Spawn(component1, component2);
+        => Content.Spawn(component1, component2);
     public WorldCommands Spawn<T1, T2, T3>(
             in T1 component1,
             in T2 component2,
@@ -38,7 +38,7 @@ public partial struct Commands : IWorldQuery
         where T1 : struct
         where T2 : struct
         where T3 : struct
-        => Spawn(component1, component2, component3);
+        => Content.Spawn(component1, component2, component3);
 
     public WorldCommands Spawn<T1, T2, T3, T4>(
             in T1 component1,
@@ -50,7 +50,7 @@ public partial struct Commands : IWorldQuery
         where T2 : struct
         where T3 : struct
         where T4 : struct
-        => Spawn(component1, component2, component3, component4);
+        => Content.Spawn(component1, component2, component3, component4);
 
     public WorldCommands Spawn<T1, T2, T3, T4, T5>(
             in T1 component1,
@@ -64,7 +64,7 @@ public partial struct Commands : IWorldQuery
         where T3 : struct
         where T4 : struct
         where T5 : struct
-        => Spawn(component1, component2, component3, component4, component5);
+        => Content.Spawn(component1, component2, component3, component4, component5);
 
     public WorldCommands Spawn<T1, T2, T3, T4, T5, T6>(
             in T1 component1,
@@ -80,7 +80,7 @@ public partial struct Commands : IWorldQuery
         where T4 : struct
         where T5 : struct
         where T6 : struct
-        => Spawn(component1, component2, component3, component4, component5, component6);
+        => Content.Spawn(component1, component2, component3, component4, component5, component6);
 
     public WorldCommands Spawn<T1, T2, T3, T4, T5, T6, T7>(
             in T1 component1,
@@ -98,7 +98,7 @@ public partial struct Commands : IWorldQuery
         where T5 : struct
         where T6 : struct
         where T7 : struct
-        => Spawn(component1, component2, component3, component4, component5, component6, component7);
+        => Content.Spawn(component1, component2, component3, component4, component5, component6, component7);
 
 
     public WorldCommands Spawn<T1, T2, T3, T4, T5, T6, T7, T8>(
@@ -119,7 +119,7 @@ public partial struct Commands : IWorldQuery
         where T6 : struct
         where T7 : struct
         where T8 : struct
-        => Spawn(component1, component2, component3, component4, component5, component6, component7, component8);
+        => Content.Spawn(component1, component2, component3, component4, component5, component6, component7, component8);
     public void Spawn<T>() where T : struct, IEquatable<T> => Content.Spawn<T>();
     public void Spawn<T1, T2>()
         where T1 : struct, IEquatable<T1>
