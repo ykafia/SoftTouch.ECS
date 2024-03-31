@@ -1,4 +1,5 @@
 using CommunityToolkit.HighPerformance.Buffers;
+using SoftTouch.ECS.Arrays;
 using SoftTouch.ECS.Storage;
 
 namespace SoftTouch.ECS;
@@ -19,7 +20,7 @@ public partial class WorldCommands(World world)
                 return;
             }
         }
-        var update = new EntityUpdate(EntityUpdateKind.ComponentUpdate, e);
+        var update = new ArchUpdate(e);
         update.AddedComponents.Add(ComponentBox<T>.Create(component));
     }
     public void RemoveComponent<T>(in Entity e) where T : struct
@@ -32,7 +33,7 @@ public partial class WorldCommands(World world)
                 return;
             }
         }
-        var update = new EntityUpdate(EntityUpdateKind.ComponentUpdate, e);
+        var update = new ArchUpdate(e);
         update.RemovedComponents.Add(ComponentBox<T>.Create(default));
     }
 
@@ -40,33 +41,33 @@ public partial class WorldCommands(World world)
     {
         foreach (var update in Updates)
         {
-            if (update.Kind == EntityUpdateKind.Spawn)
+            if (update is SpawnEntity spawn)
             {
                 // Find the archetype
                 Archetype arch = null!;
                 foreach (var a in world.Archetypes.Values)
                 {
                     arch = a;
-                    foreach (var t in update.AddedComponents.Span)
+                    foreach (var t in spawn.AddedComponents.Span)
                         if (!a.ID.Contains(t.ComponentType))
                         {
                             arch = null!;
                             break;
                         }
-                    if(arch != null)
+                    if (arch != null)
                         break;
                 }
                 if (arch is null)
                 {
-                    var idArr = new Type[update.AddedComponents.Length];
-                    for (int i = 0; i < update.AddedComponents.Length; i++)
-                        idArr[i] = update.AddedComponents.Span[i].ComponentType;
+                    var idArr = new Type[spawn.AddedComponents.Length];
+                    for (int i = 0; i < spawn.AddedComponents.Length; i++)
+                        idArr[i] = spawn.AddedComponents.Span[i].ComponentType;
                     var aid = new ArchetypeID(idArr);
-                    world.Archetypes.Add(aid, new Archetype(aid, update.AddedComponents, world));
+                    world.Archetypes.Add(aid, new Archetype(aid, spawn.AddedComponents, world));
                     arch = world.Archetypes[aid];
-                    var meta = new EntityMeta() { Generation = update.Entity.Generation, Location = new(arch, 0) };
+                    var meta = new EntityMeta() { Generation = spawn.Entity.Generation, Location = new(arch, 0) };
                     world.Entities.Meta.Add(meta);
-                    arch.AddEntity(update.Entity.Index);
+                    arch.AddEntity(spawn.Entity.Index);
                 }
                 else
                 {
@@ -75,50 +76,67 @@ public partial class WorldCommands(World world)
                     // Add the meta data
 
                     // First Step remove the reserved ids since we're spawing the entity again
-                    world.Entities.ReservedIds.Remove(update.Entity);
+                    world.Entities.ReservedIds.Remove(spawn.Entity);
 
                     // If the size of the entities is 0, Add the meta information
                     if (world.Entities.Meta.Count == 0)
                     {
-                        var meta = new EntityMeta() { Generation = update.Entity.Generation, Location = new(arch, 0) };
+                        var meta = new EntityMeta() { Generation = spawn.Entity.Generation, Location = new(arch, 0) };
                         world.Entities.Meta.Add(meta);
-                        arch.AddEntity(update.Entity.Index);
-                        foreach(var comp in update.AddedComponents.Span)
+                        arch.AddEntity(spawn.Entity.Index);
+                        foreach (var comp in spawn.AddedComponents.Span)
                             arch.Storage[comp.ComponentType].TryAdd(comp);
                     }
                     // Else check if the entity id already exists and increment its generation
-                    else if (update.Entity.Index < world.Entities.Meta.Count)
-                        world.Entities.Meta[update.Entity] = world.Entities.Meta[update.Entity] with { Generation = update.Entity.Generation };
+                    else if (spawn.Entity.Index < world.Entities.Meta.Count)
+                        world.Entities.Meta[spawn.Entity] = world.Entities.Meta[spawn.Entity] with { Generation = spawn.Entity.Generation };
                     // Else add the entity
-                    else if (world.Entities.Meta.Count == update.Entity.Index)
+                    else if (world.Entities.Meta.Count == spawn.Entity.Index)
                     {
-                        var meta = new EntityMeta() { Generation = update.Entity.Generation, Location = new(arch, arch.Length) };
+                        var meta = new EntityMeta() { Generation = spawn.Entity.Generation, Location = new(arch, arch.Length) };
                         world.Entities.Meta.Add(meta);
-                        arch.AddEntity(update.Entity.Index);
-                        foreach (var comp in update.AddedComponents.Span)
+                        arch.AddEntity(spawn.Entity.Index);
+                        foreach (var comp in spawn.AddedComponents.Span)
                             arch.Storage[comp.ComponentType].TryAdd(comp);
                     }
                     else throw new Exception("Entity index were skipped");
                 }
-                
+
 
             }
-            else if (update.Kind == EntityUpdateKind.Despawn)
+            else if (update is DespawnEntity despawn)
             {
                 // Remove all components
-                var location = world.Entities[update.Entity].Location;
-                location.Archetype.RemoveEntity(update.Entity);
+                var location = world.Entities[despawn.Entity].Location;
+                location.Archetype.RemoveEntity(despawn.Entity);
                 // Put the entity to FreeIds                
-                world.Entities.SetFree(update.Entity);
+                world.Entities.SetFree(despawn.Entity);
             }
-            else if (update.Kind == EntityUpdateKind.ComponentUpdate)
+            else if (update is ArchUpdate archUpdate)
             {
-                var oldArch = world.Entities[update.Entity].Location.Archetype;
+                var oldArch = world.Entities[archUpdate.Entity].Location.Archetype;
+                // Create the list of components
+                using var comps = new ReusableList<ComponentBox>();
+                foreach (var t in oldArch.ID.Types)
+                {
+                    bool toAdd = true;
+                    foreach (var e in update.RemovedComponents.Span)
+                        if (t == e.ComponentType)
+                            toAdd = false;
+                    if (toAdd && oldArch.GetComponent(update.Entity, t, out var c))
+                        comps.Add(c);
+                    else
+                        throw new Exception("Could not add component");
+                }
+                foreach (var r in archUpdate.AddedComponents.Span)
+                    comps.Add(r);
+
+
                 Archetype newArch = null!;
                 foreach (var a in world.Archetypes.Values)
                 {
                     newArch = a;
-                    foreach (var t in update.AddedComponents.Span)
+                    foreach (var t in comps.Span)
                         if (!a.ID.Contains(t.ComponentType))
                         {
                             newArch = null!;
@@ -129,18 +147,27 @@ public partial class WorldCommands(World world)
                 }
                 if (newArch is null)
                 {
-                    throw new NotImplementedException();
-                    // var idArr = new Type[update.AddedComponents.Length];
-                    // for (int i = 0; i < update.AddedComponents.Length; i++)
-                    //     idArr[i] = update.AddedComponents.Span[i].ComponentType;
-                    // var aid = new ArchetypeID(idArr);
-                    // world.Archetypes.Add(aid, new Archetype(aid, update.AddedComponents, world));
-                    // newArch = world.Archetypes[aid];
-                    // var meta = new EntityMeta() { Generation = update.Entity.Generation, Location = new(newArch, 0) };
-                    // world.Entities.Meta.Add(meta);
-                    // newArch.AddEntity(update.Entity.Index);
+
+                    // Create the archetype id
+                    var idArr = new Type[comps.Length];
+                    for (int i = 0; i < archUpdate.AddedComponents.Length; i++)
+                        idArr[i] = archUpdate.AddedComponents.Span[i].ComponentType;
+                    var aid = new ArchetypeID(idArr);
+                    newArch = new Archetype(aid, comps, world);
+                    world.Archetypes.Add(aid, newArch);
                 }
-                throw new NotImplementedException();
+
+                // Remove all components
+                oldArch.RemoveEntity(archUpdate.Entity);
+
+
+                world.Entities.Meta[archUpdate.Entity.Index] =
+                    world.Entities.Meta[archUpdate.Entity.Index]
+                    with
+                    {
+                        Location = new(newArch, 0)
+                    };
+                newArch.AddEntity(update.Entity.Index);
             }
             update.Dispose();
         }

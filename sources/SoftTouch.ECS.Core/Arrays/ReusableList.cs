@@ -5,7 +5,7 @@ using CommunityToolkit.HighPerformance.Buffers;
 namespace SoftTouch.ECS.Arrays;
 
 
-public class ReusableList<T>(int capacity = 4)
+public class ReusableList<T>(int capacity = 4) : IDisposable
 {
     MemoryOwner<T> _array = MemoryOwner<T>.Allocate((int)BitOperations.RoundUpToPowerOf2((uint)capacity), AllocationMode.Clear);
     public int Length { get; private set; }
@@ -16,7 +16,7 @@ public class ReusableList<T>(int capacity = 4)
     void Expand(int size)
     {
         var newSize = Length + size;
-        if(newSize > _array.Length)
+        if (newSize > _array.Length)
         {
             var newArray = MemoryOwner<T>.Allocate((int)BitOperations.RoundUpToPowerOf2((uint)newSize), AllocationMode.Clear);
             _array.Span.CopyTo(newArray.Span);
@@ -29,7 +29,7 @@ public class ReusableList<T>(int capacity = 4)
     {
         Expand(1);
         _array.Span[Length] = item;
-        Length+=1;
+        Length += 1;
     }
 
     public void Dispose()

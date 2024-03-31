@@ -12,12 +12,17 @@ public enum EntityUpdateKind
     Despawn
 }
 
-public record class EntityUpdate(EntityUpdateKind Kind, Entity Entity) : IDisposable
+
+public record SpawnEntity(Entity Entity) : EntityUpdate(Entity);
+public record DespawnEntity(Entity Entity) : EntityUpdate(Entity);
+public record ArchUpdate(Entity Entity) : EntityUpdate(Entity);
+
+public abstract record EntityUpdate(Entity Entity) : IDisposable
 {
     public ReusableList<ComponentBox> AddedComponents { get; } = new();
     public ReusableList<ComponentBox> RemovedComponents { get; } = new();
 
-    public void Add<T>(in T component) where T : struct
+    public virtual void Add<T>(in T component) where T : struct
     {
         foreach(var e in AddedComponents.Span)
             if(e is ComponentBox<T>)

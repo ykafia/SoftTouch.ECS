@@ -59,7 +59,7 @@ public ref struct QueryEntity<Q>
     {
         var idx = archetype.EntityLookup[archetypeIndex];
         var meta = archetype.World.Entities[idx];
-        query.World.Commands.Updates.Add(new EntityUpdate(EntityUpdateKind.Despawn,new(idx, meta.Generation)));
+        query.World.Commands.Updates.Add(new DespawnEntity(new(idx, meta.Generation)));
     }
 }
 

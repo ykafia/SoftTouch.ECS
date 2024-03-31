@@ -26,6 +26,8 @@ public abstract class ComponentArray
     public abstract void MoveTo(int index, ComponentArray componentArray);
     public abstract void CopyTo(ComponentArray componentArray);
     public abstract ComponentArray Clone();
+
+    public abstract ComponentBox GetComponent(int idx);
 }
 [DebuggerDisplay("ComponentsArray<{typeof(T)}>[{Count}]")]
 public class ComponentArray<T> : ComponentArray
@@ -196,5 +198,10 @@ public class ComponentArray<T> : ComponentArray
             return true;
         }
         return false;
+    }
+
+    public override ComponentBox GetComponent(int idx)
+    {
+        return ComponentBox<T>.Create(Span[idx]);
     }
 }

@@ -97,6 +97,20 @@ public partial class Archetype
         EntityLookup.Add(idx);
     }
 
+    public bool GetComponent(Entity entity, Type type, out ComponentBox box)
+    {
+        var idx = Lookup(entity);
+        if(idx > 0 && Storage.ContainsKey(type))
+        {
+            box = Storage[type].GetComponent(idx);
+            return true;
+        }
+        box = null!;
+        return false;
+    }
+
+    public int Lookup(Entity entity)
+        => EntityLookup.IndexOf(entity);
     public override string ToString()
     {
         var result =
