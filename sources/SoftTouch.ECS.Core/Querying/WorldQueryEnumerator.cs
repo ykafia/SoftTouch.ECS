@@ -50,6 +50,8 @@ public ref struct QueryEntity<Q>
     }
     public void Remove<T>() where T : struct
     {
+        if (!query.HasAccessTo<T>())
+            throw new Exception($"Cannot remove component of type {typeof(T).Name}, component does not exist");
         var idx = archetype.EntityLookup[archetypeIndex];
         var meta = archetype.World.Entities[idx];
         query.World.Commands.RemoveComponent<T>(
