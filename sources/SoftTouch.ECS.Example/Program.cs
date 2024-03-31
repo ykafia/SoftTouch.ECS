@@ -11,6 +11,7 @@ using System.Diagnostics;
 var app =
     new App()
     .AddStartupProcessor<StartupProcessor>()
+    .AddProcessor<SayBye>()
     .AddProcessor<SayHello>()
     .AddProcessor<WriteAge>();
 

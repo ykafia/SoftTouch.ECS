@@ -39,7 +39,7 @@ public ref struct QueryEntity<Q>
 
     public void Add<T>(in T c) where T : struct
     {
-        var idx = archetype.EntityLookup.Keys.ElementAt(archetypeIndex);
+        var idx = archetype.EntityLookup[archetypeIndex];
         var meta = archetype.World.Entities[idx];
         query.World.Commands.AddComponent(
             new(idx,meta.Generation), 
@@ -48,7 +48,7 @@ public ref struct QueryEntity<Q>
     }
     public void Remove<T>() where T : struct
     {
-        var idx = archetype.EntityLookup.Keys.ElementAt(archetypeIndex);
+        var idx = archetype.EntityLookup[archetypeIndex];
         var meta = archetype.World.Entities[idx];
         query.World.Commands.RemoveComponent<T>(
             new(idx, meta.Generation)
@@ -57,7 +57,7 @@ public ref struct QueryEntity<Q>
 
     public void Despawn()
     {
-        var idx = archetype.EntityLookup.Keys.ElementAt(archetypeIndex);
+        var idx = archetype.EntityLookup[archetypeIndex];
         var meta = archetype.World.Entities[idx];
         query.World.Commands.Updates.Add(new EntityUpdate(EntityUpdateKind.Despawn,new(idx, meta.Generation)));
     }
@@ -116,14 +116,14 @@ public ref struct WorldQueryEnumerator<Q>
         return false;
     }
 
-    public bool MatchArch(ArchetypeID id)
+    public readonly bool MatchArch(ArchetypeID id)
     {
         if (id.Types == null || id.Types?.Length == 0)
             return false;
         else
         {
             foreach(var t in Q.Types)
-                if(!id.Types.Contains(t))
+                if(id.Types == null || id.Types != null && !id.Types.Contains(t))
                     return false;
             return true;
         }

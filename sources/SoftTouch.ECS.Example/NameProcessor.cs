@@ -17,10 +17,13 @@ public class StartupProcessor : Processor<Resource<WorldCommands>>
     {
         Random rand = new Random();
         WorldCommands commands = Query;
-        for (int i = 0; i < 2000; i++)
-        {
-            commands.Spawn(i, new NameComponent($"john n°{i}"));
-        }
+        commands.Spawn((NameComponent)"John");
+        commands.Spawn((NameComponent)"Jane");
+        commands.Spawn((NameComponent)"Mary");
+        // for (int i = 0; i < 2000; i++)
+        // {
+        //     commands.Spawn(i, new NameComponent($"john n°{i}"));
+        // }
     }
 }
 
@@ -38,15 +41,32 @@ public class WriteAge : Processor<Query<int>>
         }
     }
 }
-public class SayHello : Processor<Query<NameComponent,float>>
+public class SayBye : Processor<Query<NameComponent>>
+{
+    public SayBye() : base(null!) { }
+    public override void Update()
+    {
+        foreach (var entity in Query)
+        {
+
+            if(entity.Get<NameComponent>().Name == "John")
+            {
+                Console.WriteLine($"Bye {entity.Get<NameComponent>().Name}.");
+                entity.Despawn();
+            }
+        }
+    }
+}
+
+public class SayHello : Processor<Query<NameComponent>>
 {
     public SayHello() : base(null!) { }
     public override void Update()
     {
         foreach (var entity in Query)
         {
-            //Console.WriteLine($"Hello {entity.Get<NameComponent>().Name}!");
-            entity.Set<float>(entity.Get<NameComponent>().Name.Length);
+            Console.WriteLine($"Hello {entity.Get<NameComponent>().Name}.");
         }
+        Console.WriteLine();
     }
 }

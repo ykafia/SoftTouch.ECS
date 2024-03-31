@@ -22,6 +22,7 @@ public readonly struct ArchetypeID
         TypeSet = [..types];
     }
 
+    // public static implicit operator ArchetypeID(TemporaryArchetypeID tid) => new(tid);
     public static implicit operator ArchetypeID(Type[] types) => new(types);
 
     internal bool IsAddedType(ArchetypeID other)

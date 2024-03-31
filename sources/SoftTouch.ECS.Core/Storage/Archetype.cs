@@ -13,7 +13,7 @@ public partial class Archetype
 
     public World World { get; init; }
     public Dictionary<Type, ComponentArray> Storage = [];
-    public Dictionary<int,int> EntityLookup { get; internal set; }
+    public List<int> EntityLookup { get; internal set; }
     public bool HasEntities => EntityLookup.Count > 0;
 
     public ArchetypeID ID;
@@ -62,25 +62,29 @@ public partial class Archetype
     internal void SetEntityComponent<T>(in Entity entity, in T component) where T : struct
     {
         var array = GetComponentArray<T>();
-        if (EntityLookup.TryGetValue(entity, out var idx))
+        var idx = EntityLookup.IndexOf(entity);
+        if (idx > -1)
         {
             array[idx] = component;
         }
         else
         {
             array.Add(component);
-            EntityLookup[entity] = array.Count - 1;
+            EntityLookup.Add(entity);
         }
     }
 
-    internal void RemoveEntity(in Entity idx)
+    internal void RemoveEntity(in Entity entity)
     {
         if (EntityLookup.Count > 0)
         {
-            var cmpid = EntityLookup[idx];
-            foreach(var t in ID.Types)
-                Storage[t].RemoveAt(cmpid);
-            EntityLookup.Remove(idx);
+            var idx = EntityLookup.IndexOf(entity);
+            if(idx > -1)
+            {
+                foreach(var t in ID.Types)
+                    Storage[t].RemoveAt(idx);
+                EntityLookup.RemoveAt(idx);
+            }
         }
     }
     public void SetComponent<T>(int index, in T component) where T : struct
@@ -88,9 +92,9 @@ public partial class Archetype
         GetComponentArray<T>()[index] = component;
     }
 
-    internal void AddEntity(in Entity idx)
+    internal void AddEntity(int idx)
     {
-        EntityLookup.Add(idx,Length);
+        EntityLookup.Add(idx);
     }
 
     public override string ToString()
