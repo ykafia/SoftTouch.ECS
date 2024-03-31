@@ -100,9 +100,9 @@ public ref struct WorldFilteredQueryEnumerator<Q>
 
     public bool MatchArch(ArchetypeID id)
     {
-        if (id.Types == null && id.Types?.Length == 0)
+        if (id.Types == null || id.Types != null && id.Types?.Length == 0)
             return false;
-        else
+        else if(id.Types != null)
         {
             foreach (var t in Q.Types)
                 if (!id.Types.Contains(t))
@@ -115,5 +115,6 @@ public ref struct WorldFilteredQueryEnumerator<Q>
                     return false;
             return true;
         }
+        return false;
     }
 }
