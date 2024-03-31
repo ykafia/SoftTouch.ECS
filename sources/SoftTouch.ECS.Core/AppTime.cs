@@ -25,7 +25,7 @@ public class AppTime
             FrameCount += 1;
             Elapsed = stopwatch.Elapsed;
             WarpElapsed = Elapsed.Multiply(Factor);
-            TotalElapsed.Add(Elapsed);
+            TotalElapsed = TotalElapsed.Add(Elapsed);
             stopwatch.Restart();
         }
         else 

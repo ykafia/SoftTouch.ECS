@@ -13,7 +13,7 @@ public class MoveCube() : Processor<Query<Model>, Time>(null!)
         foreach(var e in Query1)
         {
             ref var cube = ref e.Get<Model>();
-            cube.Transform *= Raymath.MatrixScale((float)Math.Sin(time.TotalElapsed.TotalSeconds) + 1, (float)Math.Sin(time.TotalElapsed.TotalSeconds) + 1, (float)Math.Sin(time.TotalElapsed.TotalSeconds) + 1); 
+            cube.Transform *= Raymath.MatrixScale((float)Math.Sin(time.TotalElapsed.TotalSeconds) + 1, (float)Math.Sin(time.TotalElapsed.TotalSeconds) + 1, (float)Math.Sin(time.TotalElapsed.TotalSeconds) + 1);
         }
     }
 }

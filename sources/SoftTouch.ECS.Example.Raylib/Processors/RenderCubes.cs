@@ -11,34 +11,31 @@ public class RenderCubes() : Processor<Query<Model, Transform>, Query<Light>, Qu
 {
     public override void Update()
     {
-        Camera3D camera = new();
-        foreach (var e in Query3)
+        foreach (var cameraEntity in Query3)
         {
-            camera = e.Get<Camera3D>();
-            break;
-        }
-        Raylib.BeginMode3D(camera);
-        foreach (var e in Query2)
-        {
-            ref var light = ref e.Get<Light>();
-            if (light.Enabled)
-                Raylib.DrawSphereEx(light.Position, 0.2f, 8, 8, light.Color);
-            else
-                Raylib.DrawSphereWires(light.Position, 0.2f, 8, 8, Raylib.ColorAlpha(light.Color, 0.3f));
-        }
-        foreach (var e in Query1)
-        {
-            ref var cube = ref e.Get<Model>();
-            ref var pos = ref e.Get<Transform>();
-            unsafe
+            var camera = cameraEntity.Get<Camera3D>();
+            Raylib.BeginMode3D(camera);
+            foreach (var e in Query2)
             {
-                foreach (var el in Query2)
-                    Util.UpdateLightValues(cube.Materials[0].Shader, el.Get<Light>());
+                ref var light = ref e.Get<Light>();
+                if (light.Enabled)
+                    Raylib.DrawSphereEx(light.Position, 0.2f, 8, 8, light.Color);
+                else
+                    Raylib.DrawSphereWires(light.Position, 0.2f, 8, 8, Raylib.ColorAlpha(light.Color, 0.3f));
             }
-            // Raylib.DrawModel(cube, new(), 1, Color.WHITE);
-            Raylib.DrawCube(Vector3.Zero, 1, 1, 1, Color.BLUE);
+            foreach (var e in Query1)
+            {
+                ref var cube = ref e.Get<Model>();
+                ref var pos = ref e.Get<Transform>();
+                unsafe
+                {
+                    foreach (var el in Query2)
+                        Util.UpdateLightValues(cube.Materials[0].Shader, el.Get<Light>());
+                }
+                // Raylib.DrawModel(cube, new(), 1, Color.WHITE);
+                Raylib.DrawCube(Vector3.Zero, 1, 1, 1, Color.BLUE);
+            }
+            Raylib.EndMode3D();
         }
-        Raylib.EndMode3D();
-
     }
 }
