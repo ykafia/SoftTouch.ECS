@@ -40,10 +40,10 @@ public class Startup() : Processor<Commands>(null!)
 
         unsafe { cube.Materials[0].Shader = shader; }
 
-        Query.Spawn().With(cube);
-        Query.Spawn().With(cube);
-        Query.Spawn().With(cube);
-        Query.Spawn().With(cube);
+        Query.Spawn().With(cube with {Transform = Matrix4x4.CreateTranslation(new(1,0,1))});
+        Query.Spawn().With(cube with {Transform = Matrix4x4.CreateTranslation(new(1,0,0))});
+        Query.Spawn().With(cube with {Transform = Matrix4x4.CreateTranslation(new(0,0,0))});
+        Query.Spawn().With(cube with {Transform = Matrix4x4.CreateTranslation(new(0,0,1))});
 
 
 
