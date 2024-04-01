@@ -67,9 +67,13 @@ public partial class WorldCommands(World world)
                     var aid = new ArchetypeID(idArr);
                     world.Archetypes.Add(aid, new Archetype(aid, spawn.AddedComponents, world));
                     arch = world.Archetypes[aid];
+
+                    world.Entities.ReservedIds.Remove(spawn.Entity);
+
                     var meta = new EntityMeta() { Generation = spawn.Entity.Generation, Location = new(arch, 0) };
                     world.Entities.Meta.Add(meta);
                     arch.AddEntity(spawn.Entity.Index);
+                    
                 }
                 else
                 {

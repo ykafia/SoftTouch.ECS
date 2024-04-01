@@ -9,11 +9,11 @@ public class MoveCube() : Processor<Query<Model>, Time>(null!)
 {
     public override void Update()
     {
-        var time = Query2;
-        foreach(var e in Query1)
-        {
-            ref var cube = ref e.Get<Model>();
-            cube.Transform *= Raymath.MatrixScale((float)Math.Sin(time.TotalElapsed.TotalSeconds) + 1, (float)Math.Sin(time.TotalElapsed.TotalSeconds) + 1, (float)Math.Sin(time.TotalElapsed.TotalSeconds) + 1);
-        }
+        // var time = Query2;
+        // foreach(var e in Query1)
+        // {
+        //     ref var cube = ref e.Get<Model>();
+        //     cube.Transform *= Raymath.MatrixScale((float)Math.Sin(time.TotalElapsed.TotalSeconds) + 1, (float)Math.Sin(time.TotalElapsed.TotalSeconds) + 1, (float)Math.Sin(time.TotalElapsed.TotalSeconds) + 1);
+        // }
     }
 }

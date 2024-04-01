@@ -2,7 +2,7 @@
 <html lang='en'>
 <head>
 <meta charset='utf-8' />
-<title>SoftTouch.ECS.Benchmark.GameBench-20231110-024318</title>
+<title>SoftTouch.ECS.Benchmark.GameBench-20240401-191057</title>
 
 <style type="text/css">
 	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
@@ -13,20 +13,19 @@
 </head>
 <body>
 <pre><code>
-BenchmarkDotNet=v0.12.1, OS=Windows 10.0.22621
-AMD Ryzen 5 3500U with Radeon Vega Mobile Gfx, 1 CPU, 8 logical and 4 physical cores
-.NET Core SDK=7.0.403
-  [Host]     : .NET Core 7.0.13 (CoreCLR 7.0.1323.51816, CoreFX 7.0.1323.51816), X64 RyuJIT
-  Job-RYOIPD : .NET Core 7.0.13 (CoreCLR 7.0.1323.51816, CoreFX 7.0.1323.51816), X64 RyuJIT
+BenchmarkDotNet=v0.12.1, OS=Windows 10.0.19045
+Intel Core i5-8265U CPU 1.60GHz (Whiskey Lake), 1 CPU, 8 logical and 4 physical cores
+.NET Core SDK=8.0.100
+  [Host]     : .NET Core 8.0.0 (CoreCLR 8.0.23.53103, CoreFX 8.0.23.53103), X64 RyuJIT
+  Job-OMRNDM : .NET Core 8.0.0 (CoreCLR 8.0.23.53103, CoreFX 8.0.23.53103), X64 RyuJIT
 </code></pre>
 <pre><code>IterationCount=5  LaunchCount=1  WarmupCount=5  
 </code></pre>
 
 <table>
-<thead><tr><th>        Method</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Gen 0</th><th>Gen 1</th><th>Gen 2</th><th>Allocated</th>
+<thead><tr><th>   Method</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Gen 0</th><th>Gen 1</th><th>Gen 2</th><th>Allocated</th>
 </tr>
-</thead><tbody><tr><td>SingleParallelUpdate</td><td>696.9 &mu;s</td><td>188.4 &mu;s</td><td>29.16 &mu;s</td><td>-</td><td>-</td><td>-</td><td>1.89 KB</td>
-</tr><tr><td>TenParallelUpdate</td><td>8,202.9 &mu;s</td><td>1,841.7 &mu;s</td><td>478.28 &mu;s</td><td>7.8125</td><td>-</td><td>-</td><td>18.75 KB</td>
+</thead><tbody><tr><td>Spawn1Component</td><td>247.6 ns</td><td>124.3 ns</td><td>32.28 ns</td><td>-</td><td>-</td><td>-</td><td>-</td>
 </tr></tbody></table>
 </body>
 </html>

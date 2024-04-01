@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using SoftTouch.ECS.ComponentData;
 using SoftTouch.ECS.Arrays;
 using SoftTouch.ECS.Storage;
 

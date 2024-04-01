@@ -17,12 +17,14 @@ public class StartupProcessor : Processor<Resource<WorldCommands>>
     }
     public override void Update()
     {
-        Random rand = new Random();
+        // Random rand = new Random();
+        // WorldCommands commands = Query;
+        // for (int i = 0; i < 1000; i++)
+        // {
+        //     commands.Spawn(rand.Next(1, 100), new NameComponent($"john n°{i}"), 0f);
+        // }
         WorldCommands commands = Query;
-        for (int i = 0; i < 1000; i++)
-        {
-            commands.Spawn(rand.Next(1, 100), new NameComponent($"john n°{i}"), 0f);
-        }
+        commands.Spawn<TransformComponent>();
     }
 }
 
@@ -58,32 +60,41 @@ public class GameBench
     {
         app =
            new App()
-           .AddStartupProcessor<StartupProcessor>()
-           .AddProcessor<SayHello>()
-           .AddProcessor<WriteAge>();
-        app.Update();
+           .AddStartupProcessor<StartupProcessor>();
+        //    .AddProcessor<SayHello>()
+        //    .AddProcessor<WriteAge>();
     }
 
+    [Benchmark]
+    public void Spawn1Component()
+    {
+        app.Update(false);
+        app.Update(false);
 
-    [Benchmark]
-    public void SingleParallelUpdate()
-    {
-        app.Update();
+        if(app.World[0].Location.Archetype.ID.Count != 1)
+            throw new Exception();
+
     }
-    [Benchmark]
-    public void TenParallelUpdate()
-    {
-        app.Update();
-        app.Update();
-        app.Update();
-        app.Update();
-        app.Update();
-        app.Update();
-        app.Update();
-        app.Update();
-        app.Update();
-        app.Update();
-    }
+
+    // [Benchmark]
+    // public void SingleParallelUpdate()
+    // {
+    //     app.Update();
+    // }
+    // [Benchmark]
+    // public void TenParallelUpdate()
+    // {
+    //     app.Update();
+    //     app.Update();
+    //     app.Update();
+    //     app.Update();
+    //     app.Update();
+    //     app.Update();
+    //     app.Update();
+    //     app.Update();
+    //     app.Update();
+    //     app.Update();
+    // }
     //[Benchmark]
     //public void SingleParallelUpdateNoWUpdate()
     //{

@@ -9,7 +9,7 @@ public class BeginDraw() : Processor(null!)
     public override void Update()
     {
         Raylib.BeginDrawing();
-        Raylib.ClearBackground(Color.BLACK);
+        Raylib.ClearBackground(Color.LIGHTGRAY);
     }
 }
 public class EndDraw() : Processor(null!)

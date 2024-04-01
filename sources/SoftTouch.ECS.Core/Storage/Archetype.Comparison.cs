@@ -3,7 +3,6 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using SoftTouch.ECS.Arrays;
-using SoftTouch.ECS.ComponentData;
 
 namespace SoftTouch.ECS.Storage;
 

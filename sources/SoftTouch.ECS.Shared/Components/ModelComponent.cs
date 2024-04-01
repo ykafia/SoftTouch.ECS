@@ -1,5 +1,4 @@
 using System.Numerics;
-using SoftTouch.ECS.ComponentData;
 
 
 namespace SoftTouch.ECS.Shared.Components

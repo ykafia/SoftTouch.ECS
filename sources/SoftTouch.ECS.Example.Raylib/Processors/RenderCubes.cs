@@ -7,7 +7,7 @@ using SoftTouch.ECS.Querying;
 namespace SoftTouch.ECS.Example.Rlib;
 
 
-public class RenderCubes() : Processor<Query<Model>, Query<Light>, Query<Camera3D>>(null!)
+public class RenderCubes() : Processor<Query<Model, Transform>, Query<Light>, Query<Camera3D>>(null!)
 {
     public override void Update()
     {
@@ -26,13 +26,14 @@ public class RenderCubes() : Processor<Query<Model>, Query<Light>, Query<Camera3
             foreach (var e in Query1)
             {
                 ref var cube = ref e.Get<Model>();
+                ref var trs = ref e.Get<Transform>();
                 unsafe
                 {
                     foreach (var el in Query2)
                         Util.UpdateLightValues(cube.Materials[0].Shader, el.Get<Light>());
                 }
                 // Raylib.DrawModel(cube, new(), 1, Color.WHITE);
-                Raylib.DrawCube(cube.Transform.Translation, 1, 1, 1, Color.BLUE);
+                Raylib.DrawCube(trs.Translation, 1, 1, 1, Color.BLUE);
             }
             Raylib.EndMode3D();
         }
