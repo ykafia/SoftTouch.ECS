@@ -12,7 +12,7 @@ public partial class App
     public App SetStages(ReusableList<Stage> stages)
     {
         Schedule.Clear();
-        foreach (var stage in stages)
+        foreach (var stage in stages.Span)
             if (stage is Extract)
                 throw new Exception("Stages must not contain the stage Extract");
             else if (stage is Startup)

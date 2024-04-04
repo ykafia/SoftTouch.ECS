@@ -100,4 +100,22 @@ public class ProcessorGroupCollection : IDisposable, ICollection<ProcessorGroup>
     {
         throw new NotImplementedException();
     }
+
+    public override string ToString()
+    {
+        var b = new StringBuilder().Append('[');
+        if(Span.Length == 0)
+            return b.Append(']').ToString();
+        bool start = true;
+
+        foreach(var e in Span)
+            if(start)
+            {
+                start = false;
+                b.Append(e);
+            }
+            else
+                b.Append(", ").Append(e);
+        return b.Append(']').ToString();
+    }
 }
