@@ -8,3 +8,15 @@ A stage will be a pool of processors. Each stage will be run sequentially, each 
 ## A graph for stages
 
 Each stage will be declared with an order of execution making sure stages 
+
+
+
+# Adding processor to the world
+
+
+```csharp
+var app = 
+    new App()
+    .AddProcessors<Startup, Sequence<Startup, >>()
+
+```

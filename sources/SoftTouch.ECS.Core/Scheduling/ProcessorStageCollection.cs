@@ -7,62 +7,82 @@ using System.Threading.Tasks;
 
 namespace SoftTouch.ECS.Scheduling;
 
-public class ProcessorStageCollection
+public class StageCollection : ICollection<Stage>
 {
-    List<ProcessorStage> processorStages = new() { new("Startup") };
+    readonly List<Stage> Stages = [new Startup(), new Extract()];
 
-    public int Count => throw new NotImplementedException();
+    public Stage this[int i] => Stages[i];
 
-    public bool IsReadOnly => throw new NotImplementedException();
 
-    public ProcessorStage this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public int Count => Stages.Count;
 
-    public int IndexOf(ProcessorStage item)
+    public bool IsReadOnly => false;
+
+    public Stage Get<TStage>() where TStage : Stage
     {
-        return processorStages.IndexOf(item);
+        foreach(var stage in Stages)
+            if(stage is TStage)
+                return stage;
+        throw new ArgumentException($"Stage {typeof(TStage)} not present in the list");
     }
 
-    public void Insert(int index, ProcessorStage item)
+    public int IndexOf(Stage item)
     {
-        processorStages.Insert(Math.Min(index, 1), item);
+        return Stages.IndexOf(item);
+    }
+
+    public void Insert(int index, Stage item)
+    {
+        Stages.Insert(Math.Min(index, 1), item);
     }
 
     public void RemoveAt(int index)
     {
-        if (index > 0)
-            processorStages.RemoveAt(index);
+        if (index > 0 && index < Stages.Count - 1)
+            Stages.RemoveAt(index);
     }
 
-    public void Add(ProcessorStage item)
+    public void Add(Stage item)
     {
-        processorStages.Add(item);
+        Stages.Insert(Stages.Count - 1, item);
     }
 
     public void Clear()
     {
-        processorStages.Clear();
+        Stages.Clear();
     }
 
-    public bool Contains(ProcessorStage item)
+    public bool Contains(Stage item)
     {
-        return processorStages.Contains(item);
+        return Stages.Contains(item);
     }
 
-    public void CopyTo(ProcessorStage[] array, int arrayIndex)
+    public void CopyTo(Stage[] array, int arrayIndex)
     {
-        processorStages.CopyTo(array, arrayIndex);
+        Stages.CopyTo(array, arrayIndex);
     }
 
-    public bool Remove(ProcessorStage item)
+    public bool Remove(Stage item)
     {
-        if (item.Name != "Startup")
-            return processorStages.Remove(item);
-        return false;
+        return item switch 
+        {
+            Startup or Extract or Main => false,
+            _ => Stages.Remove(item)
+        };
     }
 
-    public List<ProcessorStage>.Enumerator GetEnumerator()
+    public List<Stage>.Enumerator GetEnumerator()
     {
-        return processorStages.GetEnumerator();
+        return Stages.GetEnumerator();
     }
 
+    IEnumerator<Stage> IEnumerable<Stage>.GetEnumerator()
+    {
+        return Stages.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return Stages.GetEnumerator();
+    }
 }

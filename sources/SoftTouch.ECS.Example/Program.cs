@@ -11,14 +11,9 @@ using System.Diagnostics;
 
 var app =
     new App()
-    .AddStartupProcessor<StartupProcessor>();
-// .AddProcessor<SayBye>()
-// .AddProcessor<SayHello>()
-// .AddProcessor<WriteAge>();
+    .AddStartupProcessor<StartupProcessor>()
+    .AddProcessor<SayBye>()
+    .AddProcessor<SayHello>()
+    .AddProcessor<WriteAge>();
 
-app.Update(false);
-app.Update(false);
-app.Update(false);
-
-if (app.World[0].Location.Archetype.ID.Count != 1)
-    throw new Exception();
+app.Run();

@@ -8,7 +8,7 @@ using static Raylib_cs.Raylib;
 namespace SoftTouch.ECS.Example.Rlib;
 
 
-public class Startup() : Processor<Commands>(null!)
+public class SpawnEntities() : Processor<Commands>(null!)
 {
     public override void Update()
     {

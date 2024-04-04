@@ -7,9 +7,9 @@ public enum StageOrder
     After
 }
 
-public struct OrderedStage
+public struct OrderedStage<TStage, TOther>
+    where TStage : Stage
+    where TOther : Stage
 {
-    public ProcessorStage Stage { get; set; }
-    public string Other { get; set; }
     public StageOrder Order { get; set; }
 }

@@ -6,11 +6,11 @@ namespace SoftTouch.ECS.Scheduling;
 
 public class Scheduler
 {
-    public ProcessorStageCollection Stages { get; }
+    public StageCollection Stages { get; }
 
     public Scheduler()
     {
-        Stages = new();
+        Stages = [];
     }
 
     public void Run(bool parallel = true)
@@ -19,10 +19,10 @@ public class Scheduler
             stage.Run(parallel);
     }
 
-    public void Add(in ProcessorStage stage)
+    public void Add(in Stage stage)
     {
         foreach(var s in Stages)
-            if(s.Name == stage.Name)
+            if(s.GetType() == stage.GetType())
             {
                 foreach(var g in stage.ProcessorGroups)
                     foreach(var p in g)
@@ -30,28 +30,31 @@ public class Scheduler
             }
         Stages.Add(stage);
     }
-    public void Add(in MergeStage stage)
+    public void Add<TStage>(in MergeStage<TStage> stage)
+        where TStage : Stage, new()
     {
         foreach (var s in Stages)
-            if (s.Name == stage.Name)
+            if (s is TStage)
             {
                 foreach(var processor in stage.Processors.Span)
                     s.Add(processor);
                 return;
             }
-        var newStage = new ProcessorStage("Main");
+        var newStage = new TStage();
         foreach (var processor in stage.Processors.Span)
             newStage.Add(processor);
         Add(newStage);
     }
-    public void Add(in OrderedStage stage)
+    public void Add<TStage, TOther>(in OrderedStage<TStage,TOther> stage)
+        where TStage : Stage
+        where TOther : Stage
     {
         foreach (var s in Stages)
-            if (s.Name == stage.Stage.Name)
-                throw new Exception($"Stage with name {stage.Stage.Name} already exists");
+            if (s is TStage)
+                throw new Exception($"Stage with name {typeof(TStage)} already exists");
         for (int i = 0; i < Stages.Count; i++)
         {
-            if(Stages[i].Name == stage.Other)
+            if(Stages[i] is TOther)
             {
                 Stages.Insert(
                     stage.Order switch {
@@ -59,7 +62,7 @@ public class Scheduler
                         StageOrder.Before => i,
                         _ => throw new NotImplementedException()
                     }, 
-                    stage.Stage
+                    Stages.Get<TOther>()
                 );
             }
         }
@@ -68,7 +71,7 @@ public class Scheduler
         where TProcessor : Processor
     {
         foreach(var s in Stages)
-        if(s.Name == to)
+        if(s.GetType() == to.GetType())
         {
             s.Add(p);
             return;

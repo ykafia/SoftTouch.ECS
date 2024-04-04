@@ -4,6 +4,7 @@ using Raylib_cs;
 using SoftTouch.ECS;
 using SoftTouch.ECS.Example.RaylibUtilities;
 using SoftTouch.ECS.Example.Rlib;
+using SoftTouch.ECS.Scheduling;
 using SoftTouch.ECS.Storage;
 Console.WriteLine("Hello, World!");
 
@@ -26,14 +27,14 @@ static void ExtractData(World parentWorld, App subApp)
 
 var app = 
     new App()
-    .AddStartupProcessor<Startup>()
-    .AddProcessors("Main", new CameraUpdater(), new MoveCube(), new MoveLight());
+    .AddStartupProcessor<SpawnEntities>()
+    .AddProcessors<Main, CameraUpdater, MoveCube, MoveLight>();
 
 var renderApp = 
     new App()
-    .AddProcessors("BeginDraw", new BeginDraw())
-    .AddProcessors("Render3D", new RenderCubes())
-    .AddProcessors("EndDraw", new EndDraw());
+    .AddProcessors<Startup, BeginDraw>()
+    .AddProcessors<Render, RenderCubes>()
+    .AddProcessors<RenderEnd, EndDraw>();
 
 app.SubApp = new(renderApp, ExtractData);
 Raylib.InitWindow(800, 600, "MyGame");

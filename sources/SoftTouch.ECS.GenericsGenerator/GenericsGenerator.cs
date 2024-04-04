@@ -39,18 +39,16 @@ public class GenericsGenerator : ISourceGenerator
         {
             var range = Enumerable.Range(1, i + 1);
             code
-                .WriteLine($"public App AddProcessors<{string.Join(", ", range.Select(x => $"P{x}"))}>(string name)");
+                .WriteLine($"public App AddProcessors<TStage, {string.Join(", ", range.Select(x => $"P{x}"))}>()")
+                .WriteLine($"    where TStage : Stage, new()");
             foreach (var r in range)
                 code.WriteLine($"    where P{r} : Processor, new()");
             code
                 .OpenBlock()
-                .WriteLine("using var merge = new MergeStage")
+                .WriteLine("using var merge = new MergeStage<TStage>")
                 .OpenBlock()
-                .WriteLine("Name = name,")
-                .WriteLine($"Processors = MemoryOwner<Processor>.Allocate({i + 1}, AllocationMode.Clear)")
+                .WriteLine($"Processors = [{string.Join(", ", range.Select(r => $"new P{ r }(){{World = World}}"))}]")
                 .CloseBlockWith(";");
-            foreach (var r in range)
-                code.WriteLine($"merge.Processors.Span[{r - 1}] = new P{r}(){{World = World}};");
             code
                 .WriteLine("Schedule.Add(merge);")
                 .WriteLine("return this;")
@@ -60,19 +58,18 @@ public class GenericsGenerator : ISourceGenerator
         {
             var range = Enumerable.Range(1, i + 1);
             code
-                .WriteLine($"public App AddProcessors(string name, {string.Join(", ", range.Select(x => $"Processor p{x}"))})");
+                .WriteLine($"public App AddProcessors<TStage>({string.Join(", ", range.Select(x => $"Processor p{x}"))})")
+                .WriteLine("    where TStage : Stage, new()");
             code
                 .OpenBlock()
-                .WriteLine("using var merge = new MergeStage")
+                .WriteLine("using var merge = new MergeStage<TStage>")
                 .OpenBlock()
-                .WriteLine("Name = name,")
-                .WriteLine($"Processors = MemoryOwner<Processor>.Allocate({i + 1}, AllocationMode.Clear)")
+                .WriteLine($"Processors = [{string.Join(", ",range.Select(r => $"p{r}"))}]")
                 .CloseBlockWith(";");
-            foreach (var r in range)
-            {
-                code.WriteLine($"p{r}.World = World;");
-                code.WriteLine($"merge.Processors.Span[{r - 1}] = p{r};");
-            }
+            
+            code.WriteLine("foreach(var e in merge.Processors.Span)")
+                .WriteLine("    e.World = World;");
+
             code
                 .WriteLine("Schedule.Add(merge);")
                 .WriteLine("return this;")

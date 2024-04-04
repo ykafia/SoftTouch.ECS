@@ -8,15 +8,15 @@ public struct ProcessorGroup
     HashSet<Type> RelatedTypes;
     List<Processor> Processors;
 
-    public int Count => Processors.Count;
+    public readonly int Count => Processors.Count;
 
     public ProcessorGroup()
     {
-        RelatedTypes = new();
-        Processors = new();
+        RelatedTypes = [];
+        Processors = [];
     }
 
-    internal ProcessorGroup With<TProcessor>(TProcessor p)
+    internal readonly ProcessorGroup With<TProcessor>(TProcessor p)
         where TProcessor : Processor
     {
         foreach(var t in p.RelatedTypes)
@@ -25,7 +25,7 @@ public struct ProcessorGroup
         return this;
     }
 
-    public bool TryAdd<TProcessor>(TProcessor p)
+    public readonly bool TryAdd<TProcessor>(TProcessor p)
         where TProcessor : Processor
     {
         var related = false;
