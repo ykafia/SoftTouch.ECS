@@ -29,6 +29,7 @@ public class GenericsGenerator : ISourceGenerator
             .WriteLine("using SoftTouch.ECS.Processors;")
             .WriteLine("using SoftTouch.ECS.Querying;")
             .WriteLine("using SoftTouch.ECS.Scheduling;")
+            .WriteLine("using SoftTouch.ECS.Arrays;")
             .WriteEmptyLines(2)
             .WriteLine("namespace SoftTouch.ECS;")
             .WriteEmptyLines(3)
@@ -73,6 +74,19 @@ public class GenericsGenerator : ISourceGenerator
             code
                 .WriteLine("Schedule.Add(merge);")
                 .WriteLine("return this;")
+                .CloseBlock();
+        }
+        for (int i = 0; i < 16; i++)
+        {
+            var range = Enumerable.Range(1, i + 1);
+            code
+                .WriteLine($"public App SetStages<{string.Join(", ", range.Select(x => $"TStage{x}"))}>()");
+            foreach(var e in range)
+                code.WriteLine($"    where TStage{e} : Stage, new()");
+            code
+                .OpenBlock()
+                .WriteLine($"using ReusableList<Stage> merge = [{string.Join(", ", range.Select(r => $"new TStage{r}()"))}];")
+                .WriteLine("return SetStages(merge);")
                 .CloseBlock();
         }
         code.CloseAllBlocks();

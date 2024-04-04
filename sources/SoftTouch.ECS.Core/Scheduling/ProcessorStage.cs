@@ -12,7 +12,7 @@ public readonly struct GroupUpdater : IRefAction<ProcessorGroup>
     }
 }
 
-public abstract record Stage()
+public abstract record Stage() : IDisposable
 {
     public ProcessorGroupCollection ProcessorGroups { get; } = [new()];
     public void Add<TProcessor>(TProcessor p)
@@ -49,6 +49,11 @@ public abstract record Stage()
                 foreach (var g in ProcessorGroups)
                     g.Update();
         }
+    }
+
+    public void Dispose()
+    {
+        ProcessorGroups.Dispose();
     }
 }
 

@@ -18,21 +18,17 @@ public abstract class Processor : IProcessorRelation
 {
 
     internal World World { get; set; }
-    public bool Enabled { get; set; }
-    public bool RunAndDisable { get; set; }
-    public static ImmutableList<Type> StaticRelatedTypes { get; internal set; } = ImmutableList.Create<Type>();
+    public static ImmutableList<Type> StaticRelatedTypes { get; internal set; } = [];
     public ImmutableList<Type> RelatedTypes => StaticRelatedTypes;
 
     public Processor()
     {
         World = null!;
-        Enabled = true;
     }
 
     public Processor(World world)
     {
         World = world;
-        Enabled = true;
     }
     public abstract void Update();
 

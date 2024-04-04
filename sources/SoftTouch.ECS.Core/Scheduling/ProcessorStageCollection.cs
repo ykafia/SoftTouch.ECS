@@ -9,7 +9,9 @@ namespace SoftTouch.ECS.Scheduling;
 
 public class StageCollection : ICollection<Stage>
 {
-    readonly List<Stage> Stages = [new Startup(), new Extract()];
+    readonly Startup startup = new();
+    readonly List<Stage> Stages = [new Main()];
+    readonly Extract extract = new();
 
     public Stage this[int i] => Stages[i];
 
@@ -20,6 +22,10 @@ public class StageCollection : ICollection<Stage>
 
     public Stage Get<TStage>() where TStage : Stage
     {
+        if(startup is TStage)
+            return startup;
+        else if(extract is TStage)
+            return extract;
         foreach(var stage in Stages)
             if(stage is TStage)
                 return stage;
@@ -33,28 +39,32 @@ public class StageCollection : ICollection<Stage>
 
     public void Insert(int index, Stage item)
     {
-        Stages.Insert(Math.Min(index, 1), item);
+        Stages.Insert(index, item);
     }
 
     public void RemoveAt(int index)
     {
-        if (index > 0 && index < Stages.Count - 1)
-            Stages.RemoveAt(index);
+        Stages.RemoveAt(index);
     }
 
     public void Add(Stage item)
     {
-        Stages.Insert(Stages.Count - 1, item);
+        Stages.Add(item);
     }
 
     public void Clear()
     {
+        foreach(var s in Stages)
+            s.Dispose();
         Stages.Clear();
     }
 
     public bool Contains(Stage item)
     {
-        return Stages.Contains(item);
+        if(item is Startup || item is Extract)
+            return true;
+        else 
+            return Stages.Contains(item);
     }
 
     public void CopyTo(Stage[] array, int arrayIndex)

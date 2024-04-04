@@ -27,11 +27,13 @@ static void ExtractData(World parentWorld, App subApp)
 
 var app = 
     new App()
+    .SetStages<Main>()
     .AddStartupProcessor<SpawnEntities>()
     .AddProcessors<Main, CameraUpdater, MoveCube, MoveLight>();
 
 var renderApp = 
     new App()
+    .SetStages<Render, RenderEnd>()
     .AddProcessors<Startup, BeginDraw>()
     .AddProcessors<Render, RenderCubes>()
     .AddProcessors<RenderEnd, EndDraw>();

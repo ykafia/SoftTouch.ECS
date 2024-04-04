@@ -7,6 +7,7 @@ public struct ProcessorGroup
 {
     HashSet<Type> RelatedTypes;
     List<Processor> Processors;
+    List<Processor> SingleShots;
 
     public readonly int Count => Processors.Count;
 
@@ -14,6 +15,7 @@ public struct ProcessorGroup
     {
         RelatedTypes = [];
         Processors = [];
+        SingleShots = [];
     }
 
     internal readonly ProcessorGroup With<TProcessor>(TProcessor p)
@@ -54,7 +56,7 @@ public struct ProcessorGroup
             return false;
         }
     }
-    public bool TryRemove<TProcessor>(TProcessor processor)
+    public readonly bool TryRemove<TProcessor>(TProcessor processor)
         where TProcessor : Processor
     {
         if(!Processors.Contains(processor))
@@ -76,18 +78,41 @@ public struct ProcessorGroup
         }
     }
 
-    public void Update()
+    public readonly void Update()
     {
         foreach (var p in Processors)
+            p.Update();
+        foreach (var p in SingleShots)
+            p.Update();
+        SingleShots.Clear();
+    }
+
+    public readonly Enumerator GetEnumerator() => new(this);
+
+
+    public ref struct Enumerator(ProcessorGroup group)
+    {
+        ProcessorGroup group = group;
+        List<Processor>.Enumerator currentEnumerator = group.Processors.GetEnumerator();
+        bool processedFirstOnes = false;
+
+        public Processor Current => currentEnumerator.Current;
+
+        public bool MoveNext()
         {
-            if (p.Enabled)
+            if(!processedFirstOnes && currentEnumerator.MoveNext())
+                return true;
+            else if(!processedFirstOnes && !currentEnumerator.MoveNext())
             {
-                p.Update();
-                if (p.RunAndDisable)
-                    p.Enabled = false;
+                processedFirstOnes = true;
+                currentEnumerator = group.SingleShots.GetEnumerator();
+                return currentEnumerator.MoveNext();
             }
+            else if(processedFirstOnes && currentEnumerator.MoveNext())
+                return true;
+            else
+                return false;
         }
     }
 
-    public List<Processor>.Enumerator GetEnumerator() => Processors.GetEnumerator();
 }
