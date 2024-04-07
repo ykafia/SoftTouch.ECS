@@ -5,22 +5,14 @@ using SoftTouch.ECS.Storage;
 namespace SoftTouch.ECS;
 
 
-public enum EntityUpdateKind
-{
-    ComponentUpdate,
-    Spawn,
-    Despawn
-}
-
-
 public record SpawnEntity(Entity Entity) : EntityUpdate(Entity);
 public record DespawnEntity(Entity Entity) : EntityUpdate(Entity);
 public record ArchUpdate(Entity Entity) : EntityUpdate(Entity);
 
 public abstract record EntityUpdate(Entity Entity) : IDisposable
 {
-    public ReusableList<ComponentBox> AddedComponents { get; } = new();
-    public ReusableList<ComponentBox> RemovedComponents { get; } = new();
+    public ReusableList<ComponentBox> AddedComponents { get; } = [];
+    public ReusableList<ComponentBox> RemovedComponents { get; } = [];
 
     public virtual void Add<T>(in T component) where T : struct
     {

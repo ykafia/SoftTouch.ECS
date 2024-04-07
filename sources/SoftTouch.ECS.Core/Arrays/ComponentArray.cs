@@ -11,11 +11,14 @@ using CommunityToolkit.HighPerformance.Buffers;
 
 namespace SoftTouch.ECS.Arrays;
 
+/// <summary>
+/// A component array generic base class
+/// </summary>
 [DebuggerDisplay("ComponentsArray<{ComponentType.Name.ToString()}>[{Count}]")]
-public abstract class ComponentArray : IDisposable
+public abstract class ComponentArray
 {
     public abstract Type ComponentType { get; }
-    public int Count { get; protected set; }
+    public abstract int Count { get; }
     public abstract bool TryAdd(ComponentBox item);
     public abstract bool TryAdd<TOther>(TOther item) where TOther : struct, IEquatable<TOther>;
     public abstract bool TryRemove<TOther>(TOther item) where TOther : struct, IEquatable<TOther>;
@@ -29,8 +32,6 @@ public abstract class ComponentArray : IDisposable
     public abstract ComponentArray Clone();
 
     public abstract ComponentBox GetComponent(int idx);
-
-    public abstract void Dispose();
 }
 
 

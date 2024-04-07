@@ -8,23 +8,6 @@ using SoftTouch.ECS.Scheduling;
 using SoftTouch.ECS.Storage;
 Console.WriteLine("Hello, World!");
 
-static void ExtractData(World parentWorld, App subApp)
-{
-    foreach(var arch in parentWorld.Query<Light>())
-    {
-        subApp.World.CopyArchetype(arch);
-    }
-    foreach (var arch in parentWorld.Query<Model>())
-    {
-        subApp.World.CopyArchetype(arch);
-    }
-    foreach (var arch in parentWorld.Query<Camera3D>())
-    {
-        subApp.World.CopyArchetype(arch);
-    }
-}
-
-
 var app = 
     new App()
     .SetStages<Main>()
@@ -32,13 +15,13 @@ var app =
     .AddProcessors<Main, CameraUpdater, MoveCube, MoveLight>();
 
 var renderApp = 
-    new App()
+    new SubApp()
     .SetStages<Render, RenderEnd>()
     .AddProcessors<Startup, BeginDraw>()
     .AddProcessors<Render, RenderCubes>()
     .AddProcessors<RenderEnd, EndDraw>();
 
-app.SubApp = new(renderApp, ExtractData);
+app.SubApp = (SubApp)renderApp;
 Raylib.InitWindow(800, 600, "MyGame");
 
 

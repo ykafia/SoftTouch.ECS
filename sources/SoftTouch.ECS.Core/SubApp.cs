@@ -1,6 +1,6 @@
 namespace SoftTouch.ECS;
 
-public abstract class SubApp : App
+public class SubApp : App
 {
     public override void Update(bool parallel = true)
     {

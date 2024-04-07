@@ -12,12 +12,20 @@ using CommunityToolkit.HighPerformance.Buffers;
 
 namespace SoftTouch.ECS.Arrays;
 
+
+/// <summary>
+/// An array of structs representing components
+/// </summary>
+/// <typeparam name="T"></typeparam>
 [DebuggerDisplay("ComponentsArray<{typeof(T)}>[{Count}]")]
 public class ComponentArray<T> : ComponentArray, ICollection<T>
     where T : struct
 {
-    MemoryOwner<T> _owner;
-    public Span<T> Span => _owner.Span[..Count];
+    readonly List<T> _owner = [];
+
+    public Span<T> Span => CollectionsMarshal.AsSpan(_owner);
+
+    public override int Count => _owner.Count;
 
     public override Type ComponentType => typeof(T);
 
@@ -29,79 +37,20 @@ public class ComponentArray<T> : ComponentArray, ICollection<T>
         set => Span[index] = value;
     }
 
-    public ComponentArray()
-    {
-        _owner = MemoryOwner<T>.Allocate(8, AllocationMode.Clear);
-        Count = 0;
-    }
-    public ComponentArray(int size)
-    {
-        _owner = MemoryOwner<T>.Allocate((int)BitOperations.RoundUpToPowerOf2((uint)size), AllocationMode.Clear);
-        Count = 0;
-    }
+    
 
     public Span<T>.Enumerator GetEnumerator() => Span.GetEnumerator();
 
-
-    void Expand(int size)
-    {
-        if (_owner.Length < Count + size)
-        {
-            var nbuff = MemoryOwner<T>.Allocate((int)BitOperations.RoundUpToPowerOf2((uint)(Count + size)), AllocationMode.Clear);
-            _owner.Span.CopyTo(nbuff.Span);
-            _owner = nbuff;
-        }
-    }
-    void ExpandTo(int fullsize)
-    {
-        if (_owner.Length < fullsize)
-        {
-            var nbuff = MemoryOwner<T>.Allocate((int)BitOperations.RoundUpToPowerOf2((uint)fullsize), AllocationMode.Clear);
-            _owner.Span.CopyTo(nbuff.Span);
-            _owner = nbuff;
-        }
-    }
-
-    public void Add(T item)
-    {
-        Expand(1);
-        _owner.Span[Count] = item;
-        Count += 1;
-    }
-    public void AddRange(List<T> items)
-    {
-        Expand(items.Count);
-        CollectionsMarshal.AsSpan(items).CopyTo(_owner.Span[Count..]);
-        Count += items.Count;
-    }
-    public void AddRange(Span<T> items)
-    {
-        Expand(items.Length);
-        items.CopyTo(_owner.Span[Count..]);
-        Count += items.Length;
-    }
-    public void AddRange(ComponentArray<T> items)
-    {
-        Expand(items.Count);
-        items.Span.CopyTo(_owner.Span[Count..]);
-        Count += items.Count;
-    }
-    public bool Remove(T item)
-    {
-        int i = 0;
-        foreach (var e in _owner.Span)
-        {
-            i += 1;
-            if (e.Equals(item))
-                return RemoveAt(i);
-        }
-        return false;
-    }
+    public void Add(T item) => _owner.Add(item);
+    public void AddRange(List<T> items) => _owner.AddRange(items);
+    public void AddRange(Span<T> items) => _owner.AddRange(items);
+    public void AddRange(ComponentArray<T> items) => _owner.AddRange(items.Span);
+    public bool Remove(T item) => _owner.Remove(item);
     public override bool RemoveAt(int index)
     {
-        Span[(index + 1)..].CopyTo(Span[index..]);
-        Count -= 1;
-        return true;
+        var result = index < Count && index > 0;
+        _owner.RemoveAt(index);
+        return result;
     }
     public bool RemoveAt(int index, out T item)
     {
@@ -160,17 +109,15 @@ public class ComponentArray<T> : ComponentArray, ICollection<T>
 
     public override void Clear()
     {
-        Span.Clear();
-        Count = 0;
+        _owner.Clear();
     }
 
     public override void CopyTo(ComponentArray componentArray)
     {
         if (componentArray is ComponentArray<T> other)
         {
-            other.ExpandTo(Count);
-            other.Count = Count;
-            Span.CopyTo(other.Span);
+            other._owner.Clear();
+            other.AddRange(Span);
         }
     }
 
@@ -196,12 +143,6 @@ public class ComponentArray<T> : ComponentArray, ICollection<T>
         return ComponentBox<T>.Create(Span[idx]);
     }
 
-    public override void Dispose()
-    {
-        _owner.Dispose();
-        Count = 0;
-    }
-
     public bool Contains(T item)
     {
         foreach (var e in Span)
@@ -217,11 +158,11 @@ public class ComponentArray<T> : ComponentArray, ICollection<T>
 
     IEnumerator<T> IEnumerable<T>.GetEnumerator()
     {
-        throw new NotImplementedException("Cannot use enumeration");
+        return _owner.GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        throw new NotImplementedException("Cannot use enumeration");
+        return _owner.GetEnumerator();
     }
 }

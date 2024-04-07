@@ -38,8 +38,7 @@ public class ComponentBox<TComp>() : ComponentBox
 
     public override ComponentArray ToArray()
     {
-        var result = new ComponentArray<TComp>();
-        result.Add(Value);
+        ComponentArray<TComp> result = [Value];
         pool.Return(this);
         return result;
     }
