@@ -40,8 +40,7 @@ public partial class App
         AppTime.Update();
         Schedule.Run(parallel);
         World.ApplyUpdates();
-        SubApp?.Extract(World);
-        SubApp?.App.Update();
+        SubApp?.Update();
     }
     public virtual void UpdateNoWorldUpdates(bool parallel = true)
     {

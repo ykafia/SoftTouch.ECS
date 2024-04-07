@@ -6,17 +6,16 @@ namespace SoftTouch.ECS.Scheduling;
 
 public class Scheduler
 {
-    public StageCollection Stages { get; }
-
-    public Scheduler()
-    {
-        Stages = [];
-    }
+    public StageCollection Stages { get; } = [];
 
     public void Run(bool parallel = true)
     {
         foreach (var stage in Stages)
             stage.Run(parallel);
+    }
+    public void RunExtract()
+    {
+        Stages.Get<Extract>().Run(false);
     }
 
     public void Add(in Stage stage)
