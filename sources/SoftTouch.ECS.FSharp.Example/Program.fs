@@ -39,6 +39,7 @@ app
 |> App.update
 |> App.update
 |> (fun app -> app.World)
-|> World.getEntity 0 
+|> World.getEntity 0
+|> ignore
 //|> fun x -> x.Name
 //|> printfn "Hello %s"

@@ -22,6 +22,23 @@ public partial class App
         return this;
     }
 
+
+    public App AddProcessors<TStage>(ReusableList<Processor> processors)
+        where TStage : Stage, new()
+    {
+        foreach(var p in processors)
+            AddProcessor<TStage>(p);
+        return this;
+    }
+
+    public App AddProcessor<TStage>(Processor processor)
+        where TStage : Stage, new()
+    {
+        processor.World = World;
+        AddProcessors<TStage>(processor);
+        return this;
+    }
+
     public App AddProcessor(Processor processor)
     {
         processor.World = World;

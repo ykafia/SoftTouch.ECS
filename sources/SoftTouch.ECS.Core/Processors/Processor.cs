@@ -37,6 +37,29 @@ public abstract class Processor : IProcessorRelation
     {
         return new T() { World = world };
     }
+
+
+    public static Processor From<Q1>(UpdaterFunc<Q1> func) where Q1 : struct, IWorldQuery
+        => new DelegateProcessor<Q1>(func);
+    public static Processor From<Q1, Q2>(UpdaterFunc<Q1, Q2> func)
+        where Q1 : struct, IWorldQuery
+        where Q2 : struct, IWorldQuery
+        => new DelegateProcessor<Q1, Q2>(func);
+    public static Processor From<Q1, Q2, Q3>(UpdaterFunc<Q1, Q2, Q3> func)
+        where Q1 : struct, IWorldQuery
+        where Q2 : struct, IWorldQuery
+        where Q3 : struct, IWorldQuery
+        => new DelegateProcessor<Q1, Q2, Q3>(func);
+    public static Processor From<Q1, Q2, Q3, Q4>(UpdaterFunc<Q1, Q2, Q3, Q4> func)
+        where Q1 : struct, IWorldQuery
+        where Q2 : struct, IWorldQuery
+        where Q3 : struct, IWorldQuery
+        where Q4 : struct, IWorldQuery
+        => new DelegateProcessor<Q1, Q2, Q3, Q4>(func);
+    
+    public static Processor From<T>() where T : Processor, new()
+        => new T();
+
 }
 
 
@@ -53,7 +76,7 @@ public abstract class Processor<Q> : Processor, IProcessorRelation
             foreach (var t in eq1.ImplTypes)
                 hash.Add(t);
         }
-        StaticRelatedTypes = hash.ToImmutableList();
+        StaticRelatedTypes = [.. hash];
     }
     public Q Query => new() { World = World };
     protected Processor(World world) : base(world)
@@ -80,7 +103,7 @@ public abstract class Processor<Q1, Q2> : Processor
             foreach (var t in eq2.ImplTypes)
                 hash.Add(t);
         }
-        StaticRelatedTypes = hash.ToImmutableList();
+        StaticRelatedTypes = [.. hash];
     }
 
     public Q1 Query1 => new() { World = World };
@@ -119,7 +142,7 @@ public abstract class Processor<Q1, Q2, Q3> : Processor
             foreach (var t in eq3.ImplTypes)
                 hash.Add(t);
         }
-        StaticRelatedTypes = hash.ToImmutableList();
+        StaticRelatedTypes = [.. hash];
     }
 
     public Q1 Query1 => new() { World = World };
@@ -165,7 +188,7 @@ public abstract class Processor<Q1, Q2, Q3, Q4> : Processor
             foreach (var t in eq4.ImplTypes)
                 hash.Add(t);
         }
-        StaticRelatedTypes = hash.ToImmutableList();
+        StaticRelatedTypes = [.. hash];
     }
 
     public Q1 Query1 => new() { World = World };

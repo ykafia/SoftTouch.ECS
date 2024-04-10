@@ -34,10 +34,9 @@ namespace SoftTouch.ECS.Benchmark
         [Benchmark]
         public void SuperSortedSet2()
         {
-            bool b = true;
             foreach (var t in typesToCheck2)
                 if (!types.Contains(t))
-                    b = false;
+                    continue;
         }
 
 

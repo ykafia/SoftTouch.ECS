@@ -1,4 +1,6 @@
 using SoftTouch.ECS.Arrays;
+using SoftTouch.ECS.Processors;
+using SoftTouch.ECS.Querying;
 using SoftTouch.ECS.Storage;
 
 namespace SoftTouch.ECS;
