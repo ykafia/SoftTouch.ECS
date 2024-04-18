@@ -1,25 +1,21 @@
 using System.Text;
 using SoftTouch.ECS.Processors;
+using SoftTouch.ECS.States;
 
 namespace SoftTouch.ECS.Scheduling;
 
 
-public struct ProcessorGroup
+public class Group(WorldStates? states = null, StateEvent? stateEvent = null)
 {
-    HashSet<Type> RelatedTypes;
-    List<Processor> Processors;
-    List<Processor> SingleShots;
+    HashSet<Type> RelatedTypes = [];
+    List<Processor> Processors = [];
+    List<Processor> SingleShots = [];
+    WorldStates States = states!;
+    StateEvent? stateEvent = stateEvent;
 
-    public readonly int Count => Processors.Count;
+    public int Count => Processors.Count;
 
-    public ProcessorGroup()
-    {
-        RelatedTypes = [];
-        Processors = [];
-        SingleShots = [];
-    }
-
-    internal readonly ProcessorGroup With<TProcessor>(TProcessor p)
+    internal Group With<TProcessor>(TProcessor p)
         where TProcessor : Processor
     {
         foreach(var t in p.RelatedTypes)
@@ -28,7 +24,7 @@ public struct ProcessorGroup
         return this;
     }
 
-    public readonly bool TryAdd<TProcessor>(TProcessor p)
+    public bool TryAdd<TProcessor>(TProcessor p)
         where TProcessor : Processor
     {
         var related = false;
@@ -57,7 +53,7 @@ public struct ProcessorGroup
             return false;
         }
     }
-    public readonly bool TryRemove<TProcessor>(TProcessor processor)
+    public bool TryRemove<TProcessor>(TProcessor processor)
         where TProcessor : Processor
     {
         if(!Processors.Contains(processor))
@@ -79,21 +75,35 @@ public struct ProcessorGroup
         }
     }
 
-    public readonly void Update()
+    public void Update()
     {
-        foreach (var p in Processors)
-            p.Update();
-        foreach (var p in SingleShots)
-            p.Update();
-        SingleShots.Clear();
+        if(stateEvent is not null)
+        {
+            if(States.IsValid(stateEvent.Value))
+            {
+                foreach (var p in Processors)
+                    p.Update();
+                foreach (var p in SingleShots)
+                    p.Update();
+                SingleShots.Clear();
+            }
+        }
+        else
+        {
+            foreach (var p in Processors)
+                p.Update();
+            foreach (var p in SingleShots)
+                p.Update();
+            SingleShots.Clear();
+        }
     }
 
-    public readonly Enumerator GetEnumerator() => new(this);
+    public Enumerator GetEnumerator() => new(this);
 
 
-    public ref struct Enumerator(ProcessorGroup group)
+    public ref struct Enumerator(Group group)
     {
-        ProcessorGroup group = group;
+        Group group = group;
         List<Processor>.Enumerator currentEnumerator = group.Processors.GetEnumerator();
         bool processedFirstOnes = false;
 

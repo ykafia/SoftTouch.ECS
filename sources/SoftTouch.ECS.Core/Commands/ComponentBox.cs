@@ -5,19 +5,17 @@ using SoftTouch.ECS.Storage;
 namespace SoftTouch.ECS;
 
 
-public abstract class ComponentBox : IEquatable<ComponentBox>
+public abstract class ComponentBox
 {
     public abstract Type ComponentType { get; }
     public abstract ComponentArray ToArray();
     public abstract void Dispose();
-
-    public abstract bool Equals(ComponentBox? other);
 }
 
 public class ComponentBox<TComp>() : ComponentBox
     where TComp : struct
 {
-    static ObjectPool<ComponentBox<TComp>> pool = ObjectPool.Create<ComponentBox<TComp>>();
+    readonly static ObjectPool<ComponentBox<TComp>> pool = ObjectPool.Create<ComponentBox<TComp>>();
 
     public override Type ComponentType { get; } = typeof(TComp);
 
@@ -41,10 +39,5 @@ public class ComponentBox<TComp>() : ComponentBox
         ComponentArray<TComp> result = [Value];
         pool.Return(this);
         return result;
-    }
-
-    public override bool Equals(ComponentBox? other)
-    {
-        return other is ComponentBox<TComp>; 
     }
 }

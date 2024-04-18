@@ -13,20 +13,17 @@ public class Scheduler
         foreach (var stage in Stages)
             stage.Run(parallel);
     }
-    public void RunExtract()
-    {
-        Stages.Get<Extract>().Run(false);
-    }
+    public void Run<TStage>(bool parallel = true)
+        where TStage : Stage
+        => Stages.Get<TStage>().Run(parallel);
 
     public void Add(in Stage stage)
     {
         foreach (var s in Stages)
             if (s.GetType() == stage.GetType())
-            {
                 foreach (var g in stage.ProcessorGroups)
                     foreach (var p in g)
                         s.Add(p);
-            }
         Stages.Add(stage);
     }
     public void Add<TStage>(in MergeStage<TStage> stage)

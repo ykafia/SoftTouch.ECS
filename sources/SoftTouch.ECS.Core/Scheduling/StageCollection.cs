@@ -53,11 +53,7 @@ public class StageCollection : ICollection<Stage>
     }
 
     public void Clear()
-    {
-        foreach(var s in Stages)
-            s.Dispose();
-        Stages.Clear();
-    }
+        => Stages.Clear();
 
     public bool Contains(Stage item)
     {

@@ -4,24 +4,25 @@ using System.Runtime.InteropServices;
 
 namespace SoftTouch.ECS.Scheduling;
 
-public readonly struct GroupUpdater : IRefAction<ProcessorGroup>
-{
-    public void Invoke(ref ProcessorGroup item)
-    {
-        item.Update();
-    }
-}
+// public readonly struct GroupUpdater : IRefAction<ProcessorGroup>
+// {
+//     public void Invoke(ref ProcessorGroup item)
+//     {
+//         item.Update();
+//     }
+// }
 
-public abstract record Stage() : IDisposable
+public abstract record Stage()
 {
-    public ProcessorGroupCollection ProcessorGroups { get; } = [new()];
+    public ProcessorGroups ProcessorGroups { get; } = [new()];
+    List<Task> updateTasks = new(10);
     public void Add<TProcessor>(TProcessor p)
         where TProcessor : Processor
     {
         foreach (var group in ProcessorGroups)
             if (group.TryAdd(p))
                 return;
-        ProcessorGroups.Add(new ProcessorGroup().With(p));
+        ProcessorGroups.Add(new Group().With(p));
     }
     public void Remove<TProcessor>(TProcessor p)
         where TProcessor : Processor
@@ -33,27 +34,27 @@ public abstract record Stage() : IDisposable
 
     public void Run(bool parallel = true)
     {
-        if (ProcessorGroups.Length > 0)
+        if (ProcessorGroups.Count > 0)
         {
-            if (parallel && ProcessorGroups.Length == 1 && ProcessorGroups[0].Count > 0)
+            if (parallel && ProcessorGroups.Count == 1 && ProcessorGroups[0].Count > 0)
             {
                 ProcessorGroups[0].Update();
             }
-            else if (parallel && ProcessorGroups.Length == 2 && ProcessorGroups[0].Count == 0)
+            else if (parallel && ProcessorGroups.Count == 2 && ProcessorGroups[0].Count == 0)
             {
                 ProcessorGroups[1].Update();
             }
-            else if (parallel && ProcessorGroups.Length > 2)
-                ParallelHelper.ForEach<ProcessorGroup, GroupUpdater>(ProcessorGroups.Memory);
+            else if (parallel && ProcessorGroups.Count > 2)
+            {
+                updateTasks.Clear();
+                foreach (var grp in ProcessorGroups)
+                    updateTasks.Add(Task.Run(grp.Update));
+                Task.WhenAll();
+            }
             else
                 foreach (var g in ProcessorGroups)
                     g.Update();
         }
-    }
-
-    public void Dispose()
-    {
-        ProcessorGroups.Dispose();
     }
 }
 

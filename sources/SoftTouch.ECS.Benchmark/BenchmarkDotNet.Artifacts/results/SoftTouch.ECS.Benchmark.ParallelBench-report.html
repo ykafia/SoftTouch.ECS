@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>SoftTouch.ECS.Benchmark.ParallelBench-20240418-104228</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.12.1, OS=Windows 10.0.19045
+Intel Core i5-8265U CPU 1.60GHz (Whiskey Lake), 1 CPU, 8 logical and 4 physical cores
+.NET Core SDK=8.0.204
+  [Host]     : .NET Core 8.0.4 (CoreCLR 8.0.424.16909, CoreFX 8.0.424.16909), X64 RyuJIT
+  Job-MVAGWJ : .NET Core 8.0.4 (CoreCLR 8.0.424.16909, CoreFX 8.0.424.16909), X64 RyuJIT
+</code></pre>
+<pre><code>IterationCount=5  LaunchCount=1  WarmupCount=5  
+</code></pre>
+
+<table>
+<thead><tr><th>              Method</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Gen 0</th><th>Gen 1</th><th>Gen 2</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>CommunityParallelClearWith</td><td>18.85 &mu;s</td><td>1.692 &mu;s</td><td>0.439 &mu;s</td><td>2.4414</td><td>-</td><td>-</td><td>7.38 KB</td>
+</tr><tr><td>CommunityParallelHelper</td><td>13.92 &mu;s</td><td>3.202 &mu;s</td><td>0.496 &mu;s</td><td>2.2125</td><td>-</td><td>-</td><td>6.72 KB</td>
+</tr><tr><td>ParallelForEachT</td><td>10.90 &mu;s</td><td>1.792 &mu;s</td><td>0.465 &mu;s</td><td>1.3885</td><td>-</td><td>-</td><td>4.3 KB</td>
+</tr></tbody></table>
+</body>
+</html>

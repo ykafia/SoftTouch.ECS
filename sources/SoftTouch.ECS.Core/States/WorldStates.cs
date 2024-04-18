@@ -41,4 +41,10 @@ public class WorldStates()
         (nextStates, states) = (states, nextStates);
         nextStates = nextStates.ToDictionary(p => p.Key, p => 0U);
     }
+
+    internal bool IsValid(StateEvent stateEvent)
+    {
+        
+        return false;
+    }
 }
