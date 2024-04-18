@@ -141,6 +141,12 @@ public class GenericsGenerator : ISourceGenerator
 
             var generics = Enumerable.Range(1, i).Select(x => "T" + x);
             code
+                .WriteLine($"public delegate void EntityUpdateFunc<{string.Join(", ", generics)}>({string.Join(", ", generics.Select(x => $"ref {x} componen{x.ToLower()}"))})");
+            foreach(var g in generics)
+                code.WriteLine($"    where {g} : struct");
+            code.WriteLine(";");
+            code
+                .WriteEmptyLines(1)
                 .WriteLine($"public record struct Query<{string.Join(", ", generics)}>() : IEntityQuery")
                 .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
                 .OpenBlock()
@@ -151,7 +157,13 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine("public bool HasAccessTo<TComponent>()")
                 .WriteLine($"    =>{string.Join("||", generics.Select(x => $"typeof(TComponent) == typeof({x})"))};")
                 .WriteEmptyLines(1)
-                .WriteLine($"public WorldQueryEnumerator<Query<{string.Join(", ", generics)}>> GetEnumerator() => new(this);")
+                .WriteLine($"public readonly void ForEach(EntityUpdateFunc<{string.Join(", ", generics)}> updater)")
+                .OpenBlock()
+                .WriteLine("foreach(var e in this)")
+                .WriteLine($"    updater.Invoke({string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
+                .CloseBlock()
+                .WriteEmptyLines(1)
+                .WriteLine($"public readonly WorldQueryEnumerator<Query<{string.Join(", ", generics)}>> GetEnumerator() => new(this);")
                 .CloseAllBlocks();
 
             code.WriteEmptyLines(3);
@@ -170,7 +182,13 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine($"    =>{string.Join("||", generics.Select(x => $"typeof(TComponent) == typeof({x})"))}")
                 .WriteLine($"        && !Filters.ImplWithoutTypes.Contains(typeof(TComponent));")
                 .WriteEmptyLines(1)
-                .WriteLine($"public WorldFilteredQueryEnumerator<FilteredQuery<{string.Join(", ", generics)}, TFilter>> GetEnumerator() => new(this);")
+                .WriteLine($"public readonly void ForEach(EntityUpdateFunc<{string.Join(", ", generics)}> updater)")
+                .OpenBlock()
+                .WriteLine("foreach(var e in this)")
+                .WriteLine($"    updater.Invoke({string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
+                .CloseBlock()
+                .WriteEmptyLines(1)
+                .WriteLine($"public readonly WorldFilteredQueryEnumerator<FilteredQuery<{string.Join(", ", generics)}, TFilter>> GetEnumerator() => new(this);")
                 .CloseAllBlocks();
 
             code.WriteEmptyLines(3);

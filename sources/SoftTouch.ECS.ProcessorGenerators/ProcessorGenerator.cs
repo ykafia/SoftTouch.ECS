@@ -63,7 +63,7 @@ namespace SoftTouch.ECS.ProcessorGenerators
 
 
 
-                foreach (var import in declaration?.SyntaxTree.GetRoot().ChildNodes().OfType<UsingDirectiveSyntax>() ?? Enumerable.Empty<UsingDirectiveSyntax>())
+                foreach (var import in declaration?.SyntaxTree.GetRoot().ChildNodes().OfType<UsingDirectiveSyntax>() ?? [])
                     writer.Write(import.ToFullString());
 
                 writer.WriteEmptyLines(1);

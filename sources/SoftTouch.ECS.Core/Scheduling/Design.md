@@ -17,6 +17,6 @@ Each stage will be declared with an order of execution making sure stages
 ```csharp
 var app = 
     new App()
-    .AddProcessors<Startup, Sequence<Startup, >>()
+    .AddProcessors<Startup,Groups<Processors<SpawnEntities, InitiateValues>>>()
 
 ```

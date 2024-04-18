@@ -22,6 +22,8 @@ public interface IFilteredEntityQuery : IEntityQuery
     public abstract static IFilterQuery Filters { get; }
 }
 
+public delegate void EntityUpdateFunc<T>(ref T component1) where T : struct; 
+
 public record struct Query<TComp> : IEntityQuery
     where TComp : struct
 {
@@ -32,6 +34,11 @@ public record struct Query<TComp> : IEntityQuery
 
     public readonly bool HasAccessTo<T>() => typeof(T) == typeof(TComp);
 
+    public readonly void ForEach(EntityUpdateFunc<TComp> updater)
+    {
+        foreach(var e in this)
+            updater.Invoke(ref e.Get<TComp>());
+    }
 
     public readonly WorldQueryEnumerator<Query<TComp>> GetEnumerator() => new(this);
 }
@@ -45,7 +52,13 @@ public record struct FilteredQuery<TComp, TFilter> : IFilteredEntityQuery
 
     public World World { get; set; }
 
-    public WorldFilteredQueryEnumerator<FilteredQuery<TComp, TFilter>> GetEnumerator() => new(this);
+    public readonly void ForEach(EntityUpdateFunc<TComp> updater)
+    {
+        foreach (var e in this)
+            updater.Invoke(ref e.Get<TComp>());
+    }
+
+    public readonly WorldFilteredQueryEnumerator<FilteredQuery<TComp, TFilter>> GetEnumerator() => new(this);
 
     public readonly bool HasAccessTo<T>()
         => typeof(T) == typeof(TComp);
