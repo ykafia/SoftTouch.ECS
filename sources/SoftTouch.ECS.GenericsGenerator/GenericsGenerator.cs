@@ -85,8 +85,7 @@ public class GenericsGenerator : ISourceGenerator
                 code.WriteLine($"    where TStage{e} : Stage, new()");
             code
                 .OpenBlock()
-                .WriteLine($"using ReusableList<Stage> merge = [{string.Join(", ", range.Select(r => $"new TStage{r}()"))}];")
-                .WriteLine("return SetStages(merge);")
+                .WriteLine($"return SetStages([{string.Join(", ", range.Select(r => $"new TStage{r}()"))}]);")
                 .CloseBlock();
         }
         code.CloseAllBlocks();

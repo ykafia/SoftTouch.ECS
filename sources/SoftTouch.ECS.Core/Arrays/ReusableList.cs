@@ -1,12 +1,18 @@
 using System.Collections;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using CommunityToolkit.HighPerformance;
 using CommunityToolkit.HighPerformance.Buffers;
 
 namespace SoftTouch.ECS.Arrays;
 
 
-public class ReusableList<T> : IDisposable, ICollection<T>
+public static class ReusableListBuilder
+{
+    public static ReusableList<T> Create<T>(ReadOnlySpan<T> items) => new(items);
+}
+[CollectionBuilder(typeof(ReusableListBuilder), "Create")]
+public class ReusableList<T>() : IDisposable
 {
     protected MemoryOwner<T> _array = MemoryOwner<T>.Allocate((int)BitOperations.RoundUpToPowerOf2(4), AllocationMode.Clear);
     public int Length { get; protected set; }
@@ -17,6 +23,14 @@ public class ReusableList<T> : IDisposable, ICollection<T>
     public int Count => throw new NotImplementedException();
 
     public bool IsReadOnly => throw new NotImplementedException();
+
+    public ReusableList(ReadOnlySpan<T> items) : this()
+    {
+        _array = MemoryOwner<T>.Allocate((int)BitOperations.RoundUpToPowerOf2((uint)items.Length), AllocationMode.Clear);
+        Length = items.Length;
+        items.CopyTo(Span);
+    }
+
 
     protected void Expand(int size)
     {
@@ -80,14 +94,5 @@ public class ReusableList<T> : IDisposable, ICollection<T>
         Length -= 1;
         return true;
     }
-
-    public IEnumerator<T> GetEnumerator()
-    {
-        throw new NotImplementedException();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        throw new NotImplementedException();
-    }
+    public Span<T>.Enumerator GetEnumerator() => Span.GetEnumerator();
 }

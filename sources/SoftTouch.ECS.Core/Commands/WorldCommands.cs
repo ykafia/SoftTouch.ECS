@@ -122,7 +122,7 @@ public partial class WorldCommands(World world)
             {
                 var oldArch = world.Entities[archUpdate.Entity].Location.Archetype;
                 // Create the list of components
-                using var comps = new ReusableList<ComponentBox>();
+                using ReusableList<ComponentBox> comps = [];
                 foreach (var t in oldArch.ID.Types)
                 {
                     bool toAdd = true;

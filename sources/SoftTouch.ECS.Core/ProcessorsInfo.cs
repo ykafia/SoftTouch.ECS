@@ -13,7 +13,7 @@ public enum StateAction
 
 public record struct StateEvent(StateAction Action, Type StateType, uint State);
 
-public struct ProcessorsInfo : ICollection<Processor>, IDisposable
+public struct ProcessorsInfo : IDisposable
 {
     public ReusableList<Processor> Processors { get; set; }
     StateEvent? stateEvent;
@@ -49,13 +49,8 @@ public struct ProcessorsInfo : ICollection<Processor>, IDisposable
         => Processors.Contains(item);
     public readonly void CopyTo(Processor[] array, int arrayIndex)
         => Processors.CopyTo(array, arrayIndex);
-    public readonly IEnumerator<Processor> GetEnumerator()
+    public readonly Span<Processor>.Enumerator GetEnumerator()
         => Processors.GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        throw new NotImplementedException();
-    }
 
     public readonly void Dispose()
         => Processors.Dispose();

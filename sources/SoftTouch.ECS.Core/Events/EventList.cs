@@ -1,21 +1,27 @@
 using System.Collections;
+using SoftTouch.ECS.Processors;
 
 namespace SoftTouch.ECS.Events;
 
 
 
-public abstract class EventList;
+public abstract class EventList
+{
+    public HashSet<Processor> Readers { get; } = [];
+}
 
 public class EventList<T> : EventList, IList<T> where T : struct
 {
     readonly List<T> events = [];
-    
+
     public T this[int index] { get => events[index]; set => events[index] = value; }
 
     public int Count => events.Count;
 
     public bool IsReadOnly => false;
 
+    public IReadOnlyList<T> AsReadOnly() => events.AsReadOnly();
+    
     public void Add(T item)
         => events.Add(item);
 
@@ -32,13 +38,13 @@ public class EventList<T> : EventList, IList<T> where T : struct
         => events.GetEnumerator();
 
     public int IndexOf(T item)
-        => events.IndexOf(item);    
+        => events.IndexOf(item);
 
     public void Insert(int index, T item)
         => events.Insert(index, item);
 
     public bool Remove(T item)
-        => events.Remove(item);    
+        => events.Remove(item);
 
     public void RemoveAt(int index)
         => events.RemoveAt(index);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace SoftTouch.ECS.Querying;
 
@@ -11,7 +12,7 @@ public interface ICommandQuery : IWorldQuery
 }
 
 
-public partial struct Commands : IWorldQuery
+public partial struct Commands : ICommandQuery
 {
     public World World { get; set; }
 

@@ -24,6 +24,13 @@ public class Group(WorldStates? states = null, StateEvent? stateEvent = null)
         return this;
     }
 
+    /// <summary>
+    /// Tries to add a processor in the group, if the processor has types related to the group then it can be added else it goes in another group.
+    /// Additionally, it checks if the queries are Event readers and matches specific rules
+    /// </summary>
+    /// <typeparam name="TProcessor"></typeparam>
+    /// <param name="p">Processor to add to the group</param>
+    /// <returns>True if the processor has been added to the group, false if not.</returns>
     public bool TryAdd<TProcessor>(TProcessor p)
         where TProcessor : Processor
     {
@@ -49,10 +56,9 @@ public class Group(WorldStates? states = null, StateEvent? stateEvent = null)
             return related;
         }
         else
-        {
             return false;
-        }
     }
+    
     public bool TryRemove<TProcessor>(TProcessor processor)
         where TProcessor : Processor
     {

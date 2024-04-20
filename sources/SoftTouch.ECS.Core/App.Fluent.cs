@@ -9,7 +9,7 @@ namespace SoftTouch.ECS;
 public partial class App
 {
 
-    public App SetStages(ReusableList<Stage> stages)
+    public App SetStages(ReusableSpanList<Stage> stages)
     {
         Schedule.Clear();
         foreach (var stage in stages.Span)
@@ -23,7 +23,7 @@ public partial class App
     }
 
 
-    public App AddProcessors<TStage>(ReusableList<Processor> processors)
+    public App AddProcessors<TStage>(ReusableSpanList<Processor> processors)
         where TStage : Stage, new()
     {
         foreach(var p in processors)
