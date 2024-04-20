@@ -103,3 +103,5 @@ public readonly ref struct ReusableSpanList<T>
 
     public static implicit operator ReusableSpanList<T>(Span<T> span) => new(span);
 }
+
+

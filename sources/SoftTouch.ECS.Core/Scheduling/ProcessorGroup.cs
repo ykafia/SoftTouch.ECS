@@ -7,6 +7,7 @@ namespace SoftTouch.ECS.Scheduling;
 
 public class Group(WorldStates? states = null, StateEvent? stateEvent = null)
 {
+    HashSet<Type> RelatedEvents = [];
     HashSet<Type> RelatedTypes = [];
     List<Processor> Processors = [];
     List<Processor> SingleShots = [];
@@ -18,7 +19,7 @@ public class Group(WorldStates? states = null, StateEvent? stateEvent = null)
     internal Group With<TProcessor>(TProcessor p)
         where TProcessor : Processor
     {
-        foreach(var t in p.RelatedTypes)
+        foreach (var t in p.RelatedTypes)
             RelatedTypes.Add(t);
         Processors.Add(p);
         return this;
@@ -35,6 +36,9 @@ public class Group(WorldStates? states = null, StateEvent? stateEvent = null)
         where TProcessor : Processor
     {
         var related = false;
+        foreach (var t in p.RelatedEvents)
+            if (RelatedEvents.Contains(t))
+                return false;
         if (p.RelatedTypes.Count == 0 && RelatedTypes.Count == 0)
         {
             Processors.Add(p);
@@ -50,6 +54,8 @@ public class Group(WorldStates? states = null, StateEvent? stateEvent = null)
                     Processors.Add(p);
                     foreach (var a in p.RelatedTypes)
                         RelatedTypes.Add(a);
+                    foreach (var a in p.RelatedEvents)
+                        RelatedEvents.Add(a);
                     break;
                 }
             }
@@ -58,34 +64,36 @@ public class Group(WorldStates? states = null, StateEvent? stateEvent = null)
         else
             return false;
     }
-    
+
     public bool TryRemove<TProcessor>(TProcessor processor)
         where TProcessor : Processor
     {
-        if(!Processors.Contains(processor))
+        if (!Processors.Contains(processor))
             return false;
-        else{
+        else
+        {
             Processors.Remove(processor);
-            foreach(var t in processor.RelatedTypes)
+            foreach (var t in processor.RelatedTypes)
             {
                 bool canBeDeleted = true;
-                foreach(var p in Processors)
+                foreach (var p in Processors)
                 {
-                    if(p.RelatedTypes.Contains(t))
+                    if (p.RelatedTypes.Contains(t))
                         canBeDeleted = false;
                 }
-                if(canBeDeleted)
+                if (canBeDeleted)
                     RelatedTypes.Remove(t);
             }
+            #error Should remove related events when not existent in other processors
             return true;
         }
     }
 
     public void Update()
     {
-        if(stateEvent is not null)
+        if (stateEvent is not null)
         {
-            if(States.IsValid(stateEvent.Value))
+            if (States.IsValid(stateEvent.Value))
             {
                 foreach (var p in Processors)
                     p.Update();
@@ -117,15 +125,15 @@ public class Group(WorldStates? states = null, StateEvent? stateEvent = null)
 
         public bool MoveNext()
         {
-            if(!processedFirstOnes && currentEnumerator.MoveNext())
+            if (!processedFirstOnes && currentEnumerator.MoveNext())
                 return true;
-            else if(!processedFirstOnes && !currentEnumerator.MoveNext())
+            else if (!processedFirstOnes && !currentEnumerator.MoveNext())
             {
                 processedFirstOnes = true;
                 currentEnumerator = group.SingleShots.GetEnumerator();
                 return currentEnumerator.MoveNext();
             }
-            else if(processedFirstOnes && currentEnumerator.MoveNext())
+            else if (processedFirstOnes && currentEnumerator.MoveNext())
                 return true;
             else
                 return false;

@@ -1,4 +1,5 @@
-﻿using SoftTouch.ECS.Querying;
+﻿using SoftTouch.ECS.Events;
+using SoftTouch.ECS.Querying;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -18,8 +19,10 @@ public abstract class Processor : IProcessorRelation
 {
 
     internal World World { get; set; }
+    public static ImmutableList<Type> StaticEventReaders { get; internal set; } = [];
     public static ImmutableList<Type> StaticRelatedTypes { get; internal set; } = [];
     public ImmutableList<Type> RelatedTypes => StaticRelatedTypes;
+    public ImmutableList<Type> RelatedEvents => StaticEventReaders;
 
     public Processor()
     {
@@ -63,7 +66,7 @@ public abstract class Processor : IProcessorRelation
 }
 
 
-public abstract class Processor<Q> : Processor, IProcessorRelation
+public abstract class Processor<Q>(World world) : Processor(world), IProcessorRelation
     where Q : struct, IWorldQuery
 {
 
@@ -76,15 +79,15 @@ public abstract class Processor<Q> : Processor, IProcessorRelation
             foreach (var t in eq1.ImplTypes)
                 hash.Add(t);
         }
+        if(q1 is IEventWriter evq)
+            StaticEventReaders.Add(evq.EventDataType);
+
         StaticRelatedTypes = [.. hash];
     }
     public Q Query => new() { World = World };
-    protected Processor(World world) : base(world)
-    {
-    }
 }
 
-public abstract class Processor<Q1, Q2> : Processor
+public abstract class Processor<Q1, Q2>(World world) : Processor(world)
     where Q1 : struct, IWorldQuery
     where Q2 : struct, IWorldQuery
 {
@@ -103,20 +106,18 @@ public abstract class Processor<Q1, Q2> : Processor
             foreach (var t in eq2.ImplTypes)
                 hash.Add(t);
         }
+        if(q1 is IEventWriter evq)
+            StaticEventReaders.Add(evq.EventDataType);
+        if(q2 is IEventWriter evq2)
+            StaticEventReaders.Add(evq2.EventDataType);
         StaticRelatedTypes = [.. hash];
     }
 
     public Q1 Query1 => new() { World = World };
     public Q2 Query2 => new() { World = World };
-
-    protected Processor(World world) : base(world)
-    {
-    }
-
-
 }
 
-public abstract class Processor<Q1, Q2, Q3> : Processor
+public abstract class Processor<Q1, Q2, Q3>(World world) : Processor(world)
     where Q1 : struct, IWorldQuery
     where Q2 : struct, IWorldQuery
     where Q3 : struct, IWorldQuery
@@ -142,20 +143,22 @@ public abstract class Processor<Q1, Q2, Q3> : Processor
             foreach (var t in eq3.ImplTypes)
                 hash.Add(t);
         }
+        if(q1 is IEventWriter evq)
+            StaticEventReaders.Add(evq.EventDataType);
+        if(q2 is IEventWriter evq2)
+            StaticEventReaders.Add(evq2.EventDataType);
+        if(q3 is IEventWriter evq3)
+            StaticEventReaders.Add(evq3.EventDataType);
         StaticRelatedTypes = [.. hash];
     }
 
     public Q1 Query1 => new() { World = World };
     public Q2 Query2 => new() { World = World };
     public Q3 Query3 => new() { World = World };
-
-    protected Processor(World world) : base(world)
-    {
-    }
 }
 
 
-public abstract class Processor<Q1, Q2, Q3, Q4> : Processor
+public abstract class Processor<Q1, Q2, Q3, Q4>(World world) : Processor(world)
     where Q1 : struct, IWorldQuery
     where Q2 : struct, IWorldQuery
     where Q3 : struct, IWorldQuery
@@ -188,6 +191,14 @@ public abstract class Processor<Q1, Q2, Q3, Q4> : Processor
             foreach (var t in eq4.ImplTypes)
                 hash.Add(t);
         }
+        if(q1 is IEventWriter evq)
+            StaticEventReaders.Add(evq.EventDataType);
+        if(q2 is IEventWriter evq2)
+            StaticEventReaders.Add(evq2.EventDataType);
+        if(q3 is IEventWriter evq3)
+            StaticEventReaders.Add(evq3.EventDataType);
+        if(q4 is IEventWriter evq4)
+            StaticEventReaders.Add(evq4.EventDataType);
         StaticRelatedTypes = [.. hash];
     }
 
@@ -195,8 +206,4 @@ public abstract class Processor<Q1, Q2, Q3, Q4> : Processor
     public Q2 Query2 => new() { World = World };
     public Q3 Query3 => new() { World = World };
     public Q4 Query4 => new() { World = World };
-
-    protected Processor(World world) : base(world)
-    {
-    }
 }
