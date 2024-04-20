@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SoftTouch.ECS.Querying;
 
-public class TypeSet
+public sealed class TypeSet()
 {
 
     public static TypeSet Empty { get; } = new();
@@ -19,16 +19,12 @@ public class TypeSet
         return result;
     }
 
-    HashSet<Type> set;
-    List<Type> list;
+    readonly HashSet<Type> set = [];
+    readonly List<Type> list = [];
 
     public int Count => list.Count;
 
-    public TypeSet()
-    {
-        list = new();
-        set = new();
-    }
+  
     internal void Add(Type type)
     {
         if(!set.Contains(type))

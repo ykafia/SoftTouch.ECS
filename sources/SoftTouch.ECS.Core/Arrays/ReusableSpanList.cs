@@ -16,16 +16,6 @@ public readonly ref struct ReusableSpanList
 [CollectionBuilder(typeof(ReusableSpanList), "Create")]
 public readonly ref struct ReusableSpanList<T>
 {
-
-    public static void Machin()
-    {
-        static void SubMachin<T1>(ReusableSpanList<T1> list)
-        {
-
-        }
-        SubMachin([1, 2, 3]);
-    }
-
     SpanOwner<T> Owner { get; init;}
     public readonly Span<T> Span => Owner.Span;
     public int Count { get; init; }
