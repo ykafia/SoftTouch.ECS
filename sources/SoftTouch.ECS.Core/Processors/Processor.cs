@@ -73,6 +73,7 @@ public abstract class Processor<Q>(World world) : Processor(world), IProcessorRe
     static Processor()
     {
         var hash = new HashSet<Type>();
+        var hashEv = new HashSet<Type>();
         var q1 = new Q();
         if (q1 is IEntityQuery eq1)
         {
@@ -80,9 +81,10 @@ public abstract class Processor<Q>(World world) : Processor(world), IProcessorRe
                 hash.Add(t);
         }
         if(q1 is IEventWriter evq)
-            StaticEventReaders.Add(evq.EventDataType);
+            hashEv.Add(evq.EventDataType);
 
         StaticRelatedTypes = [.. hash];
+        StaticEventReaders = [.. hashEv];
     }
     public Q Query => new() { World = World };
 }
@@ -94,6 +96,7 @@ public abstract class Processor<Q1, Q2>(World world) : Processor(world)
     static Processor()
     {
         var hash = new HashSet<Type>();
+        var hashEv = new HashSet<Type>();
         var q1 = new Q1();
         var q2 = new Q2();
         if (q1 is IEntityQuery eq1)
@@ -107,10 +110,11 @@ public abstract class Processor<Q1, Q2>(World world) : Processor(world)
                 hash.Add(t);
         }
         if(q1 is IEventWriter evq)
-            StaticEventReaders.Add(evq.EventDataType);
+            hashEv.Add(evq.EventDataType);
         if(q2 is IEventWriter evq2)
-            StaticEventReaders.Add(evq2.EventDataType);
+            hashEv.Add(evq2.EventDataType);
         StaticRelatedTypes = [.. hash];
+        StaticEventReaders = [.. hashEv];
     }
 
     public Q1 Query1 => new() { World = World };
@@ -125,6 +129,7 @@ public abstract class Processor<Q1, Q2, Q3>(World world) : Processor(world)
     static Processor()
     {
         var hash = new HashSet<Type>();
+        var hashEv = new HashSet<Type>();
         var q1 = new Q1();
         var q2 = new Q2();
         var q3 = new Q3();
@@ -144,12 +149,13 @@ public abstract class Processor<Q1, Q2, Q3>(World world) : Processor(world)
                 hash.Add(t);
         }
         if(q1 is IEventWriter evq)
-            StaticEventReaders.Add(evq.EventDataType);
+            hashEv.Add(evq.EventDataType);
         if(q2 is IEventWriter evq2)
-            StaticEventReaders.Add(evq2.EventDataType);
+            hashEv.Add(evq2.EventDataType);
         if(q3 is IEventWriter evq3)
-            StaticEventReaders.Add(evq3.EventDataType);
+            hashEv.Add(evq3.EventDataType);
         StaticRelatedTypes = [.. hash];
+        StaticEventReaders = [.. hashEv];
     }
 
     public Q1 Query1 => new() { World = World };
@@ -167,6 +173,7 @@ public abstract class Processor<Q1, Q2, Q3, Q4>(World world) : Processor(world)
     static Processor()
     {
         var hash = new HashSet<Type>();
+        var hashEv = new HashSet<Type>();
         var q1 = new Q1();
         var q2 = new Q2();
         var q3 = new Q3();
@@ -192,14 +199,15 @@ public abstract class Processor<Q1, Q2, Q3, Q4>(World world) : Processor(world)
                 hash.Add(t);
         }
         if(q1 is IEventWriter evq)
-            StaticEventReaders.Add(evq.EventDataType);
+            hashEv.Add(evq.EventDataType);
         if(q2 is IEventWriter evq2)
-            StaticEventReaders.Add(evq2.EventDataType);
+            hashEv.Add(evq2.EventDataType);
         if(q3 is IEventWriter evq3)
-            StaticEventReaders.Add(evq3.EventDataType);
+            hashEv.Add(evq3.EventDataType);
         if(q4 is IEventWriter evq4)
-            StaticEventReaders.Add(evq4.EventDataType);
+            hashEv.Add(evq4.EventDataType);
         StaticRelatedTypes = [.. hash];
+        StaticEventReaders = [.. hashEv];
     }
 
     public Q1 Query1 => new() { World = World };

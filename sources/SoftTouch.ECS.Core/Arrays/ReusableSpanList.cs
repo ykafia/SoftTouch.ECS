@@ -27,15 +27,16 @@ public readonly ref struct ReusableSpanList<T>
 
     public ReusableSpanList(Span<T> span) : this()
     {
-        var length = span.Length / 8 * 8 + 1;
+        var length = span.Length + (8 - (span.Length % 8));
         Owner = SpanOwner<T>.Allocate(length, AllocationMode.Clear);
         Count = span.Length;
     }
     public ReusableSpanList(ReadOnlySpan<T> span) : this()
     {
-        var length = span.Length / 8 * 8 + 1;
+        var length = span.Length + (8 - (span.Length % 8));
         Owner = SpanOwner<T>.Allocate(length, AllocationMode.Clear);
         Count = span.Length;
+        span.CopyTo(Span);
     }
 
     /// <summary>

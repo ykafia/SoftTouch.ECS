@@ -9,10 +9,10 @@ namespace SoftTouch.ECS;
 public partial class App
 {
 
-    public App SetStages(ReusableSpanList<Stage> stages)
+    public App SetStages(ReadOnlySpan<Stage> stages)
     {
         Schedule.Clear();
-        foreach (var stage in stages.Span)
+        foreach (var stage in stages)
             if (stage is Extract)
                 throw new Exception("Stages must not contain the stage Extract");
             else if (stage is Startup)
@@ -23,7 +23,7 @@ public partial class App
     }
 
 
-    public App AddProcessors<TStage>(ReusableSpanList<Processor> processors)
+    public App AddProcessors<TStage>(ReadOnlySpan<Processor> processors)
         where TStage : Stage, new()
     {
         foreach(var p in processors)

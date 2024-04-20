@@ -21,6 +21,8 @@ public class Group(WorldStates? states = null, StateEvent? stateEvent = null)
     {
         foreach (var t in p.RelatedTypes)
             RelatedTypes.Add(t);
+        foreach (var t in p.RelatedEvents)
+            RelatedEvents.Add(t);
         Processors.Add(p);
         return this;
     }
@@ -84,7 +86,17 @@ public class Group(WorldStates? states = null, StateEvent? stateEvent = null)
                 if (canBeDeleted)
                     RelatedTypes.Remove(t);
             }
-            #error Should remove related events when not existent in other processors
+            foreach (var t in processor.RelatedTypes)
+            {
+                bool canBeDeleted = true;
+                foreach (var p in Processors)
+                {
+                    if (p.RelatedEvents.Contains(t))
+                        canBeDeleted = false;
+                }
+                if (canBeDeleted)
+                    RelatedEvents.Remove(t);
+            }
             return true;
         }
     }

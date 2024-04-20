@@ -7,6 +7,7 @@ using SoftTouch.ECS.Events;
 using SoftTouch.ECS.Example;
 using SoftTouch.ECS.Processors;
 using SoftTouch.ECS.Querying;
+using SoftTouch.ECS.Scheduling;
 using SoftTouch.ECS.Shared.Components;
 using SoftTouch.ECS.Shared.Processors;
 using SoftTouch.ECS.Storage;
@@ -22,10 +23,17 @@ using System.Diagnostics;
 
 // app.Run();
 
-static void Machin(Resource<EventList> eventList, Query<int, float> e1, Query<NameComponent> namedEntities)
-{
+static void Machin(EventWriter<ChangedAge> eventList, Query<double> e1){}
+static void Machin2(EventWriter<ChangedAge> eventList, Query<int, float> e1, Query<NameComponent> namedEntities){}
 
-}
-var p = Processor.From<Resource<EventList>, Query<int, float>, Query<NameComponent>>(Machin);
-foreach(var t in p.RelatedTypes)
-    Console.WriteLine(t.FullName);
+var app =
+    new App();
+app
+    .AddProcessors<Main>(
+        Processor.From<EventWriter<ChangedAge>, Query<double>>(Machin),
+        Processor.From<EventWriter<ChangedAge>, Query<int, float>, Query<NameComponent>>(Machin2)
+    );
+
+var x = 0;
+// foreach(var t in p.RelatedEvents)
+//     Console.WriteLine(t.FullName);
