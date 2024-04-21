@@ -25,5 +25,6 @@ public struct EventWriter<T> : IEventWriter
     public World World { get; set; }
     public readonly Type EventDataType => typeof(T);
     public readonly IReadOnlyList<T> Read() => ((EventList<T>)World.Resources.Get<EventsResource>().EventStorage[typeof(T)]).AsReadOnly();
+    public readonly void Add(T item) => ((EventList<T>)World.Resources.Get<EventsResource>().EventStorage[typeof(T)]).Add(item);
 }
 

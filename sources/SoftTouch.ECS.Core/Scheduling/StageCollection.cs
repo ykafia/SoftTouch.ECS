@@ -10,7 +10,7 @@ namespace SoftTouch.ECS.Scheduling;
 public class StageCollection : ICollection<Stage>
 {
     readonly Startup startup = new();
-    readonly List<Stage> Stages = [new Main()];
+    readonly List<Stage> Stages = [];
     readonly Extract extract = new();
 
     public Stage this[int i] => Stages[i];

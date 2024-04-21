@@ -12,8 +12,9 @@ namespace SoftTouch.ECS.Scheduling;
 //     }
 // }
 
-public abstract record Stage()
+public abstract class Stage()
 {
+    public App? App { get; set; }
     public ProcessorGroups ProcessorGroups { get; } = [new()];
     List<Task> updateTasks = new(10);
     public void Add<TProcessor>(TProcessor p)
@@ -58,9 +59,9 @@ public abstract record Stage()
     }
 }
 
-public record Startup() : Stage();
-public record Main() : Stage();
-public record Extract() : Stage();
+public class Startup() : Stage();
+public class Main() : Stage();
+public class Extract() : Stage();
 
 public static class StageExtensions
 {

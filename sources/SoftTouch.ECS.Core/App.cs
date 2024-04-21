@@ -24,7 +24,7 @@ public partial class App
     {
         AppTime = new();
         World = new(AppTime);
-        Schedule = new();
+        Schedule = new(this);
         IsRunning = false;
     }
 

@@ -30,8 +30,12 @@ var app =
     new App();
 app
     .AddProcessors<Main>(
-        Processor.From<EventWriter<ChangedAge>, Query<double>>(Machin),
-        Processor.From<EventWriter<ChangedAge>, Query<int, float>, Query<NameComponent>>(Machin2)
+        Processor.From(
+            static (EventWriter<ChangedAge> evw, Query<double> d) => {}
+        ),
+        Processor.From(
+            static (EventWriter<ChangedAge> evw, Query<int, float> d, Query<NameComponent> namedEntities) => {}
+        )
     );
 
 var x = 0;

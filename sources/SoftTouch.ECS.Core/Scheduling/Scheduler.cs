@@ -4,9 +4,10 @@ using SoftTouch.ECS.Processors;
 namespace SoftTouch.ECS.Scheduling;
 
 
-public class Scheduler
+public class Scheduler(App app)
 {
-    public StageCollection Stages { get; } = [];
+    public App App { get; set; } = app;
+    public StageCollection Stages { get; } = [new Main(){ App = app }];
 
     public void Run(bool parallel = true)
     {
@@ -36,7 +37,7 @@ public class Scheduler
                     s.Add(processor);
                 return;
             }
-        var newStage = new TStage();
+        var newStage = new TStage(){ App = App};
         foreach (var processor in stage.Processors.Span)
             newStage.Add(processor);
         Add(newStage);
