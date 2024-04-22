@@ -5,6 +5,7 @@ namespace SoftTouch.ECS.States;
 
 
 
+
 public class WorldStates()
 {
     // TODO: 
@@ -36,7 +37,7 @@ public class WorldStates()
         return states.Remove(typeof(T)) && nextStates.Remove(typeof(T));
     }
 
-    public void Update()
+    internal void Update()
     {
         (nextStates, states) = (states, nextStates);
         nextStates = nextStates.ToDictionary(p => p.Key, p => 0U);
