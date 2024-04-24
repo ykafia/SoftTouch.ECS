@@ -1,29 +1,29 @@
 using System.Text;
+using SoftTouch.ECS.Arrays;
 using SoftTouch.ECS.Processors;
 using SoftTouch.ECS.States;
 
 namespace SoftTouch.ECS.Scheduling;
 
 
-public class Group(WorldStates? states = null, StateEvent? stateEvent = null)
+public class Group(StateTransition? transition = null)
 {
-    HashSet<Type> RelatedEvents = [];
-    HashSet<Type> RelatedTypes = [];
-    List<Processor> Processors = [];
-    List<Processor> SingleShots = [];
-    WorldStates States = states!;
-    StateEvent? stateEvent = stateEvent;
+    HashSet<Type> relatedEventWriterTypes = [];
+    HashSet<Type> relatedTypes = [];
+    List<Processor> processors = [];
+    List<Processor> singleShots = [];
+    public StateTransition? StateEvent { get; } = transition;
 
-    public int Count => Processors.Count;
+    public int Count => processors.Count;
 
     internal Group With<TProcessor>(TProcessor p)
         where TProcessor : Processor
     {
         foreach (var t in p.RelatedTypes)
-            RelatedTypes.Add(t);
-        foreach (var t in p.RelatedEvents)
-            RelatedEvents.Add(t);
-        Processors.Add(p);
+            relatedTypes.Add(t);
+        foreach (var t in p.RelatedEventWriterTypes)
+            relatedEventWriterTypes.Add(t);
+        processors.Add(p);
         return this;
     }
 
@@ -34,30 +34,44 @@ public class Group(WorldStates? states = null, StateEvent? stateEvent = null)
     /// <typeparam name="TProcessor"></typeparam>
     /// <param name="p">Processor to add to the group</param>
     /// <returns>True if the processor has been added to the group, false if not.</returns>
-    public bool TryAdd<TProcessor>(TProcessor p)
+    public bool TryAdd<TProcessor>(TProcessor p, StateTransition? st = null)
         where TProcessor : Processor
     {
         var related = false;
-        foreach (var t in p.RelatedEvents)
-            if (RelatedEvents.Contains(t))
+        // Checks if p write events of specific type, 
+        // The rule is that two event writers cannot happen in parallel, so they have to happen sequentially.
+        // They have to happen in the same group.
+        foreach (var t in p.RelatedEventWriterTypes)
+            if (relatedEventWriterTypes.Contains(t))
                 return false;
-        if (p.RelatedTypes.Count == 0 && RelatedTypes.Count == 0)
+
+
+        // TODO: check if this approach is better
+        // using ReusableList<Type> processorRelatedTypes = [
+        //     ..p.RelatedTypes, 
+        //     ..p.RelatedEventWriterTypes
+        // ];
+        // using ReusableList<Type> groupRelatedTypes = [
+        //     ..this.relatedTypes,
+        //     ..this.relatedEventWriterTypes
+        // ];
+        if (p.RelatedTypes.Count == 0 && relatedTypes.Count == 0)
         {
-            Processors.Add(p);
+            processors.Add(p);
             return true;
         }
-        else if (p.RelatedTypes.Count > 0 && RelatedTypes.Count > 0)
+        else if (p.RelatedTypes.Count > 0 && relatedTypes.Count > 0)
         {
             foreach (var t in p.RelatedTypes)
             {
-                if (RelatedTypes.Contains(t))
+                if (relatedTypes.Contains(t))
                 {
                     related = true;
-                    Processors.Add(p);
+                    processors.Add(p);
                     foreach (var a in p.RelatedTypes)
-                        RelatedTypes.Add(a);
-                    foreach (var a in p.RelatedEvents)
-                        RelatedEvents.Add(a);
+                        relatedTypes.Add(a);
+                    foreach (var a in p.RelatedEventWriterTypes)
+                        relatedEventWriterTypes.Add(a);
                     break;
                 }
             }
@@ -70,32 +84,32 @@ public class Group(WorldStates? states = null, StateEvent? stateEvent = null)
     public bool TryRemove<TProcessor>(TProcessor processor)
         where TProcessor : Processor
     {
-        if (!Processors.Contains(processor))
+        if (!processors.Contains(processor))
             return false;
         else
         {
-            Processors.Remove(processor);
+            processors.Remove(processor);
             foreach (var t in processor.RelatedTypes)
             {
                 bool canBeDeleted = true;
-                foreach (var p in Processors)
+                foreach (var p in processors)
                 {
                     if (p.RelatedTypes.Contains(t))
                         canBeDeleted = false;
                 }
                 if (canBeDeleted)
-                    RelatedTypes.Remove(t);
+                    relatedTypes.Remove(t);
             }
             foreach (var t in processor.RelatedTypes)
             {
                 bool canBeDeleted = true;
-                foreach (var p in Processors)
+                foreach (var p in processors)
                 {
-                    if (p.RelatedEvents.Contains(t))
+                    if (p.RelatedEventWriterTypes.Contains(t))
                         canBeDeleted = false;
                 }
                 if (canBeDeleted)
-                    RelatedEvents.Remove(t);
+                    relatedEventWriterTypes.Remove(t);
             }
             return true;
         }
@@ -103,25 +117,11 @@ public class Group(WorldStates? states = null, StateEvent? stateEvent = null)
 
     public void Update()
     {
-        if (stateEvent is not null)
-        {
-            if (States.IsValid(stateEvent.Value))
-            {
-                foreach (var p in Processors)
-                    p.Update();
-                foreach (var p in SingleShots)
-                    p.Update();
-                SingleShots.Clear();
-            }
-        }
-        else
-        {
-            foreach (var p in Processors)
-                p.Update();
-            foreach (var p in SingleShots)
-                p.Update();
-            SingleShots.Clear();
-        }
+        foreach (var p in processors)
+            p.Update();
+        foreach (var p in singleShots)
+            p.Update();
+        singleShots.Clear();
     }
 
     public Enumerator GetEnumerator() => new(this);
@@ -130,7 +130,7 @@ public class Group(WorldStates? states = null, StateEvent? stateEvent = null)
     public ref struct Enumerator(Group group)
     {
         Group group = group;
-        List<Processor>.Enumerator currentEnumerator = group.Processors.GetEnumerator();
+        List<Processor>.Enumerator currentEnumerator = group.processors.GetEnumerator();
         bool processedFirstOnes = false;
 
         public Processor Current => currentEnumerator.Current;
@@ -142,7 +142,7 @@ public class Group(WorldStates? states = null, StateEvent? stateEvent = null)
             else if (!processedFirstOnes && !currentEnumerator.MoveNext())
             {
                 processedFirstOnes = true;
-                currentEnumerator = group.SingleShots.GetEnumerator();
+                currentEnumerator = group.singleShots.GetEnumerator();
                 return currentEnumerator.MoveNext();
             }
             else if (processedFirstOnes && currentEnumerator.MoveNext())
@@ -155,7 +155,7 @@ public class Group(WorldStates? states = null, StateEvent? stateEvent = null)
     public override string ToString()
     {
         var b = new StringBuilder().Append('[');
-        if (Processors.Count + SingleShots.Count == 0)
+        if (processors.Count + singleShots.Count == 0)
             return b.Append(']').ToString();
         bool start = true;
 

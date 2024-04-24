@@ -22,7 +22,7 @@ public abstract class Processor : IProcessorRelation
     public static ImmutableList<Type> StaticEventReaders { get; internal set; } = [];
     public static ImmutableList<Type> StaticRelatedTypes { get; internal set; } = [];
     public ImmutableList<Type> RelatedTypes => StaticRelatedTypes;
-    public ImmutableList<Type> RelatedEvents => StaticEventReaders;
+    public ImmutableList<Type> RelatedEventWriterTypes => StaticEventReaders;
 
     public Processor()
     {

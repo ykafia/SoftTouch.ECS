@@ -4,17 +4,15 @@ using Microsoft.Extensions.ObjectPool;
 
 namespace SoftTouch.ECS.States;
 
-
-public record struct StateChange(uint Exits, uint Enters, Type StateType);
-
 public class WorldStates()
 {
-    // TODO: 
-    // readonly HashSet<Type> Changed = [];
+    readonly List<Type> types = [];
     Dictionary<Type, uint> nextStates = [];
     Dictionary<Type, uint> states = [];
 
-    List<StateChange> stateChanges = [];
+    readonly List<StateTransition> stateChanges = [];
+
+    public IReadOnlyList<StateTransition> StateChanges => stateChanges;
 
     public T Get<T>() where T : Enum
     {
@@ -30,7 +28,7 @@ public class WorldStates()
     public void Set<T>(T value)
         where T : Enum
     {
-        if(!states.TryGetValue(typeof(T), out _))
+        if (!states.TryGetValue(typeof(T), out _))
             states[typeof(T)] = 0;
         nextStates[typeof(T)] = Convert.ToUInt32(value);
     }
@@ -43,18 +41,26 @@ public class WorldStates()
     internal void Update()
     {
         stateChanges.Clear();
-        foreach(var t in states.Keys)
-        {
-            
-        }
+        types.Clear();
+        types.AddRange(states.Keys);
+        foreach (var t in types)
+            if (states[t] != nextStates[t])
+            {
+                stateChanges.Add(new(StateStatus.OnExit, states[t], t));
+                stateChanges.Add(new(StateStatus.OnEnter, nextStates[t], t));
+            }
+            else
+                stateChanges.Add(new(StateStatus.OnActive, states[t], t));
         (nextStates, states) = (states, nextStates);
-        nextStates = nextStates.ToDictionary(p => p.Key, p => 0U);
+
+        foreach (var (k, v) in states)
+            nextStates[k] = v;
     }
 
-    internal bool IsValid(StateEvent stateEvent)
-    {
-        
-        return false;
-    }
-
+    public bool IsValid(in StateTransition e)
+        => e.Status switch
+        {
+            StateStatus.OnActive => stateChanges.Contains(e) || stateChanges.Contains(e with { Status = StateStatus.OnEnter }),
+            _ => stateChanges.Contains(e),
+        };
 }

@@ -35,6 +35,8 @@ public sealed partial class World
         Resources.Set(new WorldCommands(this));
         Entities = new(this);
     }
+    public TResource GetResource<TResource>() where TResource : class 
+        => Resources.Get<TResource>();
 
     public IEnumerable<Archetype> QueryArchetypes(ArchetypeID types)
     {
@@ -98,4 +100,5 @@ public sealed partial class World
             Archetypes[arch.ID] = arch.Clone();
         }
     }
+
 }

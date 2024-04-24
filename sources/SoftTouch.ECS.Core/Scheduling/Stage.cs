@@ -1,5 +1,6 @@
 using CommunityToolkit.HighPerformance.Helpers;
 using SoftTouch.ECS.Processors;
+using SoftTouch.ECS.States;
 using System.Runtime.InteropServices;
 
 namespace SoftTouch.ECS.Scheduling;
@@ -43,13 +44,23 @@ public abstract class Stage()
             }
             else if (parallel && ProcessorGroups.Count == 2 && ProcessorGroups[0].Count == 0)
             {
-                ProcessorGroups[1].Update();
+                var action = ProcessorGroups[1].StateEvent;
+                if (action != null && App != null && !App.World.GetResource<WorldStates>().IsValid(action.Value))
+                    return;
+                else
+                    ProcessorGroups[1].Update();
             }
             else if (parallel && ProcessorGroups.Count > 2)
             {
                 updateTasks.Clear();
                 foreach (var grp in ProcessorGroups)
-                    updateTasks.Add(Task.Run(grp.Update));
+                {
+                    var action = grp.StateEvent;
+                    if (action != null && App != null && !App.World.GetResource<WorldStates>().IsValid(action.Value))
+                        continue;
+                    else
+                        updateTasks.Add(Task.Run(grp.Update));
+                }
                 Task.WhenAll();
             }
             else
