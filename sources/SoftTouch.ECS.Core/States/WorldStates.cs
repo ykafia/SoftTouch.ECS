@@ -1,10 +1,11 @@
 
 using System.Runtime.CompilerServices;
+using Microsoft.Extensions.ObjectPool;
 
 namespace SoftTouch.ECS.States;
 
 
-
+public record struct StateChange(uint Exits, uint Enters, Type StateType);
 
 public class WorldStates()
 {
@@ -12,6 +13,8 @@ public class WorldStates()
     // readonly HashSet<Type> Changed = [];
     Dictionary<Type, uint> nextStates = [];
     Dictionary<Type, uint> states = [];
+
+    List<StateChange> stateChanges = [];
 
     public T Get<T>() where T : Enum
     {
@@ -39,6 +42,11 @@ public class WorldStates()
 
     internal void Update()
     {
+        stateChanges.Clear();
+        foreach(var t in states.Keys)
+        {
+            
+        }
         (nextStates, states) = (states, nextStates);
         nextStates = nextStates.ToDictionary(p => p.Key, p => 0U);
     }
@@ -48,4 +56,5 @@ public class WorldStates()
         
         return false;
     }
+
 }
