@@ -9,7 +9,7 @@
     <NoWarn>$(NoWarn);NU5128</NoWarn>
     <PackageTags>ECS</PackageTags>
     <Description>C# ECS implementation based on FLECS</Description>
-    <Version>1.0.3</Version>
+    <Version>0.0.4</Version>
   </PropertyGroup>
 
   <ItemGroup>

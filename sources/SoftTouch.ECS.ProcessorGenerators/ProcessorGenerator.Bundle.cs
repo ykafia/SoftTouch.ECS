@@ -36,8 +36,12 @@ namespace SoftTouch.ECS.ProcessorGenerators
             var code = new CodeWriter();
 
             Dictionary<string, CodeWriter> dict = [];
-            code.WriteLine($"namespace {projectAssembly.Name}.Bundles;")
-                .WriteLine("using SoftTouch.ECS;");
+            code.WriteLine("using SoftTouch.ECS;")
+                .WriteLine("using SoftTouch.ECS.Processors;")
+                .WriteLine("using SoftTouch.ECS.Querying;")
+                .WriteLine("using SoftTouch.ECS.Scheduling;")
+                .WriteLine($"namespace {projectAssembly.Name}.Bundles;");
+                
             if (context.SyntaxReceiver is MethodsWithAttributesSR mw)
             {
                 foreach (var m in mw.CandidateMethods)
@@ -52,6 +56,8 @@ namespace SoftTouch.ECS.ProcessorGenerators
                         var name = symbol.GetAttributes().First().ConstructorArguments.First().Value?.ToString();
                         if (!string.IsNullOrEmpty(name))
                         {
+                            code.WriteLine($"// {name} Step 3");
+
                             CodeWriter? subCode = null!;
                             if (!dict.TryGetValue(name, out subCode))
                             {
@@ -60,24 +66,21 @@ namespace SoftTouch.ECS.ProcessorGenerators
                             }
                             if (!string.IsNullOrEmpty(name))
                             {
-                                subCode.WriteLine($"public struct {name}Bundle : IBundle")
+                                subCode.WriteLine($"public struct {name}Bundle : IProcessorBundle")
                                 .OpenBlock()
                                 .WriteLine("public App AddBundleElements(App app)")
                                 .OpenBlock()
-                                .WriteLine($"app.AddProcessor<Main>(Processor.From({m.Parent.}{m.Identifier}))")
+                                .WriteLine($"app.AddProcessor<Main>(Processor.From<{string.Join(", ", m.ParameterList.Parameters.Select(p => $"{p.Type}"))}>({symbol.ContainingType.ToDisplayString()}.{m.Identifier}));")
+                                .WriteLine("return app;")
                                 .CloseAllBlocks();
-                                // subCode.Write($"public static string {m.Identifier.Text} = \"")
-                                //     .Write(string.Join(", ", symbol.GetAttributes().SelectMany(x => x.ConstructorArguments).Select(n => n.Value)))
-                                //     .Write(string.Join(", ", symbol.GetAttributes().SelectMany(ad => ad.NamedArguments).Select(n => $"{n.Key}, {n.Value}")))
-                                //     .Write("\";")
-                                //     .WriteEmptyLines(1);
+                                code.WriteLine(subCode.ToString());
                             }
                         }
                     }
                 }
             }
             code.CloseAllBlocks();
-            context.AddSource("Bundless.g.cs", code.ToString());
+            context.AddSource("Bundles.g.cs", code.ToString());
         }
 
     }

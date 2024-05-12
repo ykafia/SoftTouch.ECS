@@ -11,7 +11,10 @@ public partial class App
     public App AddBundle<TStage, TBundle>() 
         where TStage : Stage, new()
         where TBundle : struct, IProcessorBundle
-        => new TBundle();
+    {
+        new TBundle().AddBundleElements(this);
+        return this;
+    }
 
     public App SetStages(ReadOnlySpan<Stage> stages)
     {
