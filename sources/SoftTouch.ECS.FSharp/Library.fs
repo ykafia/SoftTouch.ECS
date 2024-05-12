@@ -5,11 +5,12 @@ open SoftTouch.ECS.Arrays
 open FSharp.Core
 open System
 open System.Runtime.CompilerServices
+open System.Runtime.InteropServices
 open SoftTouch.ECS.Storage
 open SoftTouch.ECS.Processors
 open SoftTouch.ECS.Querying
 
-module ProcessorTypes =
+module ProcessorTypes =   
 
     type FProcessor<'Q1 when 'Q1 :> IWorldQuery and 'Q1 : struct and 'Q1 :> ValueType and 'Q1 : (new: unit -> 'Q1)>
         (updater : 'Q1 -> unit) =
@@ -113,12 +114,22 @@ module World =
         world[index]
 
 module App =
-    let update(app : App) =
-        app.Update()
+    open SoftTouch.ECS.Scheduling
+    let update (frames: int) (app : App) =
+        for i in 0..frames do app.Update()
+        app
+    let run(app : App) =
+        app.Run()
         app
 
-    let addProcessor<'T when 'T :> Processor and 'T : (new: unit -> 'T)>(app : App) =
+    let addGenericProcessor<'T when 'T :> Processor and 'T : (new: unit -> 'T)>(app : App) =
         app.AddProcessor<'T>()
+    let addProcessor (processor : Processor) (app : App) =
+        app.AddProcessor(processor)
+    let addProcessors (processors: Processor list) (app : App) =
+        app.AddProcessors<Main>(processors |> List.toArray)
+    let addProcessorsTo (stage: 't & #Stage) (processors: Processor list) (app : App) =
+        app.AddProcessors<'t>(processors |> List.toArray)
 
     let addStartupProcessor<'T when 'T :> Processor and 'T : (new: unit -> 'T)>(processor, app : App) =
         app.AddStartupProcessor<'T>()
@@ -220,4 +231,34 @@ module Processor =
 
 
 
+module Proc =
+    let from<'Q1 when 'Q1 :> IWorldQuery and 'Q1 : struct and 'Q1 :> ValueType and 'Q1 : (new: unit -> 'Q1)> 
+            (func : 'Q1 -> unit) =
+        Processor.From<'Q1>(func);
+    let from2<'Q1, 'Q2 
+                    when 'Q1 :> IWorldQuery and 'Q1 : struct and 'Q1 :> ValueType and 'Q1 : (new: unit -> 'Q1)
+                    and 'Q2 :> IWorldQuery and 'Q2 : struct and 'Q2 :> ValueType and 'Q2 : (new: unit -> 'Q2)> 
+            (func : 'Q1 -> 'Q2 -> unit) =
+        Processor.From<'Q1, 'Q2>(func);
     
+    let from3<'Q1, 'Q2, 'Q3
+                when 
+                   'Q1 :> IWorldQuery and 'Q1 : struct and 'Q1 :> ValueType and 'Q1 : (new: unit -> 'Q1)
+                and 
+                   'Q2 :> IWorldQuery and 'Q2 : struct and 'Q2 :> ValueType and 'Q2 : (new: unit -> 'Q2)
+                and 
+                   'Q3 :> IWorldQuery and 'Q3 : struct and 'Q3 :> ValueType and 'Q3 : (new: unit -> 'Q3)> 
+        (func : 'Q1 -> 'Q2 -> 'Q3 -> unit) =
+        Processor.From<'Q1, 'Q2, 'Q3>(func);
+    
+    let from4<'Q1, 'Q2, 'Q3, 'Q4
+                when 
+                   'Q1 :> IWorldQuery and 'Q1 : struct and 'Q1 :> ValueType and 'Q1 : (new: unit -> 'Q1)
+                and 
+                   'Q2 :> IWorldQuery and 'Q2 : struct and 'Q2 :> ValueType and 'Q2 : (new: unit -> 'Q2)
+                and 
+                   'Q3 :> IWorldQuery and 'Q3 : struct and 'Q3 :> ValueType and 'Q3 : (new: unit -> 'Q3)
+                and 
+                   'Q4 :> IWorldQuery and 'Q4 : struct and 'Q4 :> ValueType and 'Q4 : (new: unit -> 'Q4)> 
+        (func : 'Q1 -> 'Q2 -> 'Q3 -> 'Q4 -> unit) =
+        Processor.From<'Q1, 'Q2, 'Q3, 'Q4>(func);

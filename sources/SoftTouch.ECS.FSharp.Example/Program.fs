@@ -1,6 +1,8 @@
 ﻿open SoftTouch.ECS
 open SoftTouch.ECS.FSharp
 open SoftTouch.ECS.Querying
+open SoftTouch.ECS.Scheduling
+open SoftTouch.ECS.Attributes
 
 [<Struct>]
 type NameComponent = 
@@ -11,7 +13,7 @@ type NameComponent =
 
 let app = new App()
 
-
+[<Bundle("MyBundle")>]
 let startup (commands : Commands) =
     commands
     |> Commands.spawn
@@ -31,13 +33,38 @@ let nameSystem (entities : Query<NameComponent>) : unit =
         entity.Get<NameComponent>()
         |> printfn "Changed to %A"
 
+let twoEntities (entities1 : Query<NameComponent>) (entities2 : Query<NameComponent>) : unit =
+    for entity in entities1 do
+        entity.Get<NameComponent>().Name
+        |> printfn "original name is : %s"
+
+
+        let name = NameComponent "Kujo Jolyne"
+        entity.Set(&name)
+
+        entity.Get<NameComponent>()
+        |> printfn "Changed to %A"
+    for entity in entities2 do
+        entity.Get<NameComponent>().Name
+        |> printfn "original name is : %s"
+
+
+        let name = NameComponent "Kujo Jolyne"
+        entity.Set(&name)
+
+        entity.Get<NameComponent>()
+        |> printfn "Changed to %A"
+
 let x = 0;
 
 app
-|> Processor.AddStartup startup
-|> Processor.Add nameSystem
-|> App.update
-|> App.update
+|> App.addProcessor (Proc.from startup)
+|> App.addProcessor (Proc.from nameSystem)
+|> App.addProcessors [Proc.from nameSystem; Proc.from2 twoEntities]
+|> App.addProcessorsTo (Main()) [
+    Proc.from nameSystem
+]
+|> App.update 2
 |> (fun app -> app.World)
 |> World.getEntity 0
 |> ignore

@@ -8,6 +8,10 @@ namespace SoftTouch.ECS;
 
 public partial class App
 {
+    public App AddBundle<TStage, TBundle>() 
+        where TStage : Stage, new()
+        where TBundle : struct, IProcessorBundle
+        => new TBundle();
 
     public App SetStages(ReadOnlySpan<Stage> stages)
     {

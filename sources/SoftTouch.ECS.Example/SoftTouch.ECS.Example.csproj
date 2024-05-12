@@ -1,6 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<ItemGroup>
+
+		<ProjectReference
+			Include="..\SoftTouch.ECS.ProcessorGenerators\SoftTouch.ECS.ProcessorGenerators.csproj"
+			OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\SoftTouch.ECS\SoftTouch.ECS.csproj" />
 		<ProjectReference Include="..\SoftTouch.ECS.Shared\SoftTouch.ECS.Shared.csproj" />
 	</ItemGroup>
@@ -11,6 +15,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<PublishAot>true</PublishAot>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 	</PropertyGroup>
 
 </Project>
