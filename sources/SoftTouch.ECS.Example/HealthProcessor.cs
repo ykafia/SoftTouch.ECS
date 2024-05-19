@@ -15,6 +15,12 @@ public static class BundledFunctions
     {
         entities.ForEach((ref int age) => age += 1);
     }
+    
+    [Bundle("Hello")]
+    public static void MyNotWorkingFunction(Query<int> entities, Query<float> somethingElse)
+    {
+        entities.ForEach((ref int age) => age += 1);
+    }
 }
 
 public class HealthProcessor : Processor<Query<HealthComponent>>

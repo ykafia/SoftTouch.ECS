@@ -3,6 +3,7 @@
 
 using SoftTouch.ECS;
 using SoftTouch.ECS.Arrays;
+using SoftTouch.ECS.Attributes;
 using SoftTouch.ECS.Events;
 using SoftTouch.ECS.Example;
 using SoftTouch.ECS.Processors;
@@ -22,8 +23,9 @@ using System.Diagnostics;
 //     .AddProcessor<WriteAge>();
 
 // app.Run();
-
+[Bundle("MachinBundle")]
 static void Machin(EventWriter<ChangedAge> eventList, Query<double> e1){}
+[Bundle("MachinBundle")]
 static void Machin2(EventWriter<ChangedAge> eventList, Query<int, float> e1, Query<NameComponent> namedEntities){}
 
 var app =
