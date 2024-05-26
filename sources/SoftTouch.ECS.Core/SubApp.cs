@@ -2,12 +2,18 @@ using SoftTouch.ECS.Scheduling;
 
 namespace SoftTouch.ECS;
 
-public class SubApp : App
+/// <summary>
+/// A sub app running in parallel after the app.
+/// </summary>
+/// <param name="parent"></param>
+public class SubApp(App parent) : App
 {
+    public App Parent { get; } = parent;
     public override void Update(bool parallel = true)
     {
         AppTime.Update();
         Schedule.Run<Extract>(false);
         Schedule.Run(parallel);
     }
+
 }

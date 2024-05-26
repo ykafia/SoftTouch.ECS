@@ -5,14 +5,6 @@ using System.Runtime.InteropServices;
 
 namespace SoftTouch.ECS.Scheduling;
 
-// public readonly struct GroupUpdater : IRefAction<ProcessorGroup>
-// {
-//     public void Invoke(ref ProcessorGroup item)
-//     {
-//         item.Update();
-//     }
-// }
-
 public abstract class Stage()
 {
     public App? App { get; set; }
