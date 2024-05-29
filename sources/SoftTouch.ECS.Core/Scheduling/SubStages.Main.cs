@@ -1,4 +1,4 @@
-namespace SoftTouch.ECS.Scheduling2;
+namespace SoftTouch.ECS.Scheduling;
 
 
 #region Startup

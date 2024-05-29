@@ -10,19 +10,18 @@ Console.WriteLine("Hello, World!");
 
 var app = 
     new App()
-    .SetStages<Main>()
     .AddStartupProcessor<SpawnEntities>()
-    .AddProcessors<Main, CameraUpdater, MoveCube, MoveLight>();
+    .AddProcessors<Update, CameraUpdater, MoveCube, MoveLight>();
 
-var renderApp = 
-    new SubApp()
-    .SetStages<Render, RenderEnd>()
-    .AddProcessors<Startup, BeginDraw>()
-    .AddProcessors<Render, RenderCubes>()
-    .AddProcessors<RenderEnd, EndDraw>();
+// var renderApp = 
+//     new SubApp()
+//     .SetStages<Render, RenderEnd>()
+//     .AddProcessors<Startup, BeginDraw>()
+//     .AddProcessors<Render, RenderCubes>()
+//     .AddProcessors<RenderEnd, EndDraw>();
 
-app.SubApp = (SubApp)renderApp;
-Raylib.InitWindow(800, 600, "MyGame");
+// app.SubApp = (SubApp)renderApp;
+// Raylib.InitWindow(800, 600, "MyGame");
 
 
 while (!Raylib.WindowShouldClose())

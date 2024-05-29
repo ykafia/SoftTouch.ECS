@@ -1,4 +1,8 @@
-namespace SoftTouch.ECS.Scheduling2;
+using System.Reflection.Metadata.Ecma335;
+using System.Reflection.PortableExecutable;
+using SoftTouch.ECS.Processors;
+
+namespace SoftTouch.ECS.Scheduling;
 
 public abstract record Stage;
 
@@ -6,10 +10,10 @@ public abstract record Stage<T> : Stage
     where T : Stage<T>
 {
     protected virtual List<SubStage<T>> SubStages { get; } = [];
-    public void Update()
+    public void Update(bool parallel = true)
     {
         foreach (var subStage in SubStages)
-            subStage.Update();
+            subStage.Update(parallel);
     }
 
     public void InsertBefore<TSubStage, TBefore>()
@@ -38,6 +42,18 @@ public abstract record Stage<T> : Stage
                 return;
             }
         }
+    }
+
+    public bool TryAdd<TSubStage>(Processor processor)
+        where TSubStage : SubStage
+    {
+        foreach(var subStage in SubStages)
+            if(subStage.GetType() == typeof(TSubStage))
+            {
+                subStage.Add(processor);
+                return true;
+            }
+        return false;
     }
 }
 

@@ -12,8 +12,9 @@ public class SubApp(App parent) : App
     public override void Update(bool parallel = true)
     {
         AppTime.Update();
-        Schedule.Run<Extract>(false);
+        Schedule.RunExtract();
         Schedule.Run(parallel);
     }
-
 }
+
+public class RenderApp(App parent) : SubApp(parent);

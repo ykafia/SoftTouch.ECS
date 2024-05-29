@@ -16,10 +16,7 @@ public sealed partial class World
 
     public WorldCommands Commands => Resources.Get<WorldCommands>();
 
-    public EntityMeta this[int id]
-    {
-        get => Entities[id];
-    }
+    public EntityMeta this[int id] => Entities[id];
 
     public World()
     {

@@ -127,8 +127,8 @@ module App =
     let addProcessor (processor : Processor) (app : App) =
         app.AddProcessor(processor)
     let addProcessors (processors: Processor list) (app : App) =
-        app.AddProcessors<Main>(processors |> List.toArray)
-    let addProcessorsTo (stage: 't & #Stage) (processors: Processor list) (app : App) =
+        app.AddProcessors<Update>(processors |> List.toArray)
+    let addProcessorsTo (stage: 't & #SubStage) (processors: Processor list) (app : App) =
         app.AddProcessors<'t>(processors |> List.toArray)
 
     let addStartupProcessor<'T when 'T :> Processor and 'T : (new: unit -> 'T)>(processor, app : App) =

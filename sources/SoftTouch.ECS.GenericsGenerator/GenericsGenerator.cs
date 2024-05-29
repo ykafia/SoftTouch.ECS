@@ -41,17 +41,14 @@ public class GenericsGenerator : ISourceGenerator
             var range = Enumerable.Range(1, i + 1);
             code
                 .WriteLine($"public App AddProcessors<TStage, {string.Join(", ", range.Select(x => $"P{x}"))}>()")
-                .WriteLine($"    where TStage : Stage, new()");
+                .WriteLine($"    where TStage: SubStage");
             foreach (var r in range)
                 code.WriteLine($"    where P{r} : Processor, new()");
             code
-                .OpenBlock()
-                .WriteLine("using var merge = new MergeStage<TStage>")
-                .OpenBlock()
-                .WriteLine($"Processors = [{string.Join(", ", range.Select(r => $"new P{ r }(){{World = World}}"))}]")
-                .CloseBlockWith(";");
+                .OpenBlock();
+            foreach(var r in range.Select(x => $"P{x}"))
+                code.WriteLine($"Schedule.Add<TStage>(new {r}());");
             code
-                .WriteLine("Schedule.Add(merge);")
                 .WriteLine("return this;")
                 .CloseBlock();
         }
@@ -60,32 +57,11 @@ public class GenericsGenerator : ISourceGenerator
             var range = Enumerable.Range(1, i + 1);
             code
                 .WriteLine($"public App AddProcessors<TStage>({string.Join(", ", range.Select(x => $"Processor p{x}"))})")
-                .WriteLine("    where TStage : Stage, new()");
+                .WriteLine("    where TStage: SubStage");
             code
                 .OpenBlock()
-                .WriteLine("using var merge = new MergeStage<TStage>")
-                .OpenBlock()
-                .WriteLine($"Processors = [{string.Join(", ",range.Select(r => $"p{r}"))}]")
-                .CloseBlockWith(";");
-            
-            code.WriteLine("foreach(var e in merge.Processors.Span)")
-                .WriteLine("    e.World = World;");
-
-            code
-                .WriteLine("Schedule.Add(merge);")
+                .WriteLine($"Schedule.Add<TStage>([{string.Join(", ",range.Select(x => $"p{x}"))}]);")
                 .WriteLine("return this;")
-                .CloseBlock();
-        }
-        for (int i = 0; i < 16; i++)
-        {
-            var range = Enumerable.Range(1, i + 1);
-            code
-                .WriteLine($"public App SetStages<{string.Join(", ", range.Select(x => $"TStage{x}"))}>()");
-            foreach(var e in range)
-                code.WriteLine($"    where TStage{e} : Stage, new()");
-            code
-                .OpenBlock()
-                .WriteLine($"return SetStages([{string.Join(", ", range.Select(r => $"new TStage{r}()"))}]);")
                 .CloseBlock();
         }
         code.CloseAllBlocks();

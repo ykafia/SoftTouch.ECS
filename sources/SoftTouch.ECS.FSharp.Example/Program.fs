@@ -61,7 +61,7 @@ app
 |> App.addProcessor (Proc.from startup)
 |> App.addProcessor (Proc.from nameSystem)
 |> App.addProcessors [Proc.from nameSystem; Proc.from2 twoEntities]
-|> App.addProcessorsTo (Main()) [
+|> App.addProcessorsTo (Update()) [
     Proc.from nameSystem
 ]
 |> App.update 2

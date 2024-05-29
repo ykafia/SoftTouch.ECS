@@ -82,7 +82,7 @@ public partial class ProcessorGenerator : ISourceGenerator
                             dict[name!] = subCode;
                         }
                         subCode?
-                            .WriteLine($"app.AddProcessor<Main>(Processor.From<{string.Join(", ", m.ParameterList.Parameters.Select(p => $"{p.Type}"))}>({symbol.ContainingType.ToDisplayString()}.{m.Identifier}));");
+                            .WriteLine($"app.AddProcessor<Update>(Processor.From<{string.Join(", ", m.ParameterList.Parameters.Select(p => $"{p.Type}"))}>({symbol.ContainingType.ToDisplayString()}.{m.Identifier}));");
                     }
                 }
                 else

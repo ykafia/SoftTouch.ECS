@@ -31,7 +31,7 @@ static void Machin2(EventWriter<ChangedAge> eventList, Query<int, float> e1, Que
 var app =
     new App();
 app
-    .AddProcessors<Main>(
+    .AddProcessors<Update>(
         Processor.From(
             static (EventWriter<ChangedAge> evw, Query<double> d) => {}
         ),

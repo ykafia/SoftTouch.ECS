@@ -2,5 +2,5 @@ using SoftTouch.ECS.Scheduling;
 
 namespace SoftTouch.ECS.Example.Rlib;
 
-public class Render() : Stage();
-public class RenderEnd() : Stage();
+public record MainRender : SubStage<Render>;
+public record RenderEnd : SubStage<Render>;
