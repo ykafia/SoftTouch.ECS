@@ -16,6 +16,15 @@ public abstract record Stage<T> : Stage
             subStage.Update(parallel);
     }
 
+    internal void SetStages<TStage>(ReadOnlySpan<SubStage<TStage>> subStages)
+        where TStage : T
+    {
+        SubStages.Clear();
+        foreach (var subStage in subStages)
+            if(subStage is SubStage<T> ss)
+                SubStages.Add(ss);
+    }
+
     public void InsertBefore<TSubStage, TBefore>()
         where TSubStage : SubStage<T>, new()
         where TBefore : SubStage<T>

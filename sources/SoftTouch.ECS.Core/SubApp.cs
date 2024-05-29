@@ -1,3 +1,4 @@
+using SoftTouch.ECS.Arrays;
 using SoftTouch.ECS.Scheduling;
 
 namespace SoftTouch.ECS;
@@ -14,6 +15,13 @@ public class SubApp(App parent) : App
         AppTime.Update();
         Schedule.RunExtract();
         Schedule.Run(parallel);
+    }
+
+    public SubApp SetStages<TStage>(ReusableList<SubStage<TStage>> subStages)
+        where TStage : Stage
+    {
+        Schedule.SetStages(subStages);
+        return this;
     }
 }
 

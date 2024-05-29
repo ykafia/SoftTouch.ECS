@@ -8,26 +8,27 @@ using SoftTouch.ECS.Scheduling;
 using SoftTouch.ECS.Storage;
 Console.WriteLine("Hello, World!");
 
-var app = 
+var app =
     new App()
     .AddStartupProcessor<SpawnEntities>()
     .AddProcessors<Update, CameraUpdater, MoveCube, MoveLight>();
 
-// var renderApp = 
-//     new SubApp()
-//     .SetStages<Render, RenderEnd>()
-//     .AddProcessors<Startup, BeginDraw>()
-//     .AddProcessors<Render, RenderCubes>()
-//     .AddProcessors<RenderEnd, EndDraw>();
+var renderApp =
+    new RenderApp(app)
+    .SetStages([new StartRender(), new MainRender(), new EndRender()])
+    .AddProcessors<StartRender, BeginDraw>()
+    .AddProcessors<MainRender, RenderCubes>()
+    .AddProcessors<EndRender, EndDraw>();
 
-// app.SubApp = (SubApp)renderApp;
+app.SubApp = (SubApp)renderApp;
+
 // Raylib.InitWindow(800, 600, "MyGame");
 
 
-while (!Raylib.WindowShouldClose())
-{
-    app.Update();
-}
+// while (!Raylib.WindowShouldClose())
+// {
+//     app.Update();
+// }
 
 // Raylib.InitWindow(800,600, "Hello World");
 // Raylib.SetWindowPosition(0,0);

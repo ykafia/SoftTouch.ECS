@@ -1,3 +1,4 @@
+using SoftTouch.ECS.Arrays;
 using SoftTouch.ECS.Processors;
 
 namespace SoftTouch.ECS.Scheduling;
@@ -39,6 +40,23 @@ public class Scheduler(App app)
             render.TryAdd<TStage>(processor);
         else
             throw new ArgumentException("TStage must be a derived type of SubStage<Main>");
+    }
+
+    /// <summary>
+    /// Set sub stages of specified stage and dispose of the ReusableList used as parameter.
+    /// </summary>
+    /// <typeparam name="TStage"></typeparam>
+    /// <param name="subStages">ReadOnlyList of sub stages to be set in the Stage specified. The list is disposed after calling the function</param>
+    internal void SetStages<TStage>(ReusableList<SubStage<TStage>> subStages)
+        where TStage : Stage
+    {
+        if(main is TStage && subStages is ReusableList<SubStage<Main>> rm)
+            main.SetStages<Main>(rm.Span);
+        else if(extract is TStage && subStages is ReusableList<SubStage<Extract>> re)
+            extract.SetStages<Extract>(re.Span);
+        else if(render is TStage && subStages is ReusableList<SubStage<Render>> rr)
+            render.SetStages<Render>(rr.Span);
+        subStages.Dispose();
     }
 
 }
