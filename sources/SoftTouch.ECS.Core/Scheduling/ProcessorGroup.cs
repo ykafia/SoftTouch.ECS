@@ -7,6 +7,7 @@ public class ProcessorGroup
     public HashSet<Type> RelatedTypes { get; } = [];
     public HashSet<Type> RelatedEventWriterTypes { get; } = [];
     readonly List<Processor> processors = [];
+    public int Count => processors.Count;
     public void Update()
     {
         foreach (var p in processors)
@@ -35,5 +36,10 @@ public class ProcessorGroup
             RelatedEventWriterTypes.Add(ert);
         processors.Add(processor);
         return true;
+    }
+
+    public override string ToString()
+    {
+        return $"[{string.Join(", ", processors.Select(x => x.GetType().Name))}]";
     }
 }

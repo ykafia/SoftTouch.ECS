@@ -16,7 +16,8 @@ public abstract record SubStage<TStage> : SubStage
         {
             tasks.Clear();
             foreach (var group in groups)
-                tasks.Add(Task.Run(group.Update));
+                if(group.Count > 0)
+                    tasks.Add(Task.Run(group.Update));
         }
         else
             foreach(var group in groups)
@@ -38,5 +39,10 @@ public abstract record SubStage<TStage> : SubStage
             groups.Add(new());
             groups[^1].TryAdd(processor);
         }
+    }
+
+    public sealed override string ToString()
+    {
+        return $"{GetType().Name} [{string.Join(", ", groups)}]";
     }
 }

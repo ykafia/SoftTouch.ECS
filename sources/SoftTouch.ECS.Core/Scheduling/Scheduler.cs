@@ -59,4 +59,9 @@ public class Scheduler(App app)
         subStages.Dispose();
     }
 
+    public override string ToString()
+    {
+        return $"Main : {main}\nRender : {render}\nExtract : {extract}";
+    }
+
 }

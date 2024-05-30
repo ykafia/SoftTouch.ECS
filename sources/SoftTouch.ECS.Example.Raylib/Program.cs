@@ -2,10 +2,8 @@
 using System.Numerics;
 using Raylib_cs;
 using SoftTouch.ECS;
-using SoftTouch.ECS.Example.RaylibUtilities;
 using SoftTouch.ECS.Example.Rlib;
 using SoftTouch.ECS.Scheduling;
-using SoftTouch.ECS.Storage;
 Console.WriteLine("Hello, World!");
 
 var app =
@@ -21,8 +19,8 @@ var renderApp =
     .AddProcessors<EndRender, EndDraw>();
 
 app.SubApp = (SubApp)renderApp;
-
-// Raylib.InitWindow(800, 600, "MyGame");
+Console.WriteLine(app.Schedule);
+Raylib.InitWindow(800, 600, "MyGame");
 
 
 // while (!Raylib.WindowShouldClose())

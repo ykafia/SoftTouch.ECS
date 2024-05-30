@@ -14,7 +14,7 @@ namespace SoftTouch.ECS.Arrays;
 /// <summary>
 /// A component array generic base class
 /// </summary>
-[DebuggerDisplay("ComponentsArray<{ComponentType.Name.ToString()}>[{Count}]")]
+[DebuggerDisplay("ComponentsArray<{ComponentType.Name.ToString(),{Count}}>")]
 public abstract class ComponentArray
 {
     public abstract Type ComponentType { get; }

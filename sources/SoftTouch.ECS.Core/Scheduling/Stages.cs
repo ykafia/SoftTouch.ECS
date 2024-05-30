@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
 using System.Reflection.PortableExecutable;
 using SoftTouch.ECS.Processors;
@@ -5,7 +6,6 @@ using SoftTouch.ECS.Processors;
 namespace SoftTouch.ECS.Scheduling;
 
 public abstract record Stage;
-
 public abstract record Stage<T> : Stage
     where T : Stage<T>
 {
@@ -63,6 +63,11 @@ public abstract record Stage<T> : Stage
                 return true;
             }
         return false;
+    }
+
+    public sealed override string ToString()
+    {
+        return $"{GetType().Name}[{string.Join(", ", SubStages)}]";
     }
 }
 
