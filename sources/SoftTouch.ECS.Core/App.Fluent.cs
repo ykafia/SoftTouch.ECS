@@ -8,7 +8,7 @@ namespace SoftTouch.ECS;
 
 public partial class App
 {
-    public App AddBundle<TStage, TBundle>() 
+    public App AddBundle<TStage, TBundle>()
         where TStage : SubStage
         where TBundle : struct, IProcessorBundle
     {
@@ -21,7 +21,7 @@ public partial class App
     public App AddProcessors<TStage>(ReadOnlySpan<Processor> processors)
         where TStage : SubStage
     {
-        foreach(var p in processors)
+        foreach (var p in processors)
             AddProcessor<TStage>(p);
         return this;
     }
@@ -72,6 +72,13 @@ public partial class App
         AddProcessors<TStage>(new DelegateProcessor<Q>(func) { World = World });
         return this;
     }
+    public App AddProcessor<TStage, Q>((UpdaterFunc<Q> func, StateTransition? state) proc)
+        where TStage : SubStage
+        where Q : struct, IWorldQuery
+    {
+        AddProcessors<TStage>(new DelegateProcessor<Q>(proc.func) { World = World, OnState = proc.state });
+        return this;
+    }
     public App AddProcessor<Q1, Q2>(UpdaterFunc<Q1, Q2> func)
         where Q1 : struct, IWorldQuery
         where Q2 : struct, IWorldQuery
@@ -85,6 +92,14 @@ public partial class App
         where Q2 : struct, IWorldQuery
     {
         AddProcessors<TStage>(new DelegateProcessor<Q1, Q2>(func) { World = World });
+        return this;
+    }
+    public App AddProcessor<TStage, Q1, Q2>((UpdaterFunc<Q1, Q2> func, StateTransition? state) proc)
+        where TStage : SubStage
+        where Q1 : struct, IWorldQuery
+        where Q2 : struct, IWorldQuery
+    {
+        AddProcessors<TStage>(new DelegateProcessor<Q1, Q2>(proc.func) { World = World, OnState = proc.state });
         return this;
     }
     public App AddProcessor<Q1, Q2, Q3>(UpdaterFunc<Q1, Q2, Q3> func)
@@ -104,6 +119,15 @@ public partial class App
         AddProcessors<TStage>(new DelegateProcessor<Q1, Q2, Q3>(func) { World = World });
         return this;
     }
+    public App AddProcessor<TStage, Q1, Q2, Q3>((UpdaterFunc<Q1, Q2, Q3> func, StateTransition? state) proc)
+        where TStage : SubStage
+        where Q1 : struct, IWorldQuery
+        where Q2 : struct, IWorldQuery
+        where Q3 : struct, IWorldQuery
+    {
+        AddProcessors<TStage>(new DelegateProcessor<Q1, Q2, Q3>(proc.func) { World = World, OnState = proc.state });
+        return this;
+    }
     public App AddProcessor<TStage, Q1, Q2, Q3, Q4>(UpdaterFunc<Q1, Q2, Q3, Q4> func)
         where TStage : SubStage
         where Q1 : struct, IWorldQuery
@@ -121,6 +145,16 @@ public partial class App
        where Q4 : struct, IWorldQuery
     {
         AddProcessors<Update>(new DelegateProcessor<Q1, Q2, Q3, Q4>(func) { World = World });
+        return this;
+    }
+    public App AddProcessor<TStage, Q1, Q2, Q3, Q4>((UpdaterFunc<Q1, Q2, Q3, Q4> func, StateTransition? state) proc)
+        where TStage : SubStage
+        where Q1 : struct, IWorldQuery
+        where Q2 : struct, IWorldQuery
+        where Q3 : struct, IWorldQuery
+        where Q4 : struct, IWorldQuery
+    {
+        AddProcessors<TStage>(new DelegateProcessor<Q1, Q2, Q3, Q4>(proc.func) { World = World, OnState = proc.state });
         return this;
     }
     public App AddStartupProcessor<Q>(UpdaterFunc<Q> func)

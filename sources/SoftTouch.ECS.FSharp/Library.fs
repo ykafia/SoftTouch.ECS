@@ -128,7 +128,7 @@ module App =
         app.AddProcessor(processor)
     let addProcessors (processors: Processor list) (app : App) =
         app.AddProcessors<Update>(processors |> List.toArray)
-    let addProcessorsTo (stage: 't & #SubStage) (processors: Processor list) (app : App) =
+    let addProcessorsTo<'t & #SubStage> (processors: Processor list) (app : App) =
         app.AddProcessors<'t>(processors |> List.toArray)
 
     let addStartupProcessor<'T when 'T :> Processor and 'T : (new: unit -> 'T)>(processor, app : App) =
@@ -233,13 +233,19 @@ module Processor =
 
 module Proc =
     let from<'Q1 when 'Q1 :> IWorldQuery and 'Q1 : struct and 'Q1 :> ValueType and 'Q1 : (new: unit -> 'Q1)> 
-            (func : 'Q1 -> unit) =
-        Processor.From<'Q1>(func);
+            (func : 'Q1 -> unit) (state : StateTransition option)=
+        let p = Processor.From<'Q1>(func);
+        match state with
+        | Some x -> p.When(x)
+        | None -> p
     let from2<'Q1, 'Q2 
                     when 'Q1 :> IWorldQuery and 'Q1 : struct and 'Q1 :> ValueType and 'Q1 : (new: unit -> 'Q1)
                     and 'Q2 :> IWorldQuery and 'Q2 : struct and 'Q2 :> ValueType and 'Q2 : (new: unit -> 'Q2)> 
-            (func : 'Q1 -> 'Q2 -> unit) =
-        Processor.From<'Q1, 'Q2>(func);
+            (func : 'Q1 -> 'Q2 -> unit) (state : StateTransition option)=
+        let p = Processor.From<'Q1, 'Q2>(func)
+        match state with
+        | Some x -> p.When(x)
+        | None -> p
     
     let from3<'Q1, 'Q2, 'Q3
                 when 
@@ -248,8 +254,11 @@ module Proc =
                    'Q2 :> IWorldQuery and 'Q2 : struct and 'Q2 :> ValueType and 'Q2 : (new: unit -> 'Q2)
                 and 
                    'Q3 :> IWorldQuery and 'Q3 : struct and 'Q3 :> ValueType and 'Q3 : (new: unit -> 'Q3)> 
-        (func : 'Q1 -> 'Q2 -> 'Q3 -> unit) =
-        Processor.From<'Q1, 'Q2, 'Q3>(func);
+        (func : 'Q1 -> 'Q2 -> 'Q3 -> unit) (state : StateTransition option) =
+        let p = Processor.From<'Q1, 'Q2, 'Q3>(func)
+        match state with
+        | Some x -> p.When(x)
+        | None -> p
     
     let from4<'Q1, 'Q2, 'Q3, 'Q4
                 when 
@@ -260,5 +269,8 @@ module Proc =
                    'Q3 :> IWorldQuery and 'Q3 : struct and 'Q3 :> ValueType and 'Q3 : (new: unit -> 'Q3)
                 and 
                    'Q4 :> IWorldQuery and 'Q4 : struct and 'Q4 :> ValueType and 'Q4 : (new: unit -> 'Q4)> 
-        (func : 'Q1 -> 'Q2 -> 'Q3 -> 'Q4 -> unit) =
-        Processor.From<'Q1, 'Q2, 'Q3, 'Q4>(func);
+        (func : 'Q1 -> 'Q2 -> 'Q3 -> 'Q4 -> unit) (state : StateTransition option) =
+        let p = Processor.From<'Q1, 'Q2, 'Q3, 'Q4>(func)
+        match state with
+        | Some x -> p.When(x)
+        | None -> p

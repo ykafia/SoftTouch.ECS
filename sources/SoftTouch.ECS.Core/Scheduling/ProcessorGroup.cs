@@ -11,7 +11,8 @@ public class ProcessorGroup
     public void Update()
     {
         foreach (var p in processors)
-            p.Update();
+            if (p.CanRun)
+                p.Update();
     }
 
 
@@ -19,20 +20,20 @@ public class ProcessorGroup
     {
         // check if the processor has any related EventWriter, writing cannot be done in parallel so the same event writers should be in the same group.
         bool related = false;
-        foreach(var ert in processor.RelatedEventWriterTypes)
-            if(RelatedEventWriterTypes.Contains(ert))
+        foreach (var ert in processor.RelatedEventWriterTypes)
+            if (RelatedEventWriterTypes.Contains(ert))
             {
                 related = true;
-                break;   
+                break;
             }
         // check if the processor has any related types that are already in the group
-        if(!related)
-            foreach(var rt in processor.RelatedTypes)
-                if(RelatedTypes.Contains(rt))
+        if (!related)
+            foreach (var rt in processor.RelatedTypes)
+                if (RelatedTypes.Contains(rt))
                     return false;
-        foreach(var rt in processor.RelatedTypes)
+        foreach (var rt in processor.RelatedTypes)
             RelatedTypes.Add(rt);
-        foreach(var ert in processor.RelatedEventWriterTypes)
+        foreach (var ert in processor.RelatedEventWriterTypes)
             RelatedEventWriterTypes.Add(ert);
         processors.Add(processor);
         return true;

@@ -23,7 +23,6 @@ public delegate void UpdaterFunc<Q1, Q2, Q3, Q4>(Q1 query1, Q2 query2, Q3 query3
     where Q3 : struct, IWorldQuery
     where Q4 : struct, IWorldQuery;
 
-
 public class DelegateProcessor<Q1>(UpdaterFunc<Q1> func) : Processor<Q1>(null!)
     where Q1 : struct, IWorldQuery
 {

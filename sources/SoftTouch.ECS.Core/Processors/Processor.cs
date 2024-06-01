@@ -1,28 +1,20 @@
 ﻿using SoftTouch.ECS.Events;
 using SoftTouch.ECS.Querying;
-using System;
-using System.Collections.Generic;
+using SoftTouch.ECS.States;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SoftTouch.ECS.Processors;
 
 
-public interface IProcessorRelation
+public abstract class Processor
 {
-    public abstract static ImmutableList<Type> StaticRelatedTypes { get; }
-}
-
-public abstract class Processor : IProcessorRelation
-{
-
     internal World World { get; set; }
     public static ImmutableList<Type> StaticEventReaders { get; internal set; } = [];
     public static ImmutableList<Type> StaticRelatedTypes { get; internal set; } = [];
     public ImmutableList<Type> RelatedTypes => StaticRelatedTypes;
     public ImmutableList<Type> RelatedEventWriterTypes => StaticEventReaders;
+    public StateTransition? OnState { get; set; } = null;
+    public bool CanRun => OnState == null || World.GetResource<WorldStates>().IsValid(OnState.Value);
 
     public Processor()
     {
@@ -59,14 +51,19 @@ public abstract class Processor : IProcessorRelation
         where Q3 : struct, IWorldQuery
         where Q4 : struct, IWorldQuery
         => new DelegateProcessor<Q1, Q2, Q3, Q4>(func);
-    
+
     public static Processor From<T>() where T : Processor, new()
         => new T();
 
+    public Processor When(StateTransition stateTransition)
+    {
+        OnState = stateTransition;
+        return this;
+    }
 }
 
 
-public abstract class Processor<Q>(World world) : Processor(world), IProcessorRelation
+public abstract class Processor<Q>(World world) : Processor(world)
     where Q : struct, IWorldQuery
 {
 
@@ -80,7 +77,7 @@ public abstract class Processor<Q>(World world) : Processor(world), IProcessorRe
             foreach (var t in eq1.ImplTypes)
                 hash.Add(t);
         }
-        if(q1 is IEventWriter evq)
+        if (q1 is IEventWriter evq)
             hashEv.Add(evq.EventDataType);
 
         StaticRelatedTypes = [.. hash];
@@ -109,9 +106,9 @@ public abstract class Processor<Q1, Q2>(World world) : Processor(world)
             foreach (var t in eq2.ImplTypes)
                 hash.Add(t);
         }
-        if(q1 is IEventWriter evq)
+        if (q1 is IEventWriter evq)
             hashEv.Add(evq.EventDataType);
-        if(q2 is IEventWriter evq2)
+        if (q2 is IEventWriter evq2)
             hashEv.Add(evq2.EventDataType);
         StaticRelatedTypes = [.. hash];
         StaticEventReaders = [.. hashEv];
@@ -148,11 +145,11 @@ public abstract class Processor<Q1, Q2, Q3>(World world) : Processor(world)
             foreach (var t in eq3.ImplTypes)
                 hash.Add(t);
         }
-        if(q1 is IEventWriter evq)
+        if (q1 is IEventWriter evq)
             hashEv.Add(evq.EventDataType);
-        if(q2 is IEventWriter evq2)
+        if (q2 is IEventWriter evq2)
             hashEv.Add(evq2.EventDataType);
-        if(q3 is IEventWriter evq3)
+        if (q3 is IEventWriter evq3)
             hashEv.Add(evq3.EventDataType);
         StaticRelatedTypes = [.. hash];
         StaticEventReaders = [.. hashEv];
@@ -198,13 +195,13 @@ public abstract class Processor<Q1, Q2, Q3, Q4>(World world) : Processor(world)
             foreach (var t in eq4.ImplTypes)
                 hash.Add(t);
         }
-        if(q1 is IEventWriter evq)
+        if (q1 is IEventWriter evq)
             hashEv.Add(evq.EventDataType);
-        if(q2 is IEventWriter evq2)
+        if (q2 is IEventWriter evq2)
             hashEv.Add(evq2.EventDataType);
-        if(q3 is IEventWriter evq3)
+        if (q3 is IEventWriter evq3)
             hashEv.Add(evq3.EventDataType);
-        if(q4 is IEventWriter evq4)
+        if (q4 is IEventWriter evq4)
             hashEv.Add(evq4.EventDataType);
         StaticRelatedTypes = [.. hash];
         StaticEventReaders = [.. hashEv];
