@@ -5,11 +5,23 @@ namespace SoftTouch.ECS.Events;
 
 
 
-public abstract class EventList;
+public abstract class EventList
+{
+    public abstract void ResetEvents();
+}
+
+public struct ProcessorReader<T>(EventList<T> list, Processor processor)
+    where T : struct
+{
+    public EventList<T> Events { get; } = list;
+    public Processor Processor { get; init; } = processor;
+    public int ReadCount = 0;
+}
 
 public class EventList<T> : EventList, IList<T> where T : struct
 {
     readonly List<T> events = [];
+    readonly List<ProcessorReader<T>> readers = [];
 
     public T this[int index] { get => events[index]; set => events[index] = value; }
 
@@ -48,4 +60,9 @@ public class EventList<T> : EventList, IList<T> where T : struct
 
     IEnumerator IEnumerable.GetEnumerator()
         => events.GetEnumerator();
+
+    public override void ResetEvents()
+    {
+#error Process unread events depending frame count by first updating number of frame since creation and then deleting every events that stayed more than two frames
+    }
 }
