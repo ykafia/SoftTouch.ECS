@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 namespace SoftTouch.ECS.Querying;
 
 
-public ref struct QueryEntity<Q>(Archetype archetype, int archetypeIndex, Q query)
+public readonly ref struct QueryEntity<Q>(Archetype archetype, int archetypeIndex, Q query)
     where Q : struct, IEntityQuery
 {
-    Archetype archetype = archetype;
-    int archetypeIndex = archetypeIndex;
-    Q query = query;
+    readonly Archetype archetype = archetype;
+    readonly int archetypeIndex = archetypeIndex;
+    readonly Q query = query;
+
+    public readonly EntityMeta EntityIndex => query.World[archetype.EntityLookup[archetypeIndex]];
 
     public ref T Get<T>()
         where T : struct

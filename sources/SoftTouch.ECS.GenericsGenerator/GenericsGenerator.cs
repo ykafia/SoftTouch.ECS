@@ -46,7 +46,7 @@ public class GenericsGenerator : ISourceGenerator
                 code.WriteLine($"    where P{r} : Processor, new()");
             code
                 .OpenBlock();
-            foreach(var r in range.Select(x => $"P{x}"))
+            foreach (var r in range.Select(x => $"P{x}"))
                 code.WriteLine($"Schedule.Add<TStage>(new {r}());");
             code
                 .WriteLine("return this;")
@@ -60,7 +60,7 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine("    where TStage: SubStage");
             code
                 .OpenBlock()
-                .WriteLine($"Schedule.Add<TStage>([{string.Join(", ",range.Select(x => $"p{x}"))}]);")
+                .WriteLine($"Schedule.Add<TStage>([{string.Join(", ", range.Select(x => $"p{x}"))}]);")
                 .WriteLine("return this;")
                 .CloseBlock();
         }
@@ -73,6 +73,8 @@ public class GenericsGenerator : ISourceGenerator
         var code = new CodeWriter();
         code.WriteLine("using CommunityToolkit.HighPerformance.Buffers;")
             .WriteLine("using System.Collections.Immutable;")
+            .WriteLine("using SoftTouch.ECS.Storage;")
+            .WriteLine("using SoftTouch.ECS.Processors;")
             .WriteEmptyLines(2)
             .WriteLine("namespace SoftTouch.ECS.Querying;")
             .WriteEmptyLines(3);
@@ -117,7 +119,12 @@ public class GenericsGenerator : ISourceGenerator
             var generics = Enumerable.Range(1, i).Select(x => "T" + x);
             code
                 .WriteLine($"public delegate void EntityUpdateFunc<{string.Join(", ", generics)}>({string.Join(", ", generics.Select(x => $"ref {x} componen{x.ToLower()}"))})");
-            foreach(var g in generics)
+            foreach (var g in generics)
+                code.WriteLine($"    where {g} : struct");
+            code.WriteLine(";");
+            code
+                .WriteLine($"public delegate void EntityUpdateFuncIndexed<{string.Join(", ", generics)}>(EntityMeta index, {string.Join(", ", generics.Select(x => $"ref {x} componen{x.ToLower()}"))})");
+            foreach (var g in generics)
                 code.WriteLine($"    where {g} : struct");
             code.WriteLine(";");
             code
@@ -128,6 +135,7 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine($"public static Type[] Types {{ get; }} = [{string.Join(", ", generics.Select(x => $"typeof({x})"))}];")
                 .WriteLine("public Type[] ImplTypes => Types;")
                 .WriteLine("public World World { get; set; }")
+                .WriteLine("public Processor CallingProcessor { get; init; }")
                 .WriteEmptyLines(1)
                 .WriteLine("public bool HasAccessTo<TComponent>()")
                 .WriteLine($"    =>{string.Join("||", generics.Select(x => $"typeof(TComponent) == typeof({x})"))};")
@@ -136,6 +144,12 @@ public class GenericsGenerator : ISourceGenerator
                 .OpenBlock()
                 .WriteLine("foreach(var e in this)")
                 .WriteLine($"    updater.Invoke({string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
+                .CloseBlock()
+                .WriteEmptyLines(1)
+                .WriteLine($"public readonly void ForEachIndexed(EntityUpdateFuncIndexed<{string.Join(", ", generics)}> updater)")
+                .OpenBlock()
+                .WriteLine("foreach(var e in this)")
+                .WriteLine($"    updater.Invoke(e.EntityIndex, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
                 .CloseBlock()
                 .WriteEmptyLines(1)
                 .WriteLine($"public readonly WorldQueryEnumerator<Query<{string.Join(", ", generics)}>> GetEnumerator() => new(this);")
@@ -152,6 +166,7 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine("public Type[] ImplTypes => Types;")
                 .WriteLine("public static IFilterQuery Filters { get; } = new TFilter();")
                 .WriteLine("public World World { get; set; }")
+                .WriteLine("public Processor CallingProcessor { get; init; }")
                 .WriteEmptyLines(1)
                 .WriteLine("public bool HasAccessTo<TComponent>()")
                 .WriteLine($"    =>{string.Join("||", generics.Select(x => $"typeof(TComponent) == typeof({x})"))}")

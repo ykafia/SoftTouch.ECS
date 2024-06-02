@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using SoftTouch.ECS.Processors;
 
 namespace SoftTouch.ECS.Querying;
 
@@ -14,6 +15,7 @@ public partial struct Commands : ICommandQuery
 {
     public World World { get; set; }
 
+    public Processor CallingProcessor { get; init; }
     public readonly WorldCommands Content => World.Resources.Get<WorldCommands>();
 
     public readonly EntityCommands Spawn() => Content.SpawnEmpty();

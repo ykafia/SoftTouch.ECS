@@ -83,7 +83,7 @@ public abstract class Processor<Q>(World world) : Processor(world)
         StaticRelatedTypes = [.. hash];
         StaticEventReaders = [.. hashEv];
     }
-    public Q Query => new() { World = World };
+    public Q Query => new() { World = World, CallingProcessor = this };
 }
 
 public abstract class Processor<Q1, Q2>(World world) : Processor(world)
@@ -114,8 +114,8 @@ public abstract class Processor<Q1, Q2>(World world) : Processor(world)
         StaticEventReaders = [.. hashEv];
     }
 
-    public Q1 Query1 => new() { World = World };
-    public Q2 Query2 => new() { World = World };
+    public Q1 Query1 => new() { World = World, CallingProcessor = this };
+    public Q2 Query2 => new() { World = World, CallingProcessor = this };
 }
 
 public abstract class Processor<Q1, Q2, Q3>(World world) : Processor(world)
@@ -155,9 +155,9 @@ public abstract class Processor<Q1, Q2, Q3>(World world) : Processor(world)
         StaticEventReaders = [.. hashEv];
     }
 
-    public Q1 Query1 => new() { World = World };
-    public Q2 Query2 => new() { World = World };
-    public Q3 Query3 => new() { World = World };
+    public Q1 Query1 => new() { World = World, CallingProcessor = this };
+    public Q2 Query2 => new() { World = World, CallingProcessor = this };
+    public Q3 Query3 => new() { World = World, CallingProcessor = this };
 }
 
 
@@ -207,8 +207,8 @@ public abstract class Processor<Q1, Q2, Q3, Q4>(World world) : Processor(world)
         StaticEventReaders = [.. hashEv];
     }
 
-    public Q1 Query1 => new() { World = World };
-    public Q2 Query2 => new() { World = World };
-    public Q3 Query3 => new() { World = World };
-    public Q4 Query4 => new() { World = World };
+    public Q1 Query1 => new() { World = World, CallingProcessor = this };
+    public Q2 Query2 => new() { World = World, CallingProcessor = this };
+    public Q3 Query3 => new() { World = World, CallingProcessor = this };
+    public Q4 Query4 => new() { World = World, CallingProcessor = this };
 }

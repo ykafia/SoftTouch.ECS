@@ -4,6 +4,9 @@ using Microsoft.Extensions.ObjectPool;
 
 namespace SoftTouch.ECS.States;
 
+/// <summary>
+/// Class describing states in the world
+/// </summary>
 public class WorldStates()
 {
     readonly List<Type> types = [];
@@ -14,17 +17,31 @@ public class WorldStates()
 
     public IReadOnlyList<StateTransition> StateChanges => stateChanges;
 
+    /// <summary>
+    /// Gets the value of the state based on the type
+    /// </summary>
+    /// <typeparam name="T">Type of the state</typeparam>
+    /// <returns>Value of the state</returns>
     public T Get<T>() where T : Enum
     {
         var state = states[typeof(T)];
         return Unsafe.As<uint, T>(ref state);
     }
+    /// <summary>
+    /// Gets the value of the new state based on the type
+    /// </summary>
+    /// <typeparam name="T">Type of the state</typeparam>
+    /// <returns>Value of the new state</returns>
     public T GetNew<T>() where T : Enum
     {
         var state = nextStates[typeof(T)];
         return Unsafe.As<uint, T>(ref state);
     }
-
+    /// <summary>
+    /// Sets the value of the state
+    /// </summary>
+    /// <param name="value">Type of the state to change</param>
+    /// <typeparam name="T"></typeparam>
     public void Set<T>(T value)
         where T : Enum
     {

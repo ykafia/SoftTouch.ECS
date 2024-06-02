@@ -15,30 +15,22 @@ using SoftTouch.ECS.Storage;
 using System.Diagnostics;
 
 
-// var app =
-//     new App()
-//     .AddStartupProcessor<StartupProcessor>()
-//     .AddProcessor<SayBye>()
-//     .AddProcessor<SayHello>()
-//     .AddProcessor<WriteAge>();
-
-// app.Run();
-[Bundle("MachinBundle")]
-static void Machin(EventWriter<ChangedAge> eventList, Query<double> e1){}
-[Bundle("MachinBundle")]
-static void Machin2(EventWriter<ChangedAge> eventList, Query<int, float> e1, Query<NameComponent> namedEntities){}
-
 var app =
-    new App();
-app
+    new App()
     .AddProcessors<Update>(
         Processor.From(
-            static (EventWriter<ChangedAge> evw, Query<double> d) => {}
+            static (EventWriter<ChangedAge> evw, Query<double> d) => evw.Add(new() { Age = 12 })
         ),
         Processor.From(
-            static (EventWriter<ChangedAge> evw, Query<int, float> d, Query<NameComponent> namedEntities) => {}
+            static (EventReader<ChangedAge> evw, Query<int, float> d, Query<NameComponent> namedEntities) =>
+            {
+                if (evw.Read().Count > 0)
+                    Console.WriteLine(evw.Read()[0].Age);
+            }
         )
     );
+
+
 
 var x = 0;
 // foreach(var t in p.RelatedEvents)

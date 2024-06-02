@@ -5,10 +5,7 @@ namespace SoftTouch.ECS.Events;
 
 
 
-public abstract class EventList
-{
-    public HashSet<Processor> Readers { get; } = [];
-}
+public abstract class EventList;
 
 public class EventList<T> : EventList, IList<T> where T : struct
 {
@@ -21,7 +18,7 @@ public class EventList<T> : EventList, IList<T> where T : struct
     public bool IsReadOnly => false;
 
     public IReadOnlyList<T> AsReadOnly() => events.AsReadOnly();
-    
+
     public void Add(T item)
         => events.Add(item);
 

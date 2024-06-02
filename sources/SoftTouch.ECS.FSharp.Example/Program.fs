@@ -25,19 +25,16 @@ let nameSystem (entities : Query<NameComponent>) : unit =
     for entity in entities do
         entity.Get<NameComponent>().Name
         |> printfn "original name is : %s"
-
-
         let name = NameComponent "Kujo Jolyne"
         entity.Set(&name)
 
         entity.Get<NameComponent>()
         |> printfn "Changed to %A"
 
-let twoEntities (entities1 : Query<NameComponent>) (entities2 : Query<NameComponent>) : unit =
+let twoEntities (entities1 : Query<NameComponent>) (entities2 : Query<NameComponent>) (commands : Commands) : unit =
     for entity in entities1 do
         entity.Get<NameComponent>().Name
         |> printfn "original name is : %s"
-
 
         let name = NameComponent "Kujo Jolyne"
         entity.Set(&name)
@@ -62,7 +59,7 @@ app
 |> App.addProcessor (Proc.from nameSystem None)
 |> App.addProcessors [
         Proc.from nameSystem None; 
-        Proc.from2 twoEntities None
+        Proc.from3 twoEntities None
     ]
 |> App.addProcessorsTo<Update> [
         Proc.from nameSystem None

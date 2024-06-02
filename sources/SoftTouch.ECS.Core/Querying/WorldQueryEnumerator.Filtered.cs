@@ -9,19 +9,14 @@ using System.Threading.Tasks;
 namespace SoftTouch.ECS.Querying;
 
 
-public ref struct FilteredQueryEntity<Q>
+public readonly ref struct FilteredQueryEntity<Q>(Archetype archetype, int archetypeIndex, Q query)
     where Q : struct, IFilteredEntityQuery
 {
-    Archetype archetype;
-    int archetypeIndex;
-    Q query;
+    readonly Archetype archetype = archetype;
+    readonly int archetypeIndex = archetypeIndex;
+    readonly Q query = query;
 
-    public FilteredQueryEntity(Archetype archetype, int archetypeIndex, Q query)
-    {
-        this.archetype = archetype;
-        this.archetypeIndex = archetypeIndex;
-        this.query = query;
-    }
+    public readonly EntityMeta EntityIndex => query.World[archetype.EntityLookup[archetypeIndex]];
 
     public ref T Get<T>()
         where T : struct
@@ -40,13 +35,30 @@ public ref struct FilteredQueryEntity<Q>
 
     public void Add<T>(in T c) where T : struct
     {
-        throw new NotImplementedException();
-        //query.World.AddArchetypeUpdate(new ComponentAdd<T>(c, new(archetype.EntityLookup.LookUp(archetypeIndex), archetype)));
+        if(query.HasAccessTo<T>())
+            throw new Exception($"Cannot add component of type {typeof(T).Name}, component was already added");
+        var idx = archetype.EntityLookup[archetypeIndex];
+        var meta = archetype.World.Entities[idx];
+        query.World.Commands.AddComponent(
+            new(idx,meta.Generation), 
+            in c
+        );
     }
     public void Remove<T>() where T : struct
     {
-        throw new NotImplementedException();
-        //query.World.AddArchetypeUpdate(new ComponentRemove<T>(new(archetype.EntityLookup.LookUp(archetypeIndex), archetype)));
+        if (!query.HasAccessTo<T>())
+            throw new Exception($"Cannot remove component of type {typeof(T).Name}, component does not exist");
+        var idx = archetype.EntityLookup[archetypeIndex];
+        var meta = archetype.World.Entities[idx];
+        query.World.Commands.RemoveComponent<T>(
+            new(idx, meta.Generation)
+        );
+    }
+    public void Despawn()
+    {
+        var idx = archetype.EntityLookup[archetypeIndex];
+        var meta = archetype.World.Entities[idx];
+        query.World.Commands.Updates.Add(new DespawnEntity(new(idx, meta.Generation)));
     }
 }
 
