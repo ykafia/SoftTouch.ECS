@@ -26,6 +26,7 @@ var app =
     .AddProcessor<Update, EventReader<ChangedAge>>(
         static (EventReader<ChangedAge> evw) =>
         {
+            #error in parallel this breaks and iterates over weird events
             foreach (var ev in evw.Receive())
                 Console.WriteLine($"Age has been changed to {ev.Age}");
         }
