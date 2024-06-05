@@ -8,12 +8,7 @@ namespace SoftTouch.ECS;
 
 public class WorldResources
 {
-    Dictionary<Type, object> resources;
-
-    public WorldResources()
-    {
-        resources = new Dictionary<Type, object>();
-    }
+    readonly Dictionary<Type, object> resources = [];
 
     internal void Set<T>(T obj) where T : class
     {

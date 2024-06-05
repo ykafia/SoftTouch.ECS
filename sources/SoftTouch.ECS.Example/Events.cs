@@ -11,6 +11,7 @@ public struct ChangedAge(long creationFrame) : IEvent
     public long CreationFrame { get; set; } = creationFrame;
 
     public HashSet<Processor> AlreadyRead { get; } = [];
+    public int FrameAge { get; set; }
 }
 
 public struct ChangedName(long creationFrame) : IEvent
@@ -20,4 +21,12 @@ public struct ChangedName(long creationFrame) : IEvent
     public long CreationFrame { get; set; } = creationFrame;
 
     public HashSet<Processor> AlreadyRead { get; } = [];
+    public int FrameAge { get; set; }
+}
+
+
+public struct TimeCount(TimeSpan delay)
+{
+    public TimeSpan Delay { get; set; } = delay;
+    public TimeSpan Time { get; set; } = TimeSpan.Zero;
 }

@@ -18,7 +18,7 @@ public struct EventReader<T> : IEventReader
     public World World { get; set; }
     public Processor CallingProcessor { get; init; }
     public readonly Type EventDataType => typeof(T);
-    public readonly IReadOnlyList<T> Read() => ((EventList<T>)World.Resources.Get<EventsResource>().EventStorage[typeof(T)]).AsReadOnly();
+    public readonly ProcessorReader<T> Receive() => World.GetResource<EventsResource>().Receive<T>(CallingProcessor);
 }
 
 public struct EventWriter<T> : IEventWriter
@@ -27,7 +27,7 @@ public struct EventWriter<T> : IEventWriter
     public World World { get; set; }
     public Processor CallingProcessor { get; init; }
     public readonly Type EventDataType => typeof(T);
-    public readonly IReadOnlyList<T> Read() => ((EventList<T>)World.Resources.Get<EventsResource>().EventStorage[typeof(T)]).AsReadOnly();
-    public readonly void Add(T item) => ((EventList<T>)World.Resources.Get<EventsResource>().EventStorage[typeof(T)]).Add(item);
+    public readonly ProcessorReader<T> Receive() => World.GetResource<EventsResource>().Receive<T>(CallingProcessor);
+    public readonly void Broadcast(T item) => World.GetResource<EventsResource>().Add(item);
 }
 

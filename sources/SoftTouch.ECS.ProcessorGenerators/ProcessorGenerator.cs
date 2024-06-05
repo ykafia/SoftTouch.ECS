@@ -29,7 +29,7 @@ namespace SoftTouch.ECS.ProcessorGenerators
         }
         public void Execute(GeneratorExecutionContext context)
         {
-            GenerateBundles(context);
+            // GenerateBundles(context);
 
             // var projectAssembly = context.Compilation.Assembly;
             // var rootNodes = context.Compilation.SyntaxTrees.Select(tree => tree.GetRoot());

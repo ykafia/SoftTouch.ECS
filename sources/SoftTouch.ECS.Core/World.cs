@@ -1,4 +1,5 @@
 using SoftTouch.ECS.Arrays;
+using SoftTouch.ECS.Events;
 using SoftTouch.ECS.Processors;
 using SoftTouch.ECS.Querying;
 using SoftTouch.ECS.Storage;
@@ -28,6 +29,7 @@ public sealed partial class World
     {
         AppTime = appTime;
         Resources.Set(AppTime);
+        Resources.Set(new EventsResource());
         Archetypes.Add(new(), Archetype.CreateEmpty(this));
         Resources.Set(new WorldCommands(this));
         Entities = new(this);

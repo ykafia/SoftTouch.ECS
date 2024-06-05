@@ -8,9 +8,9 @@ public abstract record SubStage;
 public abstract record SubStage<TStage> : SubStage
     where TStage : Stage
 {
-    readonly List<ProcessorGroup> groups = [];
+    internal List<ProcessorGroup> groups = [];
     readonly List<Task> tasks = [];
-    public void Update(bool parallel = true)
+    public virtual void Update(bool parallel = true)
     {
         if (parallel)
         {
@@ -18,10 +18,12 @@ public abstract record SubStage<TStage> : SubStage
             foreach (var group in groups)
                 if(group.Count > 0)
                     tasks.Add(Task.Run(group.Update));
+            Task.WhenAll(tasks);
         }
         else
             foreach(var group in groups)
                 group.Update();
+        
     }
 
     public void Add(Processor processor)

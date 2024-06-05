@@ -2,18 +2,24 @@ namespace SoftTouch.ECS.Scheduling;
 
 
 #region Startup
+
+/// <summary>
+/// Base record for Startup stages
+/// </summary>
+public abstract record StartupBase : SubStage<Main>;
+
 /// <summary>
 /// Runs once before the startup stage.
 /// </summary>
-public sealed record PreStartup : SubStage<Main>;
+public sealed record PreStartup : StartupBase;
 /// <summary>
 /// Runs once at the start of the app.
 /// </summary>
-public sealed record Startup : SubStage<Main>;
+public sealed record Startup : StartupBase;
 /// <summary>
 /// Runs once after the startup stage.
 /// </summary>
-public sealed record PostStartup : SubStage<Main>;
+public sealed record PostStartup : StartupBase;
 #endregion
 
 #region Main

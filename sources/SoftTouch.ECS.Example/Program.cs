@@ -17,21 +17,35 @@ using System.Diagnostics;
 
 var app =
     new App()
-    .AddProcessors<Update>(
-        Processor.From(
-            static (EventWriter<ChangedAge> evw, Query<double> d) => evw.Add(new() { Age = 12 })
-        ),
-        Processor.From(
-            static (EventReader<ChangedAge> evw, Query<int, float> d, Query<NameComponent> namedEntities) =>
+    .AddProcessor<Startup, EventWriter<ChangedAge>, Commands>(
+        static (EventWriter<ChangedAge> evw, Commands commands) =>
+        {
+            evw.Broadcast(new() { Age = 12 });
+            commands.Spawn(new TimeCount(TimeSpan.FromSeconds(2)));
+        })
+    .AddProcessor<Update, EventReader<ChangedAge>>(
+        static (EventReader<ChangedAge> evw) =>
+        {
+            foreach (var ev in evw.Receive())
+                Console.WriteLine($"Age has been changed to {ev.Age}");
+        }
+    )
+    .AddProcessor<Update, EventWriter<ChangedAge>, Query<TimeCount>, Resource<AppTime>>(static (EventWriter<ChangedAge> ageChange, Query<TimeCount> tc, Resource<AppTime> time) =>
+    {
+        var elapsed = time.Content.Elapsed.TotalSeconds;
+        foreach(var e in tc)
+        {
+            ref var t = ref e.Get<TimeCount>();
+            t.Time += TimeSpan.FromSeconds(elapsed);
+            if(t.Time > t.Delay)
             {
-                if (evw.Read().Count > 0)
-                    Console.WriteLine(evw.Read()[0].Age);
+                ageChange.Broadcast(new() { Age = 13 });
+                t.Time = TimeSpan.Zero;
             }
-        )
-    );
+        }
+    });
 
 
 
-var x = 0;
-// foreach(var t in p.RelatedEvents)
-//     Console.WriteLine(t.FullName);
+
+app.Run(true);

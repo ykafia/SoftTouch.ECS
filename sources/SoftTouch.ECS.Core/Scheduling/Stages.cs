@@ -10,7 +10,7 @@ public abstract record Stage<T> : Stage
     where T : Stage<T>
 {
     protected virtual List<SubStage<T>> SubStages { get; } = [];
-    public void Update(bool parallel = true)
+    public virtual void Update(bool parallel = true)
     {
         foreach (var subStage in SubStages)
             subStage.Update(parallel);
@@ -71,15 +71,33 @@ public abstract record Stage<T> : Stage
     }
 }
 
-public record Main : Stage<Main>
+public sealed record Main : Stage<Main>
 {
+    bool started = false;
     protected override List<SubStage<Main>> SubStages { get; } = [
+        new PreStartup(),
+        new Startup(),
+        new PostStartup(),
         new First(),
         new PreUpdate(),
         new Update(),
         new PostUpdate(),
         new Last()
     ];
+
+    public override void Update(bool parallel = true)
+    {
+        if(!started)
+        {
+            foreach (var stage in SubStages)
+                if (stage is StartupBase)
+                    stage.Update(parallel);
+            started = true;
+        }
+        foreach(var stage in SubStages)
+            if (stage is not StartupBase)
+                stage.Update(parallel);
+    }
 }
 
 

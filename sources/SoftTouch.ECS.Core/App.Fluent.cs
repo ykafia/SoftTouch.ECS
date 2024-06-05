@@ -8,15 +8,12 @@ namespace SoftTouch.ECS;
 
 public partial class App
 {
-    public App AddBundle<TStage, TBundle>()
-        where TStage : SubStage
-        where TBundle : struct, IProcessorBundle
+    public App AddPlugin<TPlugin>()
+        where TPlugin : struct, IPlugin
     {
-        new TBundle().AddBundleElements(this);
+        new TPlugin().Initialize(this);
         return this;
     }
-
-
 
     public App AddProcessors<TStage>(ReadOnlySpan<Processor> processors)
         where TStage : SubStage
