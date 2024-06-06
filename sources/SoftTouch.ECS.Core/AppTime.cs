@@ -18,7 +18,7 @@ public class AppTime
         Factor = 1;
     }
 
-    public void Update()
+    internal void Update()
     {
         if (stopwatch.IsRunning)
         {

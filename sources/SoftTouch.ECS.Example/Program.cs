@@ -21,14 +21,24 @@ var app =
         static (EventWriter<ChangedAge> evw, Commands commands) =>
         {
             evw.Broadcast(new() { Age = 12 });
-            commands.Spawn(new TimeCount(TimeSpan.FromSeconds(2)));
+            commands
+                .Spawn(new TimeCount(TimeSpan.FromSeconds(2)))
+                .Spawn(new NameComponent("John Doe"));
         })
-    .AddProcessor<Update, EventReader<ChangedAge>>(
-        static (EventReader<ChangedAge> evw) =>
+    .AddProcessor<Update, EventReader<ChangedAge>, Resource<AppTime>>(
+        static (EventReader<ChangedAge> evw, Resource<AppTime> appTime) =>
         {
-            #error in parallel this breaks and iterates over weird events
+            bool any = false;
             foreach (var ev in evw.Receive())
+            {
                 Console.WriteLine($"Age has been changed to {ev.Age}");
+                any = true;
+            }
+            if (any)
+            {
+                Console.WriteLine(appTime.Content.TotalElapsed);
+                Console.WriteLine();
+            }
         }
     )
     .AddProcessor<Update, EventWriter<ChangedAge>, Query<TimeCount>, Resource<AppTime>>(static (EventWriter<ChangedAge> ageChange, Query<TimeCount> tc, Resource<AppTime> time) =>
@@ -44,6 +54,11 @@ var app =
                 t.Time = TimeSpan.Zero;
             }
         }
+    })
+    .AddProcessor<Update, Query<NameComponent>, EventWriter<ChangedAge>>(
+        static (Query<NameComponent> named, EventWriter<ChangedAge> ev) =>
+    {
+        
     });
 
 

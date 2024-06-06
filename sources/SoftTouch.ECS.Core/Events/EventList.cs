@@ -11,51 +11,6 @@ public abstract class EventList
     public abstract void UpdateEvents();
 }
 
-public struct ProcessorReader<T>(EventList<T>? list, Processor processor)
-    where T : struct, IEvent
-{
-
-    readonly EventList<T>? events = list;
-    public Processor Processor { get; init; } = processor;
-    public int ReadCount = 0;
-
-    public readonly Enumerator GetEnumerator() => new(events, Processor, ReadCount);
-
-    public ref struct Enumerator
-    {
-        Span<T>.Enumerator enumerator;
-        ref ProcessorReader<T> reader;
-
-        public Enumerator(EventList<T>? list, Processor processor, int readCount)
-        {
-            if (list != null)
-            {
-                if (readCount >= list.Count)
-                    enumerator = Span<T>.Empty.GetEnumerator();
-                else
-                {
-                    enumerator = list.events.AsSpan()[readCount..].GetEnumerator();
-                    reader = ref list.GetOrSubscribe(processor);
-                }
-            }
-            else
-                enumerator = Span<T>.Empty.GetEnumerator();
-        }
-
-        public T Current => enumerator.Current;
-
-        public bool MoveNext()
-        {
-            if (enumerator.MoveNext())
-            {
-                reader.ReadCount += 1;
-                return true;
-            }
-            return false;
-        }
-    }
-}
-
 public class EventList<T> : EventList, IList<T> where T : struct, IEvent
 {
     readonly internal List<T> events = [];
@@ -67,14 +22,20 @@ public class EventList<T> : EventList, IList<T> where T : struct, IEvent
 
     public bool IsReadOnly => false;
 
+    private object obj = new();
+
     public IReadOnlyList<T> AsReadOnly() => events.AsReadOnly();
 
     public ref ProcessorReader<T> GetOrSubscribe(Processor processor)
     {
-        foreach (ref var p in readers.AsSpan())
-            if (p.Processor == processor)
-                return ref p;
-        readers.Add(new(this, processor));
+        lock (obj)
+        {
+            foreach (ref var p in readers.AsSpan())
+                if (p.Processor == processor)
+                    return ref p;
+
+            readers.Add(new(this, processor));
+        }
         return ref readers.AsSpan()[^1];
     }
     public bool Unsubscribe(Processor processor)

@@ -12,7 +12,7 @@ public abstract record SubStage<TStage> : SubStage
     readonly List<Task> tasks = [];
     public virtual void Update(bool parallel = true)
     {
-        if (parallel)
+        if (parallel && groups.Count > 1)
         {
             tasks.Clear();
             foreach (var group in groups)
