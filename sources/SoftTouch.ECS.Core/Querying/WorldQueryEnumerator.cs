@@ -62,8 +62,6 @@ public readonly ref struct QueryEntity<Q>(Archetype archetype, int archetypeInde
     }
 }
 
-
-
 public ref struct WorldQueryEnumerator<Q>
     where Q : struct, IEntityQuery
 {

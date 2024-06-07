@@ -5,9 +5,9 @@ using SoftTouch.ECS.Storage;
 namespace SoftTouch.ECS;
 
 
-public record SpawnEntity(Entity Entity) : EntityUpdate(Entity);
-public record DespawnEntity(Entity Entity) : EntityUpdate(Entity);
-public record ArchUpdate(Entity Entity) : EntityUpdate(Entity);
+public sealed record SpawnEntity(Entity Entity) : EntityUpdate(Entity);
+public sealed record DespawnEntity(Entity Entity) : EntityUpdate(Entity);
+public sealed record ArchUpdate(Entity Entity) : EntityUpdate(Entity);
 
 public abstract record EntityUpdate(Entity Entity) : IDisposable
 {

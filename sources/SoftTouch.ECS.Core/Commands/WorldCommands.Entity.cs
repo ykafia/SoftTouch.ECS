@@ -5,6 +5,11 @@ namespace SoftTouch.ECS;
 
 public partial class WorldCommands
 {
+    public EntityWorld? GetOrSpawn(Entity entity)
+    {
+        // if entity exists then cool
+        return new();
+    }
     public WorldCommands Spawn()
     {
         var entity = world.Entities.GetOrCreate();
