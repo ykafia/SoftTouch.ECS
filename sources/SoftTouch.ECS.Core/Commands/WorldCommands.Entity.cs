@@ -7,7 +7,12 @@ public partial class WorldCommands
 {
     public EntityWorld? GetOrSpawn(Entity entity)
     {
-        // if entity exists then cool
+        #error implement this function
+        // if entity exists return EntityWorld using the entity index
+
+        // else if there is an entity with a different generation return null
+
+        // else spawn new one
         return new();
     }
     public WorldCommands Spawn()
