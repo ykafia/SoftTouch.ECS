@@ -70,7 +70,7 @@ public partial class WorldCommands(World world)
 
                     world.Entities.ReservedIds.Remove(spawn.Entity);
 
-                    var meta = new EntityMeta() { Generation = spawn.Entity.Generation, Location = new(arch, 0) };
+                    var meta = new EntityMeta() { Entity = spawn.Entity, Location = new(arch, 0) };
                     world.Entities.Meta.Add(meta);
                     arch.AddEntity(spawn.Entity.Index);
                     
@@ -87,7 +87,7 @@ public partial class WorldCommands(World world)
                     // If the size of the entities is 0, Add the meta information
                     if (world.Entities.Meta.Count == 0)
                     {
-                        var meta = new EntityMeta() { Generation = spawn.Entity.Generation, Location = new(arch, 0) };
+                        var meta = new EntityMeta() { Entity = spawn.Entity, Location = new(arch, 0) };
                         world.Entities.Meta.Add(meta);
                         arch.AddEntity(spawn.Entity.Index);
                         foreach (var comp in spawn.AddedComponents.Span)
@@ -95,11 +95,11 @@ public partial class WorldCommands(World world)
                     }
                     // Else check if the entity id already exists and increment its generation
                     else if (spawn.Entity.Index < world.Entities.Meta.Count)
-                        world.Entities.Meta[spawn.Entity] = world.Entities.Meta[spawn.Entity] with { Generation = spawn.Entity.Generation };
+                        world.Entities.Meta[spawn.Entity] = world.Entities.Meta[spawn.Entity] with { Entity = spawn.Entity };
                     // Else add the entity
                     else if (world.Entities.Meta.Count == spawn.Entity.Index)
                     {
-                        var meta = new EntityMeta() { Generation = spawn.Entity.Generation, Location = new(arch, arch.Length) };
+                        var meta = new EntityMeta() { Entity = spawn.Entity, Location = new(arch, arch.Length) };
                         world.Entities.Meta.Add(meta);
                         arch.AddEntity(spawn.Entity.Index);
                         foreach (var comp in spawn.AddedComponents.Span)

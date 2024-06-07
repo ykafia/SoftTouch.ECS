@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,6 +17,7 @@ public readonly ref struct QueryEntity<Q>(Archetype archetype, int archetypeInde
     readonly Q query = query;
 
     public readonly EntityMeta EntityIndex => query.World[archetype.EntityLookup[archetypeIndex]];
+    public readonly Entity Entity => EntityIndex;
 
     public ref T Get<T>()
         where T : struct
@@ -39,7 +41,7 @@ public readonly ref struct QueryEntity<Q>(Archetype archetype, int archetypeInde
         var idx = archetype.EntityLookup[archetypeIndex];
         var meta = archetype.World.Entities[idx];
         query.World.Commands.AddComponent(
-            new(idx,meta.Generation), 
+            new(idx,meta.Entity.Generation), 
             in c
         );
     }
@@ -50,7 +52,7 @@ public readonly ref struct QueryEntity<Q>(Archetype archetype, int archetypeInde
         var idx = archetype.EntityLookup[archetypeIndex];
         var meta = archetype.World.Entities[idx];
         query.World.Commands.RemoveComponent<T>(
-            new(idx, meta.Generation)
+            new(idx, meta.Entity.Generation)
         );
     }
 
@@ -58,7 +60,7 @@ public readonly ref struct QueryEntity<Q>(Archetype archetype, int archetypeInde
     {
         var idx = archetype.EntityLookup[archetypeIndex];
         var meta = archetype.World.Entities[idx];
-        query.World.Commands.Updates.Add(new DespawnEntity(new(idx, meta.Generation)));
+        query.World.Commands.Updates.Add(new DespawnEntity(new(idx, meta.Entity.Generation)));
     }
 }
 

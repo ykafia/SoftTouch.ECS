@@ -30,14 +30,13 @@ public class Entities(World world)
             // If there are free indices we use this free index but have to increment the generation.
             var id = FreeIds[0];
             FreeIds.RemoveAt(0);
-            Meta[id] = Meta[id] with { Generation = Meta[id].Generation + 1 };
+            Meta[id] = Meta[id] with { Entity = new() { Index = id, Generation = Meta[id].Entity.Generation + 1 } };
             ReservedIds.Add(id);
-            return new(id, Meta[id].Generation);
+            return Meta[id].Entity;
         }
         else
         {
             // if there are no free indices that means we have to create a new one of generation 0
-        
             var id = Math.Max(Meta.Count, ReservedIds.Count > 0 ? ReservedIds.Max() + 1 : 0);
             ReservedIds.Add(id);
             return new(id, 0);

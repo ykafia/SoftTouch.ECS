@@ -23,7 +23,9 @@ public interface IFilteredEntityQuery : IEntityQuery
 }
 
 public delegate void EntityUpdateFunc<T>(ref T component1) where T : struct;
+public delegate void EntityUpdateFuncData<TData, T>(ref TData data, ref T component1) where T : struct;
 public delegate void EntityUpdateFuncIndexed<T>(EntityMeta index, ref T component1) where T : struct;
+public delegate void EntityUpdateFuncIndexedData<TData, T>(ref TData data, EntityMeta index, ref T component1) where T : struct;
 
 public record struct Query<TComp> : IEntityQuery
     where TComp : struct
@@ -41,10 +43,20 @@ public record struct Query<TComp> : IEntityQuery
         foreach (var e in this)
             updater.Invoke(ref e.Get<TComp>());
     }
+    public readonly void ForEach<TData>(ref TData data, EntityUpdateFuncData<TData, TComp> updater)
+    {
+        foreach (var e in this)
+            updater.Invoke(ref data, ref e.Get<TComp>());
+    }
     public readonly void ForEachIndexed(EntityUpdateFuncIndexed<TComp> updater)
     {
         foreach (var e in this)
             updater.Invoke(e.EntityIndex, ref e.Get<TComp>());
+    }
+    public readonly void ForEachIndexedData<TData>(ref TData data, EntityUpdateFuncIndexedData<TData, TComp> updater)
+    {
+        foreach (var e in this)
+            updater.Invoke(ref data, e.EntityIndex, ref e.Get<TComp>());
     }
 
     public readonly WorldQueryEnumerator<Query<TComp>> GetEnumerator() => new(this);
@@ -65,10 +77,20 @@ public record struct FilteredQuery<TComp, TFilter> : IFilteredEntityQuery
         foreach (var e in this)
             updater.Invoke(ref e.Get<TComp>());
     }
+    public readonly void ForEach<TData>(ref TData data, EntityUpdateFuncData<TData, TComp> updater)
+    {
+        foreach (var e in this)
+            updater.Invoke(ref data, ref e.Get<TComp>());
+    }
     public readonly void ForEachIndexed(EntityUpdateFuncIndexed<TComp> updater)
     {
         foreach (var e in this)
             updater.Invoke(e.EntityIndex, ref e.Get<TComp>());
+    }
+    public readonly void ForEachIndexedData<TData>(ref TData data, EntityUpdateFuncIndexedData<TData, TComp> updater)
+    {
+        foreach (var e in this)
+            updater.Invoke(ref data, e.EntityIndex, ref e.Get<TComp>());
     }
 
     public readonly WorldFilteredQueryEnumerator<FilteredQuery<TComp, TFilter>> GetEnumerator() => new(this);

@@ -40,7 +40,7 @@ public readonly ref struct FilteredQueryEntity<Q>(Archetype archetype, int arche
         var idx = archetype.EntityLookup[archetypeIndex];
         var meta = archetype.World.Entities[idx];
         query.World.Commands.AddComponent(
-            new(idx,meta.Generation), 
+            new(idx,meta.Entity.Generation), 
             in c
         );
     }
@@ -51,14 +51,14 @@ public readonly ref struct FilteredQueryEntity<Q>(Archetype archetype, int arche
         var idx = archetype.EntityLookup[archetypeIndex];
         var meta = archetype.World.Entities[idx];
         query.World.Commands.RemoveComponent<T>(
-            new(idx, meta.Generation)
+            meta.Entity
         );
     }
     public void Despawn()
     {
         var idx = archetype.EntityLookup[archetypeIndex];
         var meta = archetype.World.Entities[idx];
-        query.World.Commands.Updates.Add(new DespawnEntity(new(idx, meta.Generation)));
+        query.World.Commands.Updates.Add(new DespawnEntity(new(idx, meta.Entity.Generation)));
     }
 }
 

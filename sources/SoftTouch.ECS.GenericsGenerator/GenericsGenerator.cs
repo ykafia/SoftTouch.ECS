@@ -123,7 +123,17 @@ public class GenericsGenerator : ISourceGenerator
                 code.WriteLine($"    where {g} : struct");
             code.WriteLine(";");
             code
-                .WriteLine($"public delegate void EntityUpdateFuncIndexed<{string.Join(", ", generics)}>(EntityMeta index, {string.Join(", ", generics.Select(x => $"ref {x} componen{x.ToLower()}"))})");
+                .WriteLine($"public delegate void EntityUpdateFuncData<TData, {string.Join(", ", generics)}>(ref TData data, {string.Join(", ", generics.Select(x => $"ref {x} componen{x.ToLower()}"))})");
+            foreach (var g in generics)
+                code.WriteLine($"    where {g} : struct");
+            code.WriteLine(";");
+            code
+                .WriteLine($"public delegate void EntityUpdateFuncIndexed<{string.Join(", ", generics)}>(Entity index, {string.Join(", ", generics.Select(x => $"ref {x} componen{x.ToLower()}"))})");
+            foreach (var g in generics)
+                code.WriteLine($"    where {g} : struct");
+            code.WriteLine(";");
+            code
+                .WriteLine($"public delegate void EntityUpdateFuncIndexedData<TData, {string.Join(", ", generics)}>(ref TData data, Entity index, {string.Join(", ", generics.Select(x => $"ref {x} componen{x.ToLower()}"))})");            
             foreach (var g in generics)
                 code.WriteLine($"    where {g} : struct");
             code.WriteLine(";");
@@ -146,10 +156,22 @@ public class GenericsGenerator : ISourceGenerator
                 .WriteLine($"    updater.Invoke({string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
                 .CloseBlock()
                 .WriteEmptyLines(1)
+                .WriteLine($"public readonly void ForEach<TData>(ref TData data, EntityUpdateFuncData<TData, {string.Join(", ", generics)}> updater)")
+                .OpenBlock()
+                .WriteLine("foreach(var e in this)")
+                .WriteLine($"    updater.Invoke(ref data, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
+                .CloseBlock()
+                .WriteEmptyLines(1)
                 .WriteLine($"public readonly void ForEachIndexed(EntityUpdateFuncIndexed<{string.Join(", ", generics)}> updater)")
                 .OpenBlock()
                 .WriteLine("foreach(var e in this)")
-                .WriteLine($"    updater.Invoke(e.EntityIndex, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
+                .WriteLine($"    updater.Invoke(e.Entity, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
+                .CloseBlock()
+                .WriteEmptyLines(1)
+                .WriteLine($"public readonly void ForEachIndexedData<TData>(ref TData data, EntityUpdateFuncIndexedData<TData, {string.Join(", ", generics)}> updater)")
+                .OpenBlock()
+                .WriteLine("foreach(var e in this)")
+                .WriteLine($"    updater.Invoke(ref data, e.Entity, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
                 .CloseBlock()
                 .WriteEmptyLines(1)
                 .WriteLine($"public readonly WorldQueryEnumerator<Query<{string.Join(", ", generics)}>> GetEnumerator() => new(this);")
@@ -176,6 +198,24 @@ public class GenericsGenerator : ISourceGenerator
                 .OpenBlock()
                 .WriteLine("foreach(var e in this)")
                 .WriteLine($"    updater.Invoke({string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
+                .CloseBlock()
+                .WriteEmptyLines(1)
+                .WriteLine($"public readonly void ForEach<TData>(ref TData data, EntityUpdateFuncData<TData, {string.Join(", ", generics)}> updater)")
+                .OpenBlock()
+                .WriteLine("foreach(var e in this)")
+                .WriteLine($"    updater.Invoke(ref data, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
+                .CloseBlock()
+                .WriteEmptyLines(1)
+                .WriteLine($"public readonly void ForEachIndexed(EntityUpdateFuncIndexed<{string.Join(", ", generics)}> updater)")
+                .OpenBlock()
+                .WriteLine("foreach(var e in this)")
+                .WriteLine($"    updater.Invoke(e.Entity, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
+                .CloseBlock()
+                .WriteEmptyLines(1)
+                .WriteLine($"public readonly void ForEachIndexedData<TData>(ref TData data, EntityUpdateFuncIndexedData<TData, {string.Join(", ", generics)}> updater)")
+                .OpenBlock()
+                .WriteLine("foreach(var e in this)")
+                .WriteLine($"    updater.Invoke(ref data, e.Entity, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
                 .CloseBlock()
                 .WriteEmptyLines(1)
                 .WriteLine($"public readonly WorldFilteredQueryEnumerator<FilteredQuery<{string.Join(", ", generics)}, TFilter>> GetEnumerator() => new(this);")
