@@ -7,13 +7,13 @@ public partial class WorldCommands
 {
     public EntityWorld? GetOrSpawn(Entity entity)
     {
-        #error implement this function
+        throw new NotImplementedException();
+        // #error implement this function
         // if entity exists return EntityWorld using the entity index
 
         // else if there is an entity with a different generation return null
 
         // else spawn new one
-        return new();
     }
     public WorldCommands Spawn()
     {
