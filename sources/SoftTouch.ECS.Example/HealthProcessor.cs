@@ -8,21 +8,6 @@ using SoftTouch.ECS.Attributes;
 namespace SoftTouch.ECS.Example;
 
 
-public static class BundledFunctions
-{
-    [Bundle("Hello")]
-    public static void MyFunction(Query<int> entities)
-    {
-        entities.ForEach((ref int age) => age += 1);
-    }
-    
-    [Bundle("Hello")]
-    public static void MyNotWorkingFunction(Query<int> entities, Query<float> somethingElse)
-    {
-        entities.ForEach((ref int age) => age += 1);
-    }
-}
-
 public class HealthProcessor : Processor<Query<HealthComponent>>
 {
     Random rand = new Random();

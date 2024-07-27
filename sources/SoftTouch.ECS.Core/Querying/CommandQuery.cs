@@ -20,18 +20,18 @@ public partial struct Commands : ICommandQuery
 
     public readonly EntityCommands Spawn() => Content.SpawnEmpty();
 
-    public readonly WorldCommands Spawn<T1>(in T1 component1)
+    public readonly EntityCommands Spawn<T1>(in T1 component1)
             where T1 : struct
         => Content.Spawn(component1);
 
-    public readonly WorldCommands Spawn<T1, T2>(
+    public readonly EntityCommands Spawn<T1, T2>(
             in T1 component1,
             in T2 component2
         )
         where T1 : struct
         where T2 : struct
         => Content.Spawn(component1, component2);
-    public readonly WorldCommands Spawn<T1, T2, T3>(
+    public readonly EntityCommands Spawn<T1, T2, T3>(
             in T1 component1,
             in T2 component2,
             in T3 component3
@@ -41,7 +41,7 @@ public partial struct Commands : ICommandQuery
         where T3 : struct
         => Content.Spawn(component1, component2, component3);
 
-    public readonly WorldCommands Spawn<T1, T2, T3, T4>(
+    public readonly EntityCommands Spawn<T1, T2, T3, T4>(
             in T1 component1,
             in T2 component2,
             in T3 component3,
@@ -53,7 +53,7 @@ public partial struct Commands : ICommandQuery
         where T4 : struct
         => Content.Spawn(component1, component2, component3, component4);
 
-    public readonly WorldCommands Spawn<T1, T2, T3, T4, T5>(
+    public readonly EntityCommands Spawn<T1, T2, T3, T4, T5>(
             in T1 component1,
             in T2 component2,
             in T3 component3,
@@ -67,7 +67,7 @@ public partial struct Commands : ICommandQuery
         where T5 : struct
         => Content.Spawn(component1, component2, component3, component4, component5);
 
-    public readonly WorldCommands Spawn<T1, T2, T3, T4, T5, T6>(
+    public readonly EntityCommands Spawn<T1, T2, T3, T4, T5, T6>(
             in T1 component1,
             in T2 component2,
             in T3 component3,
@@ -83,7 +83,7 @@ public partial struct Commands : ICommandQuery
         where T6 : struct
         => Content.Spawn(component1, component2, component3, component4, component5, component6);
 
-    public readonly WorldCommands Spawn<T1, T2, T3, T4, T5, T6, T7>(
+    public readonly EntityCommands Spawn<T1, T2, T3, T4, T5, T6, T7>(
             in T1 component1,
             in T2 component2,
             in T3 component3,
@@ -102,7 +102,7 @@ public partial struct Commands : ICommandQuery
         => Content.Spawn(component1, component2, component3, component4, component5, component6, component7);
 
 
-    public readonly WorldCommands Spawn<T1, T2, T3, T4, T5, T6, T7, T8>(
+    public readonly EntityCommands Spawn<T1, T2, T3, T4, T5, T6, T7, T8>(
             in T1 component1,
             in T2 component2,
             in T3 component3,

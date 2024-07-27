@@ -15,12 +15,12 @@ public partial class WorldCommands
 
         // else spawn new one
     }
-    public WorldCommands Spawn()
+    public EntityCommands Spawn()
     {
         var entity = world.Entities.GetOrCreate();
         var update = new SpawnEntity(entity);
         Updates.Add(update);
-        return this;
+        return new(update, this);
     }
     public EntityCommands SpawnEmpty()
     {
@@ -29,17 +29,17 @@ public partial class WorldCommands
         Updates.Add(update);
         return new(update, this);
     }
-    public WorldCommands Spawn<T1>(in T1 component1)
+    public EntityCommands Spawn<T1>(in T1 component1)
             where T1 : struct
     {
         var entity = world.Entities.GetOrCreate();
         var update = new SpawnEntity(entity);
         update.Add(in component1);
         Updates.Add(update);
-        return this;
+        return new(update, this);
     }
 
-    public WorldCommands Spawn<T1, T2>(
+    public EntityCommands Spawn<T1, T2>(
             in T1 component1,
             in T2 component2
         )
@@ -51,10 +51,10 @@ public partial class WorldCommands
         update.Add(in component1);
         update.Add(in component2);
         Updates.Add(update);
-        return this;
+        return new(update, this);
     }
-    public WorldCommands Spawn<T1, T2, T3>(
-            in T1 component1,
+    public EntityCommands Spawn<T1, T2, T3>(
+            in T1 component1,   
             in T2 component2,
             in T3 component3
         )
@@ -68,9 +68,9 @@ public partial class WorldCommands
         update.Add(in component2);
         update.Add(in component3);
         Updates.Add(update);
-        return this;
+        return new(update, this);
     }
-    public WorldCommands Spawn<T1, T2, T3, T4>(
+    public EntityCommands Spawn<T1, T2, T3, T4>(
             in T1 component1,
             in T2 component2,
             in T3 component3,
@@ -88,9 +88,9 @@ public partial class WorldCommands
         update.Add(in component3);
         update.Add(in component4);
         Updates.Add(update);
-        return this;
+        return new(update, this);
     }
-    public WorldCommands Spawn<T1, T2, T3, T4, T5>(
+    public EntityCommands Spawn<T1, T2, T3, T4, T5>(
             in T1 component1,
             in T2 component2,
             in T3 component3,
@@ -111,9 +111,9 @@ public partial class WorldCommands
         update.Add(in component4);
         update.Add(in component5);
         Updates.Add(update);
-        return this;
+        return new(update, this);
     }
-    public WorldCommands Spawn<T1, T2, T3, T4, T5, T6>(
+    public EntityCommands Spawn<T1, T2, T3, T4, T5, T6>(
             in T1 component1,
             in T2 component2,
             in T3 component3,
@@ -137,9 +137,9 @@ public partial class WorldCommands
         update.Add(in component5);
         update.Add(in component6);
         Updates.Add(update);
-        return this;
+        return new(update, this);
     }
-    public WorldCommands Spawn<T1, T2, T3, T4, T5, T6, T7>(
+    public EntityCommands Spawn<T1, T2, T3, T4, T5, T6, T7>(
             in T1 component1,
             in T2 component2,
             in T3 component3,
@@ -166,10 +166,10 @@ public partial class WorldCommands
         update.Add(in component6);
         update.Add(in component7);
         Updates.Add(update);
-        return this;
+        return new(update, this);
     }
 
-    public WorldCommands Spawn<T1, T2, T3, T4, T5, T6, T7, T8>(
+    public EntityCommands Spawn<T1, T2, T3, T4, T5, T6, T7, T8>(
             in T1 component1,
             in T2 component2,
             in T3 component3,
@@ -199,27 +199,27 @@ public partial class WorldCommands
         update.Add(in component7);
         update.Add(in component8);
         Updates.Add(update);
-        return this;
+        return new(update, this);
     }
-    public WorldCommands Spawn<T1>()
+    public EntityCommands Spawn<T1>()
         where T1 : struct
     {
         return Spawn<T1>(default);
     }
-    public WorldCommands Spawn<T1, T2>()
+    public EntityCommands Spawn<T1, T2>()
         where T1 : struct
         where T2 : struct
     {
         return Spawn<T1, T2>(default, default);
     }
-    public WorldCommands Spawn<T1, T2, T3>()
+    public EntityCommands Spawn<T1, T2, T3>()
         where T1 : struct
         where T2 : struct
         where T3 : struct
     {
         return Spawn<T1, T2, T3>(default, default, default);
     }
-    public WorldCommands Spawn<T1, T2, T3, T4>()
+    public EntityCommands Spawn<T1, T2, T3, T4>()
         where T1 : struct
         where T2 : struct
         where T3 : struct
@@ -227,7 +227,7 @@ public partial class WorldCommands
     {
         return Spawn<T1, T2, T3, T4>(default, default, default, default);
     }
-    public WorldCommands Spawn<T1, T2, T3, T4, T5>()
+    public EntityCommands Spawn<T1, T2, T3, T4, T5>()
         where T1 : struct
         where T2 : struct
         where T3 : struct
@@ -237,7 +237,7 @@ public partial class WorldCommands
         return Spawn<T1, T2, T3, T4, T5>(default, default, default, default, default);
     }
 
-    public WorldCommands Spawn<T1, T2, T3, T4, T5, T6>()
+    public EntityCommands Spawn<T1, T2, T3, T4, T5, T6>()
         where T1 : struct
         where T2 : struct
         where T3 : struct
@@ -247,7 +247,7 @@ public partial class WorldCommands
     {
         return Spawn<T1, T2, T3, T4, T5, T6>(default, default, default, default, default, default);
     }
-    public WorldCommands Spawn<T1, T2, T3, T4, T5, T6, T7>()
+    public EntityCommands Spawn<T1, T2, T3, T4, T5, T6, T7>()
         where T1 : struct
         where T2 : struct
         where T3 : struct
@@ -258,7 +258,7 @@ public partial class WorldCommands
     {
         return Spawn<T1, T2, T3, T4, T5, T6, T7>(default, default, default, default, default, default, default);
     }
-    public WorldCommands Spawn<T1, T2, T3, T4, T5, T6, T7, T8>()
+    public EntityCommands Spawn<T1, T2, T3, T4, T5, T6, T7, T8>()
         where T1 : struct
         where T2 : struct
         where T3 : struct

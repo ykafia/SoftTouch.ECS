@@ -1,28 +1,37 @@
-﻿using SoftTouch.ECS.Storage;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.CompilerServices;
+using SoftTouch.ECS.Components;
+using SoftTouch.ECS.Storage;
 
 namespace SoftTouch.ECS;
 
 
-public record EntityCommands(EntityUpdate Entity, WorldCommands Commands)
+public record struct EntityCommands(EntityUpdate Entity, WorldCommands Commands)
 {
-    public EntityCommands With<T1>(in T1 component1)
-        where T1 : struct
+    public readonly Entity Id => Entity.Entity;
+}
+
+public static class EntityCommandsExtensions
+{
+    public static EntityCommands Insert<T>(this EntityCommands commands)
+        where T : struct
     {
-        Entity.Add(component1);
-        return this;
+        commands.Entity.Add<T>(default);
+        return commands;
     }
-    public EntityCommands With<T1>()
-        where T1 : struct
+    public static EntityCommands Insert<T>(this EntityCommands commands, in T component)
+        where T : struct
     {
-        Entity.Add(default(T1));
-        return this;
+        commands.Entity.Add(component);
+        return commands;
+    }
+    public static EntityCommands SetParent(this EntityCommands commands, in Entity entity)
+    {
+        commands.Entity.Add<Parent>(entity);
+        return commands;
+    }
+    public static EntityCommands PushChildren(this EntityCommands commands, List<Entity> entities)
+    {
+        commands.Entity.Add<Children>(entities);
+        return commands;
     }
 }

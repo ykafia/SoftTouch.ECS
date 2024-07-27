@@ -21,9 +21,8 @@ var app =
         static (EventWriter<ChangedAge> evw, Commands commands) =>
         {
             evw.Broadcast(new() { Age = 12 });
-            commands
-                .Spawn(new TimeCount(TimeSpan.FromSeconds(2)))
-                .Spawn(new NameComponent("John Doe"));
+            commands.Spawn(new TimeCount(TimeSpan.FromSeconds(2)));
+            commands.Spawn(new NameComponent("John Doe"));
         })
     .AddProcessor<Update, EventReader<ChangedAge>, Resource<AppTime>>(
         static (EventReader<ChangedAge> evw, Resource<AppTime> appTime) =>

@@ -41,24 +41,24 @@ public class SpawnEntities() : Processor<Commands>(null!)
         unsafe { cube.Materials[0].Shader = shader; }
 
         Query.Spawn()
-            .With(cube)
-            .With(new Transform() { Translation = new(1, 0, 1) });
+            .Insert(cube)
+            .Insert(new Transform() { Translation = new(1, 0, 1) });
         Query.Spawn()
-            .With(cube)
-            .With(new Transform() { Translation = new(-1, 0, 1) });
+            .Insert(cube)
+            .Insert(new Transform() { Translation = new(-1, 0, 1) });
         Query.Spawn()
-            .With(cube)
-            .With(new Transform() { Translation = new(-1, 0, -1) });
+            .Insert(cube)
+            .Insert(new Transform() { Translation = new(-1, 0, -1) });
         Query.Spawn()
-            .With(cube)
-            .With(new Transform() { Translation = new(1, 0, -1) });
+            .Insert(cube)
+            .Insert(new Transform() { Translation = new(1, 0, -1) });
 
 
 
-        Query.Spawn().With(Util.CreateLight(LightType.LIGHT_POINT, new(2, 1, 2), Vector3.Zero, Color.YELLOW, shader));
-        Query.Spawn().With(Util.CreateLight(LightType.LIGHT_POINT, new(-2, 1, 2), Vector3.Zero, Color.RED, shader));
-        Query.Spawn().With(Util.CreateLight(LightType.LIGHT_POINT, new(-2, 1, -2), Vector3.Zero, Color.GREEN, shader));
-        Query.Spawn().With(Util.CreateLight(LightType.LIGHT_POINT, new(-2, 1, 2), Vector3.Zero, Color.BLUE, shader));
+        Query.Spawn().Insert(Util.CreateLight(LightType.LIGHT_POINT, new(2, 1, 2), Vector3.Zero, Color.YELLOW, shader));
+        Query.Spawn().Insert(Util.CreateLight(LightType.LIGHT_POINT, new(-2, 1, 2), Vector3.Zero, Color.RED, shader));
+        Query.Spawn().Insert(Util.CreateLight(LightType.LIGHT_POINT, new(-2, 1, -2), Vector3.Zero, Color.GREEN, shader));
+        Query.Spawn().Insert(Util.CreateLight(LightType.LIGHT_POINT, new(-2, 1, 2), Vector3.Zero, Color.BLUE, shader));
 
     }
 }
