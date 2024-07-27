@@ -24,7 +24,7 @@ public interface IFilter
 public interface IHasFilter : IFilter { }
 public interface IWithoutFilter : IFilter { }
 
-public record Has<T>() : IFilter
+public record With<T>() : IFilter
     where T : struct, IEquatable<T>
 {
     public static TypeSet WithTypes { get; } = TypeSet.Create(typeof(T));
@@ -58,6 +58,8 @@ public record Filter<THas, TWithout>() : IFilterQuery
     public TypeSet ImplWithTypes => WithTypes;
     public TypeSet ImplWithoutTypes => WithoutTypes;
 }
+
+
 
 
 

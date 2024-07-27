@@ -243,7 +243,7 @@ public class GenericsGenerator : ISourceGenerator
 
             var generics = Enumerable.Range(1, i).Select(x => "T" + x);
             code
-                .WriteLine($"public record Has<{string.Join(", ", generics)}>() : IFilter")
+                .WriteLine($"public record With<{string.Join(", ", generics)}>() : IFilter")
                 .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
                 .OpenBlock()
                 .WriteLine($"public static TypeSet WithTypes {{ get; }} = TypeSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
