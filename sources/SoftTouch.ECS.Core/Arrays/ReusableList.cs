@@ -20,9 +20,16 @@ public class ReusableList<T>() : IDisposable
     public Span<T> Span => _array.Span[..Length];
     public Memory<T> Memory => _array.Memory[..Length];
 
-    public int Count => throw new NotImplementedException();
+    public int Count => Length;
 
-    public bool IsReadOnly => throw new NotImplementedException();
+    public bool IsReadOnly => true;
+
+    public T this[int index] 
+    {
+        get => Span[index];
+        set => Span[index] = value;
+    }
+    
 
     public ReusableList(ReadOnlySpan<T> items) : this()
     {
