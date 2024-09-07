@@ -19,6 +19,7 @@ public readonly struct ArchetypeID
     public ArchetypeID(params Type[] types)
     {
         Types = types;
+        Array.Sort(Types, (a, b) => string.Compare(a.FullName, b.FullName));
         TypeSet = [..types];
     }
 
@@ -80,7 +81,19 @@ public readonly struct ArchetypeID
     public static bool operator !=(ArchetypeID id1, ArchetypeID id2) => !id1.Equals(id2);
     public override bool Equals([NotNullWhen(true)] object? obj)
     {
-        return obj is ArchetypeID id && IsSupersetOf(id) && IsSubsetOf(id);
+        if(obj is ArchetypeID id)
+        {
+            if (Types.Length != id.Types.Length)
+                return false;
+
+            for (int i = 0; i < Types.Length; i++)
+            {
+                if (Types[i] != id.Types[i])
+                    return false;
+            }
+            return true;
+        }
+        return false;
     }
 
     public override int GetHashCode()
