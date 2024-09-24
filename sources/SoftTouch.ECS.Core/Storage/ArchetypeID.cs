@@ -16,9 +16,9 @@ public readonly struct ArchetypeID
     public int Count => Types.Length;
     public Span<Type> Span => Types.AsSpan();
 
-    public ArchetypeID(params Type[] types)
+    public ArchetypeID(ReadOnlySpan<Type> types)
     {
-        Types = types;
+        Types = types.ToArray();
         Array.Sort(Types, (a, b) => string.Compare(a.FullName, b.FullName));
         TypeSet = [..types];
     }

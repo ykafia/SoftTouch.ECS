@@ -32,6 +32,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DesignIdeas", "DesignIdeas"
 		EntityIndexPooling.md = EntityIndexPooling.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftTouch.ECS.Analyzers", "sources\SoftTouch.ECS.Analyzers\SoftTouch.ECS.Analyzers.csproj", "{360C168B-8C6A-40D2-BE80-18BBDA849738}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -82,6 +84,10 @@ Global
 		{A97FAB05-C381-4BA3-8C92-8AD67CC85228}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A97FAB05-C381-4BA3-8C92-8AD67CC85228}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A97FAB05-C381-4BA3-8C92-8AD67CC85228}.Release|Any CPU.Build.0 = Release|Any CPU
+		{360C168B-8C6A-40D2-BE80-18BBDA849738}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{360C168B-8C6A-40D2-BE80-18BBDA849738}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{360C168B-8C6A-40D2-BE80-18BBDA849738}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{360C168B-8C6A-40D2-BE80-18BBDA849738}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,6 +104,7 @@ Global
 		{C13AAF00-C06D-4569-BE20-7FFF5FA63392} = {1F9F4560-CA0F-477A-B8F6-AA8072ADA27C}
 		{C86FE0C1-1420-48FE-92E0-583B075183E0} = {1F9F4560-CA0F-477A-B8F6-AA8072ADA27C}
 		{A97FAB05-C381-4BA3-8C92-8AD67CC85228} = {1F9F4560-CA0F-477A-B8F6-AA8072ADA27C}
+		{360C168B-8C6A-40D2-BE80-18BBDA849738} = {1F9F4560-CA0F-477A-B8F6-AA8072ADA27C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {088E9130-BBEB-434D-81F4-8939372421C1}

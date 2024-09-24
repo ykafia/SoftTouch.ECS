@@ -1,12 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<ItemGroup>
-
-		<ProjectReference
-			Include="..\SoftTouch.ECS.ProcessorGenerators\SoftTouch.ECS.ProcessorGenerators.csproj"
-			OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\SoftTouch.ECS\SoftTouch.ECS.csproj" />
 		<ProjectReference Include="..\SoftTouch.ECS.Shared\SoftTouch.ECS.Shared.csproj" />
+		<ProjectReference Include="..\SoftTouch.ECS.Analyzers\SoftTouch.ECS.Analyzers.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
 	</ItemGroup>
 
 	<PropertyGroup>

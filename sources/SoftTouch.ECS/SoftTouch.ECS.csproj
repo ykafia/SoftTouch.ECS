@@ -9,12 +9,16 @@
     <NoWarn>$(NoWarn);NU5128</NoWarn>
     <PackageTags>ECS</PackageTags>
     <Description>C# ECS implementation based on FLECS</Description>
-    <Version>0.0.4</Version>
+    <Version>0.0.5</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SoftTouch.ECS.Core\SoftTouch.ECS.Core.csproj"/>
     <ProjectReference Include="..\SoftTouch.ECS.ProcessorGenerators\SoftTouch.ECS.ProcessorGenerators.csproj"/>
+    <ProjectReference Include="..\SoftTouch.ECS.Analyzers\SoftTouch.ECS.Analyzers.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\SoftTouch.ECS.Analyzers\bin\$(Configuration)\netstandard2.0\SoftTouch.ECS.Analyzers.dll" Pack="true" PackagePath="analyzers/dotnet/cs" />
   </ItemGroup>
 
   <!-- <Target Name="CopyPackage" AfterTargets="Build"> 

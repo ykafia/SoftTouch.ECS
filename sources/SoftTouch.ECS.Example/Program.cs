@@ -14,16 +14,16 @@ using SoftTouch.ECS.Shared.Processors;
 using SoftTouch.ECS.Storage;
 using System.Diagnostics;
 
+static void BroadCastSomeData(EventWriter<ChangedAge> evw, Commands commands)
+{
+    evw.Broadcast(new() { Age = 12 });
+    commands.Spawn(new TimeCount(TimeSpan.FromSeconds(2)));
+    commands.Spawn(new NameComponent("John Doe"));
+}
 
 var app =
     new App()
-    .AddProcessor<Startup, EventWriter<ChangedAge>, Commands>(
-        static (EventWriter<ChangedAge> evw, Commands commands) =>
-        {
-            evw.Broadcast(new() { Age = 12 });
-            commands.Spawn(new TimeCount(TimeSpan.FromSeconds(2)));
-            commands.Spawn(new NameComponent("John Doe"));
-        })
+    .AddProcessor<Startup, EventWriter<ChangedAge>, Commands>(BroadCastSomeData)
     .AddProcessor<Update, EventReader<ChangedAge>, Resource<AppTime>>(
         static (EventReader<ChangedAge> evw, Resource<AppTime> appTime) =>
         {
@@ -43,11 +43,11 @@ var app =
     .AddProcessor<Update, EventWriter<ChangedAge>, Query<TimeCount>, Resource<AppTime>>(static (EventWriter<ChangedAge> ageChange, Query<TimeCount> tc, Resource<AppTime> time) =>
     {
         var elapsed = time.Content.Elapsed.TotalSeconds;
-        foreach(var e in tc)
+        foreach (var e in tc)
         {
             ref var t = ref e.Get<TimeCount>();
             t.Time += TimeSpan.FromSeconds(elapsed);
-            if(t.Time > t.Delay)
+            if (t.Time > t.Delay)
             {
                 ageChange.Broadcast(new() { Age = 13 });
                 t.Time = TimeSpan.Zero;
@@ -57,7 +57,7 @@ var app =
     .AddProcessor<Update, Query<NameComponent>, EventWriter<ChangedAge>>(
         static (Query<NameComponent> named, EventWriter<ChangedAge> ev) =>
     {
-        
+
     });
 
 

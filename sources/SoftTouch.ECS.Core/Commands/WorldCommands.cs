@@ -16,12 +16,12 @@ public partial class WorldCommands(World world)
         {
             if (u.Entity == e)
             {
-                u.AddedComponents.Add(ComponentBox<T>.Create(component));
+                u.Add(component);
                 return;
             }
         }
         var update = new ArchUpdate(e);
-        update.AddedComponents.Add(ComponentBox<T>.Create(component));
+        update.Add(component);
         Updates.Add(update);
     }
     public void RemoveComponent<T>(in Entity e) where T : struct
@@ -30,12 +30,12 @@ public partial class WorldCommands(World world)
         {
             if (u.Entity == e)
             {
-                u.RemovedComponents.Add(ComponentBox<T>.Create(default));
+                u.Remove<T>();
                 return;
             }
         }
         var update = new ArchUpdate(e);
-        update.RemovedComponents.Add(ComponentBox<T>.Create(default));
+        update.Remove<T>();
         Updates.Add(update);
     }
 
@@ -50,8 +50,9 @@ public partial class WorldCommands(World world)
                 foreach (var a in world.Archetypes.Values)
                 {
                     arch = a;
-                    foreach (var t in spawn.AddedComponents.Span)
-                        if (!a.ID.Contains(t.ComponentType))
+                    foreach (var t in spawn.ComponentUpdates.Span)
+
+                        if (t.Operation == ComponentOperation.Add && !a.ID.Contains(t.Component.ComponentType))
                         {
                             arch = null!;
                             break;
@@ -61,11 +62,18 @@ public partial class WorldCommands(World world)
                 }
                 if (arch is null)
                 {
-                    var idArr = new Type[spawn.AddedComponents.Length];
-                    for (int i = 0; i < spawn.AddedComponents.Length; i++)
-                        idArr[i] = spawn.AddedComponents.Span[i].ComponentType;
+                    using var added = new ReusableList<ComponentBox>();
+                    foreach (var c in update.ComponentUpdates)
+                        if (c.Operation == ComponentOperation.Add)
+                            added.Add(c.Component);
+                    var idArr = new Type[added.Length];
+                    int filled = 0;
+                    foreach (var c in update.ComponentUpdates)
+                        if (c.Operation == ComponentOperation.Add)
+                            idArr[filled++] = c.Component.ComponentType;
                     var aid = new ArchetypeID(idArr);
-                    world.Archetypes.Add(aid, new Archetype(aid, spawn.AddedComponents, world));
+                    
+                    world.Archetypes.Add(aid, new Archetype(aid, added, world));
                     arch = world.Archetypes[aid];
 
                     world.Entities.ReservedIds.Remove(spawn.Entity);
@@ -73,7 +81,6 @@ public partial class WorldCommands(World world)
                     var meta = new EntityMeta() { Entity = spawn.Entity, Location = new(arch, 0) };
                     world.Entities.Meta.Add(meta);
                     arch.AddEntity(spawn.Entity.Index);
-                    
                 }
                 else
                 {
@@ -90,8 +97,9 @@ public partial class WorldCommands(World world)
                         var meta = new EntityMeta() { Entity = spawn.Entity, Location = new(arch, 0) };
                         world.Entities.Meta.Add(meta);
                         arch.AddEntity(spawn.Entity.Index);
-                        foreach (var comp in spawn.AddedComponents.Span)
-                            arch.Storage[comp.ComponentType].TryAdd(comp);
+                        foreach (var comp in spawn.ComponentUpdates.Span)
+                            if(comp.Operation == ComponentOperation.Add)
+                                arch.Storage[comp.Component.ComponentType].TryAdd(comp);
                     }
                     // Else check if the entity id already exists and increment its generation
                     else if (spawn.Entity.Index < world.Entities.Meta.Count)
@@ -102,8 +110,9 @@ public partial class WorldCommands(World world)
                         var meta = new EntityMeta() { Entity = spawn.Entity, Location = new(arch, arch.Length) };
                         world.Entities.Meta.Add(meta);
                         arch.AddEntity(spawn.Entity.Index);
-                        foreach (var comp in spawn.AddedComponents.Span)
-                            arch.Storage[comp.ComponentType].TryAdd(comp);
+                        foreach (var comp in spawn.ComponentUpdates.Span)
+                            if(comp.Operation == ComponentOperation.Add)
+                                arch.Storage[comp.Component.ComponentType].TryAdd(comp);
                     }
                     else throw new Exception("Entity index were skipped");
                 }
@@ -126,16 +135,17 @@ public partial class WorldCommands(World world)
                 foreach (var t in oldArch.ID.Types)
                 {
                     bool toAdd = true;
-                    foreach (var e in update.RemovedComponents.Span)
-                        if (t == e.ComponentType)
+                    foreach (var e in update.ComponentUpdates.Span)
+                        if (e.Operation == ComponentOperation.Remove && t == e.Component.ComponentType)
                             toAdd = false;
                     if (toAdd && oldArch.GetComponent(update.Entity, t, out var c))
                         comps.Add(c);
                     else
                         throw new Exception("Could not add component");
                 }
-                foreach (var r in archUpdate.AddedComponents.Span)
-                    comps.Add(r);
+                foreach (var r in archUpdate.ComponentUpdates.Span)
+                    if(r.Operation == ComponentOperation.Add)
+                        comps.Add(r.Component);
 
 
                 Archetype newArch = null!;
