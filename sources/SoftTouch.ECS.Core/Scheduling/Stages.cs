@@ -1,23 +1,31 @@
 using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
 using System.Reflection.PortableExecutable;
+using SoftTouch.ECS.Arrays;
 using SoftTouch.ECS.Processors;
 
 namespace SoftTouch.ECS.Scheduling;
 
-public abstract record Stage;
+public abstract record Stage
+{
+    public abstract void Update();
+    public abstract bool TryAdd<TSubStage>(Processor processor) where TSubStage : SubStage;
+    internal abstract void SetStages<TStage>(ReadOnlySpan<SubStage<TStage>> subStages) where TStage : Stage;
+    
+}
 public abstract record Stage<T> : Stage
     where T : Stage<T>
 {
+    public bool Parallel { get; set; } = true;
     protected virtual List<SubStage<T>> SubStages { get; } = [];
-    public virtual void Update(bool parallel = true)
+
+    public override void Update()
     {
         foreach (var subStage in SubStages)
-            subStage.Update(parallel);
+            subStage.Update(Parallel);
     }
 
-    internal void SetStages<TStage>(ReadOnlySpan<SubStage<TStage>> subStages)
-        where TStage : T
+    internal override void SetStages<TStage>(ReadOnlySpan<SubStage<TStage>> subStages)
     {
         SubStages.Clear();
         foreach (var subStage in subStages)
@@ -53,8 +61,7 @@ public abstract record Stage<T> : Stage
         }
     }
 
-    public bool TryAdd<TSubStage>(Processor processor)
-        where TSubStage : SubStage
+    public override bool TryAdd<TSubStage>(Processor processor)
     {
         foreach(var subStage in SubStages)
             if(subStage.GetType() == typeof(TSubStage))
@@ -85,21 +92,17 @@ public sealed record Main : Stage<Main>
         new Last()
     ];
 
-    public override void Update(bool parallel = true)
+    public override void Update()
     {
         if(!started)
         {
             foreach (var stage in SubStages)
                 if (stage is StartupBase)
-                    stage.Update(parallel);
+                    stage.Update(Parallel);
             started = true;
         }
         foreach(var stage in SubStages)
             if (stage is not StartupBase)
-                stage.Update(parallel);
+                stage.Update(Parallel);
     }
 }
-
-
-public record Extract : Stage<Extract>;
-public record Render : Stage<Render>;

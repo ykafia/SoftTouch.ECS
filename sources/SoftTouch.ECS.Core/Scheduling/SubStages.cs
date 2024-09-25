@@ -4,10 +4,14 @@ using SoftTouch.ECS.Processors;
 namespace SoftTouch.ECS.Scheduling;
 
 
-public abstract record SubStage;
+public abstract record SubStage
+{
+    public abstract Type StageType { get; }
+}
 public abstract record SubStage<TStage> : SubStage
     where TStage : Stage
 {
+    public override Type StageType => typeof(TStage);
     internal List<ProcessorGroup> groups = [];
     readonly List<Task> tasks = [];
     public virtual void Update(bool parallel = true)

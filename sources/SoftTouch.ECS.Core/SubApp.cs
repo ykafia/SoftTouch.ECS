@@ -7,22 +7,19 @@ namespace SoftTouch.ECS;
 /// A sub app running in parallel after the app.
 /// </summary>
 /// <param name="parent"></param>
-public class SubApp(App parent) : App
+public abstract class SubApp(App parent, List<Stage>? stages = null) : App(stages)
 {
     public App Parent { get; } = parent;
-    public override void Update(bool parallel = true)
+    public override void Update()
     {
         AppTime.Update();
-        Schedule.RunExtract();
-        Schedule.Run(parallel);
+        Schedule.Run();
     }
 
-    public SubApp SetStages<TStage>(ReusableList<SubStage<TStage>> subStages)
+    public SubApp SetStages<TStage>(ReadOnlySpan<SubStage<TStage>> subStages)
         where TStage : Stage
     {
         Schedule.SetStages(subStages);
         return this;
     }
 }
-
-public class RenderApp(App parent) : SubApp(parent);

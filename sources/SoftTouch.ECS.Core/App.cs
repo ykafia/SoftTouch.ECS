@@ -22,36 +22,36 @@ public partial class App
 
     public SubApp? SubApp { get; set; }
 
-    public App()
+    public App(List<Stage>? stages = null)
     {
         AppTime = new();
         Events = new();
         World = new(AppTime);
         World.Resources.Set(Events);
-        Schedule = new(this);
+        Schedule = new(this, stages ?? [new Main()]);
         IsRunning = false;
     }
 
-    public void Run(bool parallel = true)
+    public void Run()
     {
         IsRunning = true;
         while(IsRunning)
-            Update(parallel);
+            Update();
     }
 
-    public virtual void Update(bool parallel = true)
+    public virtual void Update()
     {
         AppTime.Update();
         Events.Update();
-        Schedule.Run(parallel);
+        Schedule.Run();
         World.ApplyUpdates();
-        SubApp?.Update(parallel);
+        SubApp?.Update();
         
     }
-    public virtual void UpdateNoWorldUpdates(bool parallel = true)
+    public virtual void UpdateNoWorldUpdates()
     {
         AppTime.Update();
-        Schedule.Run(parallel);
+        Schedule.Run();
         //World.ApplyUpdates();
     }
 }
