@@ -2,10 +2,11 @@
 using SoftTouch.ECS.Querying;
 using SoftTouch.ECS.States;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SoftTouch.ECS.Processors;
 
-
+[SuppressMessage("Design", "CA1822")]
 public abstract class Processor
 {
     internal World World { get; set; }
@@ -16,22 +17,14 @@ public abstract class Processor
     public StateTransition? OnState { get; set; } = null;
     public bool CanRun => OnState == null || World.GetResource<WorldStates>().IsValid(OnState.Value);
 
-    public Processor()
-    {
-        World = null!;
-    }
+    public Processor() => World = null!;
 
-    public Processor(World world)
-    {
-        World = world;
-    }
+    public Processor(World world) => World = world;
+
     public abstract void Update();
 
     public static Processor Create<T>(World world)
-        where T : Processor, new()
-    {
-        return new T() { World = world };
-    }
+        where T : Processor, new() => new T() { World = world };
 
 
     public static Processor From<Q1>(UpdaterFunc<Q1> func) where Q1 : struct, IWorldQuery
@@ -73,10 +66,8 @@ public abstract class Processor<Q>(World world) : Processor(world)
         var hashEv = new HashSet<Type>();
         var q1 = new Q();
         if (q1 is IEntityQuery eq1)
-        {
             foreach (var t in eq1.ImplTypes)
                 hash.Add(t);
-        }
         if (q1 is IEventWriter evq)
             hashEv.Add(evq.EventDataType);
 
@@ -97,15 +88,11 @@ public abstract class Processor<Q1, Q2>(World world) : Processor(world)
         var q1 = new Q1();
         var q2 = new Q2();
         if (q1 is IEntityQuery eq1)
-        {
             foreach (var t in eq1.ImplTypes)
                 hash.Add(t);
-        }
         if (q2 is IEntityQuery eq2)
-        {
             foreach (var t in eq2.ImplTypes)
                 hash.Add(t);
-        }
         if (q1 is IEventWriter evq)
             hashEv.Add(evq.EventDataType);
         if (q2 is IEventWriter evq2)
@@ -131,20 +118,14 @@ public abstract class Processor<Q1, Q2, Q3>(World world) : Processor(world)
         var q2 = new Q2();
         var q3 = new Q3();
         if (q1 is IEntityQuery eq1)
-        {
             foreach (var t in eq1.ImplTypes)
                 hash.Add(t);
-        }
         if (q2 is IEntityQuery eq2)
-        {
             foreach (var t in eq2.ImplTypes)
                 hash.Add(t);
-        }
         if (q3 is IEntityQuery eq3)
-        {
             foreach (var t in eq3.ImplTypes)
                 hash.Add(t);
-        }
         if (q1 is IEventWriter evq)
             hashEv.Add(evq.EventDataType);
         if (q2 is IEventWriter evq2)
@@ -176,25 +157,17 @@ public abstract class Processor<Q1, Q2, Q3, Q4>(World world) : Processor(world)
         var q3 = new Q3();
         var q4 = new Q4();
         if (q1 is IEntityQuery eq1)
-        {
             foreach (var t in eq1.ImplTypes)
                 hash.Add(t);
-        }
         if (q2 is IEntityQuery eq2)
-        {
             foreach (var t in eq2.ImplTypes)
                 hash.Add(t);
-        }
         if (q3 is IEntityQuery eq3)
-        {
             foreach (var t in eq3.ImplTypes)
                 hash.Add(t);
-        }
         if (q4 is IEntityQuery eq4)
-        {
             foreach (var t in eq4.ImplTypes)
                 hash.Add(t);
-        }
         if (q1 is IEventWriter evq)
             hashEv.Add(evq.EventDataType);
         if (q2 is IEventWriter evq2)

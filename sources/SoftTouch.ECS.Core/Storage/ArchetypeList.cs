@@ -6,20 +6,18 @@ public record struct ArchetypeItem(ArchetypeID Key, Archetype Value);
 
 public class ArchetypeList
 {
-
-    public ArchetypeListKeys Keys => new ArchetypeListKeys(this);
-    public ArchetypeListValues Values => new ArchetypeListValues(this);
+    public ArchetypeListKeys Keys => new(this);
+    public ArchetypeListValues Values => new(this);
     public int Count => list.Count;
-
-    List<ArchetypeItem> list = new();
-    Dictionary<ArchetypeID, int> lookup = new();
+    readonly List<ArchetypeItem> list = [];
+    readonly Dictionary<ArchetypeID, int> lookup = [];
 
     public Archetype this[ArchetypeID id]
     {
         get => list[lookup[id]].Value;
         set
         {
-            if(ContainsKey(id))
+            if (ContainsKey(id))
             {
                 list[lookup[id]] = list[lookup[id]] with { Value = value };
             }
@@ -58,68 +56,40 @@ public class ArchetypeList
 
     public Enumerator GetEnumerator() => new(this);
 
-    public ref struct Enumerator
+    public ref struct Enumerator(ArchetypeList list)
     {
-        List<ArchetypeItem>.Enumerator enumerator;
-        public Enumerator(ArchetypeList list)
-        {
-            enumerator = list.list.GetEnumerator();
-        }
+        List<ArchetypeItem>.Enumerator enumerator = list.list.GetEnumerator();
         public ArchetypeItem Current => enumerator.Current;
         public bool MoveNext() => enumerator.MoveNext();
     }
 
-    public ref struct ArchetypeListKeys
+    public readonly ref struct ArchetypeListKeys(ArchetypeList list)
     {
-        ArchetypeList list;
-
-        public ArchetypeListKeys(ArchetypeList list)
-        {
-            this.list = list;
-        }
+        readonly ArchetypeList list = list;
 
         public Enumerator GetEnumerator() => new(list);
 
-        public ref struct Enumerator
+        public ref struct Enumerator(ArchetypeList list)
         {
-            List<ArchetypeItem>.Enumerator enumerator;
-            public Enumerator(ArchetypeList list)
-            {
-                this.enumerator = list.list.GetEnumerator();
-            }
+            List<ArchetypeItem>.Enumerator enumerator = list.list.GetEnumerator();
             public ArchetypeID Current => enumerator.Current.Key;
-            public bool MoveNext()
-            {
-                return enumerator.MoveNext();
-            }
+            public bool MoveNext() => enumerator.MoveNext();
 
         }
     }
-    public ref struct ArchetypeListValues
+    public readonly ref struct ArchetypeListValues(ArchetypeList list)
     {
-        ArchetypeList list;
+        readonly ArchetypeList list = list;
 
         public Archetype this[int index] => list.list[index].Value;
 
-        public ArchetypeListValues(ArchetypeList list)
-        {
-            this.list = list;
-        }
         public Enumerator GetEnumerator() => new(list);
 
-        public ref struct Enumerator
+        public ref struct Enumerator(ArchetypeList list)
         {
-            List<ArchetypeItem>.Enumerator enumerator;
-            public Enumerator(ArchetypeList list)
-            {
-                this.enumerator = list.list.GetEnumerator();
-            }
+            List<ArchetypeItem>.Enumerator enumerator = list.list.GetEnumerator();
             public Archetype Current => enumerator.Current.Value;
-            public bool MoveNext()
-            {
-                return enumerator.MoveNext();
-            }
-
+            public bool MoveNext() => enumerator.MoveNext();
         }
     }
 }

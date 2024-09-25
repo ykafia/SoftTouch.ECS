@@ -9,27 +9,32 @@ using System.Collections.Immutable;
 namespace SoftTouch.ECS.Storage;
 
 [DebuggerDisplay("{TypesToString}")]
-public readonly struct ArchetypeID
+public ref struct RefArchetypeID
 {
-    public Type[] Types { get; }
-    public int Count => Types.Length;
-    public Span<Type> Span => Types.AsSpan();
+    public Span<Type> Types { get; }
+    public readonly int Count => Types.Length;
 
-    public ArchetypeID(ReadOnlySpan<Type> types)
+    public RefArchetypeID(Span<Type> types)
     {
-        Types = types.ToArray();
-        Array.Sort(Types, (a, b) => string.Compare(a.FullName, b.FullName));
+        Types = types;
+        Types.Sort(Types, (a, b) => string.Compare(a.FullName, b.FullName));
     }
 
     // public static implicit operator ArchetypeID(TemporaryArchetypeID tid) => new(tid);
-    public static implicit operator ArchetypeID(Type[] types) => new(types);
+    public static implicit operator RefArchetypeID(Span<Type> types) => new(types);
 
-    internal bool IsAddedType(ArchetypeID other)
+    internal readonly bool IsAddedType(ArchetypeID other)
         => Types.Length == other.Types.Length + 1;
 
-    public bool Contains(Type t) => Types.Contains(t);
+    public readonly bool Contains(Type value)
+    {
+        foreach (var type in Types)
+            if (type == value)
+                return true;
+        return false;
+    }
 
-    public bool IsSupersetOf(in ArchetypeID other)
+    public readonly bool IsSupersetOf(in RefArchetypeID other)
     {
         if (Types.Length < other.Types.Length)
             return false;
@@ -38,9 +43,9 @@ public readonly struct ArchetypeID
                 return false;
         return true;
     }
-    public readonly bool IsStrictSupersetOf(in ArchetypeID other)
+    public readonly bool IsStrictSupersetOf(in RefArchetypeID other)
     {
-        if(Types.Length <= other.Types.Length)
+        if (Types.Length <= other.Types.Length)
             return false;
         for (int i = 0; i < Types.Length; i += 1)
             if (Types[i] != other.Types[i])
@@ -48,17 +53,21 @@ public readonly struct ArchetypeID
         return true;
     }
 
-    public bool IsSubsetOf(in ArchetypeID other)
+    public readonly bool IsSubsetOf(in RefArchetypeID other)
         => other.IsSupersetOf(in this);
-    public bool IsStrictSubsetOf(in ArchetypeID other)
+    public readonly bool IsStrictSubsetOf(in RefArchetypeID other)
         => other.IsStrictSupersetOf(in this);
 
 
-    public static bool operator ==(ArchetypeID id1, ArchetypeID id2) => id1.Equals(id2);
-    public static bool operator !=(ArchetypeID id1, ArchetypeID id2) => !id1.Equals(id2);
-    public override bool Equals([NotNullWhen(true)] object? obj)
+    public static bool operator ==(RefArchetypeID id1, ArchetypeID id2) => id1.Equals(id2);
+    public static bool operator !=(RefArchetypeID id1, ArchetypeID id2) => !id1.Equals(id2);
+
+    public static bool operator ==(RefArchetypeID id1, RefArchetypeID id2) => id1.IsSupersetOf(id2) && id1.IsSubsetOf(id2);
+    public static bool operator !=(RefArchetypeID id1, RefArchetypeID id2) => !(id1.IsSupersetOf(id2) && id1.IsSubsetOf(id2));
+
+    public override readonly bool Equals([NotNullWhen(true)] object? obj)
     {
-        if(obj is ArchetypeID id)
+        if (obj is ArchetypeID id)
         {
             if (Types.Length != id.Types.Length)
                 return false;
@@ -73,7 +82,7 @@ public readonly struct ArchetypeID
         return false;
     }
 
-    public override int GetHashCode()
+    public override readonly int GetHashCode()
     {
         if (Types == null) return 0;
 

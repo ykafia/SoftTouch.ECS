@@ -168,6 +168,4 @@ public partial struct Commands : ICommandQuery
         => Content.Spawn<T1, T2, T3, T4, T5, T6, T7>();
 
     public readonly void Spawn<T>(T comp) where T : struct, IEquatable<T> => Content.Spawn(comp);
-
-
 }

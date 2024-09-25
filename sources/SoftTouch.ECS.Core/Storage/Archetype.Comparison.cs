@@ -16,7 +16,6 @@ public partial class Archetype
     public bool IsStrictSubsetOf(Archetype t) => ID.IsStrictSubsetOf(t.ID);
     public bool IsStrictSubsetOf(ArchetypeID types) => ID.IsStrictSubsetOf(types);
 
-    public void TypeExcept(Archetype t, out Type[] types) => ID.Except(t.ID, out types);
 
 
 

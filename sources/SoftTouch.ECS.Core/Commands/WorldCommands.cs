@@ -51,7 +51,6 @@ public partial class WorldCommands(World world)
                 {
                     arch = a;
                     foreach (var t in spawn.ComponentUpdates.Span)
-
                         if (t.Operation == ComponentOperation.Add && !a.ID.Contains(t.Component.ComponentType))
                         {
                             arch = null!;

@@ -44,11 +44,6 @@ public partial class Archetype
 
     public int this[in Entity i] => EntityLookup[i];
 
-
-    private Span<T> GetComponentSpan<T>() where T : struct
-    {
-        return ((ComponentArray<T>)Storage[typeof(T)]).Span;
-    }
     internal ComponentArray<T> GetComponentArray<T>() where T : struct
     {
         return (ComponentArray<T>)Storage[typeof(T)];
