@@ -45,13 +45,5 @@ public sealed class TypeSet()
     public bool Contains(Type t)
         => set.Contains(t);
 
-    public bool IsQuerySubsetOf(Type[] elements)
-    {
-        foreach (var t in this)
-            if (!elements.Contains(t))
-                return false;
-        return true;
-    }
-
     public List<Type>.Enumerator GetEnumerator() => list.GetEnumerator();
 }
