@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using SoftTouch.ECS.Arrays;
+using System.Runtime.InteropServices;
 
 namespace SoftTouch.ECS.Storage;
 
@@ -19,6 +20,12 @@ public partial class Archetype
 
     public int Length => EntityLookup.Count;
 
+    public ComponentArray this[Type type]
+    {
+        get => Storage[type];
+        set => Storage[type] = value;
+    }
+
     public Archetype(ArchetypeID aid, ReusableList<ComponentBox> components, World w)
     {
         foreach (var c in components.Span)
@@ -31,13 +38,19 @@ public partial class Archetype
         components.Dispose();
     }
 
-    public Archetype(IEnumerable<ComponentArray> componentArrays, World w)
+    public bool Has<T>() where T : struct => Has(typeof(T));
+    public bool Has(Type type) => Storage.ContainsKey(type);
+
+
+    public Archetype(ReadOnlySpan<ComponentArray> componentArrays, World w)
     {
+        using var tmp = new ReusableList<Type>();
         foreach (var ca in componentArrays)
         {
             Storage[ca.ComponentType] = ca.Create();
+            tmp.Add(ca.ComponentType);
         };
-        ID = new ArchetypeID(componentArrays.Select(x => x.ComponentType).ToArray());
+        ID = new ArchetypeID(tmp.Span);
         World = w;
         EntityLookup = [];
     }

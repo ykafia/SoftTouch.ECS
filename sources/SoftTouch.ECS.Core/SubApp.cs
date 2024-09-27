@@ -7,9 +7,16 @@ namespace SoftTouch.ECS;
 /// A sub app running in parallel after the app.
 /// </summary>
 /// <param name="parent"></param>
-public abstract class SubApp(App parent, List<Stage>? stages = null) : App(stages)
+public abstract class SubApp : App
 {
-    public App Parent { get; } = parent;
+    public App Parent { get; }
+
+    public SubApp(App parent, List<Stage>? stages = null) : base(stages)
+    {
+        Parent = parent;
+        World.Resources.Set(Parent.World);
+    }
+
     public override void Update()
     {
         AppTime.Update();

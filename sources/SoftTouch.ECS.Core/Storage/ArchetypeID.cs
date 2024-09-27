@@ -21,6 +21,13 @@ public readonly struct ArchetypeID
         Array.Sort(Types, (a, b) => string.Compare(a.FullName, b.FullName));
     }
 
+    public ArchetypeID(Type[] types)
+    {
+        Types = types;
+        Array.Sort(Types, (a, b) => string.Compare(a.FullName, b.FullName));
+    }
+
+
     // public static implicit operator ArchetypeID(TemporaryArchetypeID tid) => new(tid);
     public static implicit operator ArchetypeID(Type[] types) => new(types);
 

@@ -68,8 +68,8 @@ public class GameBench
     [Benchmark]
     public void Spawn1Component()
     {
-        app.Update(false);
-        app.Update(false);
+        app.Update();
+        app.Update();
 
         if(app.World[0].Location.Archetype.ID.Count != 1)
             throw new Exception();

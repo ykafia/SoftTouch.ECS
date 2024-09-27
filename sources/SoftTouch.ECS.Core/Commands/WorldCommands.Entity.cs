@@ -5,16 +5,7 @@ namespace SoftTouch.ECS;
 
 public partial class WorldCommands
 {
-    public EntityWorld? GetOrSpawn(Entity entity)
-    {
-        throw new NotImplementedException();
-        // #error implement this function
-        // if entity exists return EntityWorld using the entity index
-
-        // else if there is an entity with a different generation return null
-
-        // else spawn new one
-    }
+    
     public EntityCommands Spawn()
     {
         var entity = world.Entities.GetOrCreate();

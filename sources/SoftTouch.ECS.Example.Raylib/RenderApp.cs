@@ -1,8 +1,7 @@
 using SoftTouch.ECS.Querying;
+using SoftTouch.ECS.Scheduling;
 
 namespace SoftTouch.ECS.Example.Rlib;
 
-public class RenderApp : SubApp
-{
-    public RenderApp(App parent) : base(parent, [new Extract()])
-}
+
+public class RenderApp(App parent) : SubApp(parent, [new Extraction(), new Render()]);

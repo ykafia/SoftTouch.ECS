@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace SoftTouch.ECS.Querying;
 
-
 public readonly ref struct QueryEntity<Q>(Archetype archetype, int archetypeIndex, Q query)
     where Q : struct, IEntityQuery
 {

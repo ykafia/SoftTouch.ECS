@@ -63,4 +63,4 @@ var app =
 
 
 
-app.Run(true);
+app.Run();
