@@ -6,7 +6,7 @@ using System.Numerics;
 
 namespace SoftTouch.ECS.Shared.Processors
 {
-    public class ModelProcessor : Processor<Query<ModelComponent>>
+    public class ModelProcessor : Processor<Query<ModelComponent, NoFilter>>
     {
         public ModelProcessor(World world) : base(world)
         {

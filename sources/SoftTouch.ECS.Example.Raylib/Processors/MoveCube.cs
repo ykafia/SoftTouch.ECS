@@ -5,7 +5,7 @@ using SoftTouch.ECS.Querying;
 namespace SoftTouch.ECS.Example.Rlib;
 
 
-public class MoveCube() : Processor<Query<Model>, Time>(null!)
+public class MoveCube() : Processor<Query<Model, NoFilter>, Time>(null!)
 {
     public override void Update()
     {

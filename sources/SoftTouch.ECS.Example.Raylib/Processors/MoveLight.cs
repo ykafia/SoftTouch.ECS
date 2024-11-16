@@ -5,7 +5,7 @@ using SoftTouch.ECS.Querying;
 namespace SoftTouch.ECS.Example.Rlib;
 
 
-public class MoveLight() : Processor<Query<Light>, Time>(null!)
+public class MoveLight() : Processor<Query<Light, NoFilter>, Time>(null!)
 {
     public override void Update()
     {

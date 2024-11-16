@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace SoftTouch.ECS.Shared.Processors
 {
-    public class NameProcessor : Processor<Query<NameComponent>>
+    public class NameProcessor : Processor<Query<NameComponent, NoFilter>>
     {
         public NameProcessor(World world) : base(world)
         {
@@ -20,7 +20,7 @@ namespace SoftTouch.ECS.Shared.Processors
             //}
         }
     }
-    public class OtherNameProcessor : Processor<Query<NameComponent>>
+    public class OtherNameProcessor : Processor<Query<NameComponent, NoFilter>>
     {
         public OtherNameProcessor(World world) : base(world)
         {

@@ -5,7 +5,7 @@ using SoftTouch.ECS.Querying;
 namespace SoftTouch.ECS.Example.Rlib;
 
 
-public class ExtractComponent<T>(World world) : Processor<Query<T>, Commands>(world)
+public class ExtractComponent<T>(World world) : Processor<Query<T, NoFilter>, Commands>(world)
     where T : struct
 {
 

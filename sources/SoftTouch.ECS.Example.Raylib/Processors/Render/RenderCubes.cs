@@ -7,7 +7,7 @@ using SoftTouch.ECS.Querying;
 namespace SoftTouch.ECS.Example.Rlib;
 
 
-public class RenderCubes() : Processor<Query<Model, Transform>, Query<Light>, Query<Camera3D>>(null!)
+public class RenderCubes() : Processor<Query<Model, Transform, NoFilter>, Query<Light, NoFilter>, Query<Camera3D, NoFilter>>(null!)
 {
     public override void Update()
     {

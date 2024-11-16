@@ -16,8 +16,8 @@ public struct ChangedAge(long creationFrame) : IEvent
 
 public struct ChangedName(long creationFrame) : IEvent
 {
-    public string PreviousName { get; set; }
-    public string Name { get; set; }
+    public string? PreviousName { get; set; }
+    public string? Name { get; set; }
     public long CreationFrame { get; set; } = creationFrame;
 
     public HashSet<Processor> AlreadyRead { get; } = [];

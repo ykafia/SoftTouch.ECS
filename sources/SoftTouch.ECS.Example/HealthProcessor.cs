@@ -8,7 +8,7 @@ using SoftTouch.ECS.Attributes;
 namespace SoftTouch.ECS.Example;
 
 
-public class HealthProcessor : Processor<Query<HealthComponent, int>>
+public class HealthProcessor : Processor<Query<HealthComponent, int, NoFilter>>
 {
     Random rand = new Random();
 
@@ -43,7 +43,7 @@ public class HealthProcessor : Processor<Query<HealthComponent, int>>
 //}
 
 
-public class AsyncProcessor : Processor<Query<int>>
+public class AsyncProcessor : Processor<Query<int, NoFilter>>
 {
     public AsyncProcessor(World world) : base(world)
     {

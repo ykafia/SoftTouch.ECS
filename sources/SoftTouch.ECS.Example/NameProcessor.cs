@@ -27,7 +27,7 @@ public class StartupProcessor : Processor<Resource<WorldCommands>>
     }
 }
 
-public class WriteAge : Processor<Query<int>>
+public class WriteAge : Processor<Query<int, NoFilter>>
 {
     public WriteAge() : base(null!) { }
     public override void Update()
@@ -41,7 +41,7 @@ public class WriteAge : Processor<Query<int>>
         }
     }
 }
-public class SayBye : Processor<FilteredQuery<NameComponent, Filter<Without<int>>>>
+public class SayBye : Processor<Query<NameComponent, Filter<Without<int>>>>
 {
     public SayBye() : base(null!) { }
     public override void Update()
@@ -62,7 +62,7 @@ public class SayBye : Processor<FilteredQuery<NameComponent, Filter<Without<int>
     }
 }
 
-public class SayHello : Processor<Query<NameComponent>>
+public class SayHello : Processor<Query<NameComponent, NoFilter>>
 {
     public SayHello() : base(null!) { }
     public override void Update()

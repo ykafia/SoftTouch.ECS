@@ -60,6 +60,15 @@ public record Filter<THas, TWithout>() : IFilterQuery
 }
 
 
+public record NoFilter() : IFilterQuery
+{
+    public static TypeSet WithTypes { get; } = TypeSet.Create();
+    public static TypeSet WithoutTypes { get; } = TypeSet.Create();
+
+    public TypeSet ImplWithTypes => WithTypes;
+    public TypeSet ImplWithoutTypes => WithoutTypes;
+}
+
 
 
 

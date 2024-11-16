@@ -8,7 +8,6 @@ namespace SoftTouch.ECS.Querying;
 
 public sealed class TypeSet()
 {
-
     public static TypeSet Empty { get; } = new();
 
     public static TypeSet Create(params Type[] types)

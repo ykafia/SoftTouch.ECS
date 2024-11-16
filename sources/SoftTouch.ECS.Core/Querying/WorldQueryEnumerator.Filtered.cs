@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SoftTouch.ECS.Querying;
 
-public ref struct WorldFilteredQueryEnumerator<Q>
+public ref struct WorldQueryEnumerator<Q>
     where Q : struct, IFilteredEntityQuery
 {
     Q query;
@@ -21,7 +21,7 @@ public ref struct WorldFilteredQueryEnumerator<Q>
 
     public QueryEntity<Q> Current => new(currentArchetype, archIndex, query);
 
-    public WorldFilteredQueryEnumerator(Q query)
+    public WorldQueryEnumerator(Q query)
     {
         this.query = query;
         enumerator = world.Archetypes.GetEnumerator();

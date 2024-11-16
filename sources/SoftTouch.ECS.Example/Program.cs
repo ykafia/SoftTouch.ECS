@@ -40,7 +40,7 @@ var app =
             }
         }
     )
-    .AddProcessor<Update, EventWriter<ChangedAge>, Query<TimeCount>, Resource<AppTime>>(static (EventWriter<ChangedAge> ageChange, Query<TimeCount> tc, Resource<AppTime> time) =>
+    .AddProcessor<Update, EventWriter<ChangedAge>, Query<TimeCount, NoFilter>, Resource<AppTime>>(static (EventWriter<ChangedAge> ageChange, Query<TimeCount, NoFilter> tc, Resource<AppTime> time) =>
     {
         var elapsed = time.Content.Elapsed.TotalSeconds;
         foreach (var e in tc)
@@ -54,8 +54,8 @@ var app =
             }
         }
     })
-    .AddProcessor<Update, Query<NameComponent>, EventWriter<ChangedAge>>(
-        static (Query<NameComponent> named, EventWriter<ChangedAge> ev) =>
+    .AddProcessor<Update, Query<NameComponent, NoFilter>, EventWriter<ChangedAge>>(
+        static (Query<NameComponent, NoFilter> named, EventWriter<ChangedAge> ev) =>
     {
 
     });
