@@ -59,11 +59,25 @@ public ref struct RefArchetypeID
         => other.IsStrictSupersetOf(in this);
 
 
-    public static bool operator ==(RefArchetypeID id1, ArchetypeID id2) => id1.Equals(id2);
-    public static bool operator !=(RefArchetypeID id1, ArchetypeID id2) => !id1.Equals(id2);
+    public static bool operator ==(RefArchetypeID id1, ArchetypeID id2) => id1.SameAs(id2);
+    public static bool operator !=(RefArchetypeID id1, ArchetypeID id2) => !id1.SameAs(id2);
 
     public static bool operator ==(RefArchetypeID id1, RefArchetypeID id2) => id1.IsSupersetOf(id2) && id1.IsSubsetOf(id2);
     public static bool operator !=(RefArchetypeID id1, RefArchetypeID id2) => !(id1.IsSupersetOf(id2) && id1.IsSubsetOf(id2));
+
+
+    public readonly bool SameAs(ArchetypeID other)
+    {
+        if (Types.Length != other.Types.Length)
+            return false;
+
+        for (int i = 0; i < Types.Length; i++)
+        {
+            if (Types[i] != other.Types[i])
+                return false;
+        }
+        return true;
+    }
 
     public override readonly bool Equals([NotNullWhen(true)] object? obj)
     {
@@ -94,4 +108,5 @@ public ref struct RefArchetypeID
             return hash;
         }
     }
+    public ArchetypeID ToArchetypeID() => new(Types); 
 }

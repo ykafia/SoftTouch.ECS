@@ -10,7 +10,8 @@ public partial class WorldCommands(World world)
     internal List<EntityUpdate> Updates { get; } = [];
 
 
-    public void AddComponent<T>(in Entity e, in T component) where T : struct
+    public void AddComponent<T>(in Entity e, in T component) 
+        where T : struct
     {
         foreach (var u in Updates)
         {
@@ -24,7 +25,8 @@ public partial class WorldCommands(World world)
         update.Add(component);
         Updates.Add(update);
     }
-    public void RemoveComponent<T>(in Entity e) where T : struct
+    public void RemoveComponent<T>(in Entity e) 
+        where T : struct
     {
         foreach (var u in Updates)
         {

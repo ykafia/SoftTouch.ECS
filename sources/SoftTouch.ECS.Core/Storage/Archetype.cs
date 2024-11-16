@@ -37,6 +37,16 @@ public partial class Archetype
         EntityLookup = [];
         components.Dispose();
     }
+    public Archetype(ArchetypeID aid, ReadOnlySpan<ComponentBox> components, World w)
+    {
+        foreach (var c in components)
+        {
+            Storage[c.ComponentType] = c.ToArray();
+        }
+        ID = aid;
+        World = w;
+        EntityLookup = [];
+    }
 
     public bool Has<T>() where T : struct => Has(typeof(T));
     public bool Has(Type type) => Storage.ContainsKey(type);
@@ -98,6 +108,11 @@ public partial class Archetype
     {
         GetComponentArray<T>()[index] = component;
     }
+    public void SetComponent(int index, ComponentBox component)
+    {
+        if(Storage.TryGetValue(component.ComponentType, out var components))
+            components.TryAdd(component);
+    }
 
     internal void AddEntity(int idx)
     {
@@ -132,7 +147,7 @@ public partial class Archetype
         return result.ToString();
     }
 
-    public void Clear()
+    internal void Clear()
     {
         foreach(var t in ID.Span)
         {

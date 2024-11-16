@@ -36,4 +36,11 @@ public sealed partial class World
     }
     public TResource GetResource<TResource>() where TResource : class 
         => Resources.Get<TResource>();
+
+    public void Clear()
+    {
+        foreach (var (_, arch) in Archetypes)
+            arch.Clear();
+        Entities.Clear();
+    }
 }

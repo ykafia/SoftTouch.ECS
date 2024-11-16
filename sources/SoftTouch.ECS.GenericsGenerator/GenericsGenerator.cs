@@ -1,116 +1,80 @@
 ﻿using Microsoft.CodeAnalysis;
-using SoftTouch.ECS.Generators.Shared;
-using System.ComponentModel;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Text;
+using System.Text;
 
 
 namespace SoftTouch.ECS.GenericsGenerator;
 
 [Generator]
-public class GenericsGenerator : ISourceGenerator
+public partial class GenericsGenerator : IIncrementalGenerator
 {
-    public void Initialize(GeneratorInitializationContext context)
+    public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // No initialization required for this one
-    }
-    public void Execute(GeneratorExecutionContext context)
-    {
         GenerateQueries(context);
         // GenerateWorldQueries(context);
         GenerateFilters(context);
         //GenerateProcessorSetExtensions(context);
         GenerateProcessorCreators(context);
+        GenerateInsertOrSpawn(context);
     }
 
-    public void GenerateProcessorCreators(GeneratorExecutionContext context)
+    public void GenerateProcessorCreators(IncrementalGeneratorInitializationContext context)
     {
-        var code = new CodeWriter();
+        var code = new StringBuilder();
         code
-            .WriteLine("using CommunityToolkit.HighPerformance.Buffers;")
-            .WriteLine("using SoftTouch.ECS.Processors;")
-            .WriteLine("using SoftTouch.ECS.Querying;")
-            .WriteLine("using SoftTouch.ECS.Scheduling;")
-            .WriteLine("using SoftTouch.ECS.Arrays;")
-            .WriteEmptyLines(2)
-            .WriteLine("namespace SoftTouch.ECS;")
-            .WriteEmptyLines(3)
-            .WriteLine("public partial class App")
-            .OpenBlock();
+            .AppendLine("using CommunityToolkit.HighPerformance.Buffers;")
+            .AppendLine("using SoftTouch.ECS.Processors;")
+            .AppendLine("using SoftTouch.ECS.Querying;")
+            .AppendLine("using SoftTouch.ECS.Scheduling;")
+            .AppendLine("using SoftTouch.ECS.Arrays;")
+            .AppendLine("namespace SoftTouch.ECS;")
+            .AppendLine("public partial class App")
+            .AppendLine("{");
 
         for (int i = 0; i < 16; i++)
         {
             var range = Enumerable.Range(1, i + 1);
             code
-                .WriteLine($"public App AddProcessors<TStage, {string.Join(", ", range.Select(x => $"P{x}"))}>()")
-                .WriteLine($"    where TStage: SubStage");
+                .AppendLine($"public App AddProcessors<TStage, {string.Join(", ", range.Select(x => $"P{x}"))}>()")
+                .AppendLine($"    where TStage: SubStage");
             foreach (var r in range)
-                code.WriteLine($"    where P{r} : Processor, new()");
+                code.AppendLine($"    where P{r} : Processor, new()");
             code
-                .OpenBlock();
+                .AppendLine("{");
             foreach (var r in range.Select(x => $"P{x}"))
-                code.WriteLine($"Schedule.Add<TStage>(new {r}());");
+                code.AppendLine($"Schedule.Add<TStage>(new {r}());");
             code
-                .WriteLine("return this;")
-                .CloseBlock();
+                .AppendLine("return this;")
+                .AppendLine("}");
         }
         for (int i = 0; i < 16; i++)
         {
             var range = Enumerable.Range(1, i + 1);
             code
-                .WriteLine($"public App AddProcessors<TStage>({string.Join(", ", range.Select(x => $"Processor p{x}"))})")
-                .WriteLine("    where TStage: SubStage");
+                .AppendLine($"public App AddProcessors<TStage>({string.Join(", ", range.Select(x => $"Processor p{x}"))})")
+                .AppendLine("    where TStage: SubStage");
             code
-                .OpenBlock()
-                .WriteLine($"Schedule.Add<TStage>([{string.Join(", ", range.Select(x => $"p{x}"))}]);")
-                .WriteLine("return this;")
-                .CloseBlock();
+                .AppendLine("{")
+                .AppendLine($"Schedule.Add<TStage>([{string.Join(", ", range.Select(x => $"p{x}"))}]);")
+                .AppendLine("return this;")
+                .AppendLine("}");
         }
-        code.CloseAllBlocks();
-        context.AddSource("App.g.cs", code.ToString());
+        code.AppendLine("}");
+        context.RegisterPostInitializationOutput(ctx => ctx.AddSource("App.g.cs", code.ToSourceText()));
     }
 
-    public static void GenerateQueries(GeneratorExecutionContext context)
+    public static void GenerateQueries(IncrementalGeneratorInitializationContext context)
     {
-        var code = new CodeWriter();
-        code.WriteLine("using CommunityToolkit.HighPerformance.Buffers;")
-            .WriteLine("using System.Collections.Immutable;")
-            .WriteLine("using SoftTouch.ECS.Storage;")
-            .WriteLine("using SoftTouch.ECS.Processors;")
-            .WriteEmptyLines(2)
-            .WriteLine("namespace SoftTouch.ECS.Querying;")
-            .WriteEmptyLines(3);
-
-
-        // for (int i = 2; i < 17; i++)
-        // {
-
-        //     var generics = Enumerable.Range(1, i).Select(x => "T" + x);
-        //     code
-        //         .WriteLine($"public record struct Read<{string.Join(", ", generics)}>() : IReadComponent")
-        //         .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
-        //         .OpenBlock()
-        //         .WriteLine($"public static TypeSet TypesRead {{ get; }} = TypeSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
-        //         .WriteLine($"public static TypeSet TypesWrite {{ get; }} = TypeSet.Empty;")
-        //         .WriteLine("public TypeSet ImplRead => TypesRead;")
-        //         .WriteLine("public TypeSet ImplWrite => TypesWrite;")
-        //         .CloseAllBlocks();
-
-        //     code.WriteEmptyLines(3);
-
-        //     code
-        //         .WriteLine($"public record struct Write<{string.Join(", ", generics)}>() : IWriteComponent")
-        //         .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
-        //         .OpenBlock()
-        //         .WriteLine($"public static TypeSet TypesRead {{ get; }} = TypeSet.Empty;")
-        //         .WriteLine($"public static TypeSet TypesWrite {{ get; }} = TypeSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
-        //         .WriteLine("public TypeSet ImplRead => TypesRead;")
-        //         .WriteLine("public TypeSet ImplWrite => TypesWrite;")
-        //         .CloseAllBlocks();
-
-        //     code.WriteEmptyLines(3);
-
-        // }
-
-        // context.AddSource("Queries.g.cs", code.ToString());
+        var code = new StringBuilder();
+        code.AppendLine("using CommunityToolkit.HighPerformance.Buffers;")
+            .AppendLine("using System.Collections.Immutable;")
+            .AppendLine("using SoftTouch.ECS.Storage;")
+            .AppendLine("using SoftTouch.ECS.Processors;")
+            .AppendLine()
+            .AppendLine("namespace SoftTouch.ECS.Querying;")
+            .AppendLine();
 
 
         for (int i = 2; i < 17; i++)
@@ -118,155 +82,165 @@ public class GenericsGenerator : ISourceGenerator
 
             var generics = Enumerable.Range(1, i).Select(x => "T" + x);
             code
-                .WriteLine($"public delegate void EntityUpdateFunc<{string.Join(", ", generics)}>({string.Join(", ", generics.Select(x => $"ref {x} componen{x.ToLower()}"))})");
+                .AppendLine($"public delegate void EntityUpdateFunc<{string.Join(", ", generics)}>({string.Join(", ", generics.Select(x => $"ref {x} componen{x.ToLower()}"))})");
             foreach (var g in generics)
-                code.WriteLine($"    where {g} : struct");
-            code.WriteLine(";");
+                code.AppendLine($"    where {g} : struct");
+            code.AppendLine(";");
             code
-                .WriteLine($"public delegate void EntityUpdateFuncData<TData, {string.Join(", ", generics)}>(ref TData data, {string.Join(", ", generics.Select(x => $"ref {x} componen{x.ToLower()}"))})");
+                .AppendLine($"public delegate void EntityUpdateFuncData<TData, {string.Join(", ", generics)}>(ref TData data, {string.Join(", ", generics.Select(x => $"ref {x} componen{x.ToLower()}"))})");
             foreach (var g in generics)
-                code.WriteLine($"    where {g} : struct");
-            code.WriteLine(";");
+                code.AppendLine($"    where {g} : struct");
+            code.AppendLine(";");
             code
-                .WriteLine($"public delegate void EntityUpdateFuncIndexed<{string.Join(", ", generics)}>(Entity index, {string.Join(", ", generics.Select(x => $"ref {x} componen{x.ToLower()}"))})");
+                .AppendLine($"public delegate void EntityUpdateFuncIndexed<{string.Join(", ", generics)}>(Entity index, {string.Join(", ", generics.Select(x => $"ref {x} componen{x.ToLower()}"))})");
             foreach (var g in generics)
-                code.WriteLine($"    where {g} : struct");
-            code.WriteLine(";");
+                code.AppendLine($"    where {g} : struct");
+            code.AppendLine(";");
             code
-                .WriteLine($"public delegate void EntityUpdateFuncIndexedData<TData, {string.Join(", ", generics)}>(ref TData data, Entity index, {string.Join(", ", generics.Select(x => $"ref {x} componen{x.ToLower()}"))})");            
+                .AppendLine($"public delegate void EntityUpdateFuncIndexedData<TData, {string.Join(", ", generics)}>(ref TData data, Entity index, {string.Join(", ", generics.Select(x => $"ref {x} componen{x.ToLower()}"))})");
             foreach (var g in generics)
-                code.WriteLine($"    where {g} : struct");
-            code.WriteLine(";");
+                code.AppendLine($"    where {g} : struct");
+            code.AppendLine(";");
             code
-                .WriteEmptyLines(1)
-                .WriteLine($"public record struct Query<{string.Join(", ", generics)}>() : IEntityQuery")
-                .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
-                .OpenBlock()
-                .WriteLine($"public static Type[] Types {{ get; }} = [{string.Join(", ", generics.Select(x => $"typeof({x})"))}];")
-                .WriteLine("public Type[] ImplTypes => Types;")
-                .WriteLine("public World World { get; set; }")
-                .WriteLine("public Processor CallingProcessor { get; init; }")
-                .WriteEmptyLines(1)
-                .WriteLine("public bool HasAccessTo<TComponent>()")
-                .WriteLine($"    =>{string.Join("||", generics.Select(x => $"typeof(TComponent) == typeof({x})"))};")
-                .WriteEmptyLines(1)
-                .WriteLine($"public readonly void ForEach(EntityUpdateFunc<{string.Join(", ", generics)}> updater)")
-                .OpenBlock()
-                .WriteLine("foreach(var e in this)")
-                .WriteLine($"    updater.Invoke({string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
-                .CloseBlock()
-                .WriteEmptyLines(1)
-                .WriteLine($"public readonly void ForEach<TData>(ref TData data, EntityUpdateFuncData<TData, {string.Join(", ", generics)}> updater)")
-                .OpenBlock()
-                .WriteLine("foreach(var e in this)")
-                .WriteLine($"    updater.Invoke(ref data, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
-                .CloseBlock()
-                .WriteEmptyLines(1)
-                .WriteLine($"public readonly void ForEachIndexed(EntityUpdateFuncIndexed<{string.Join(", ", generics)}> updater)")
-                .OpenBlock()
-                .WriteLine("foreach(var e in this)")
-                .WriteLine($"    updater.Invoke(e.Entity, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
-                .CloseBlock()
-                .WriteEmptyLines(1)
-                .WriteLine($"public readonly void ForEachIndexedData<TData>(ref TData data, EntityUpdateFuncIndexedData<TData, {string.Join(", ", generics)}> updater)")
-                .OpenBlock()
-                .WriteLine("foreach(var e in this)")
-                .WriteLine($"    updater.Invoke(ref data, e.Entity, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
-                .CloseBlock()
-                .WriteEmptyLines(1)
-                .WriteLine($"public readonly WorldQueryEnumerator<Query<{string.Join(", ", generics)}>> GetEnumerator() => new(this);")
-                .CloseAllBlocks();
+                .AppendLine()
+                .AppendLine($"public record struct Query<{string.Join(", ", generics)}>() : IEntityQuery")
+                .AppendLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
+                .AppendLine("{")
+                .AppendLine($"public static Type[] Types {{ get; }} = [{string.Join(", ", generics.Select(x => $"typeof({x})"))}];")
+                .AppendLine("public Type[] ImplTypes => Types;")
+                .AppendLine("public World World { get; set; }")
+                .AppendLine("public Processor CallingProcessor { get; init; }")
+                .AppendLine()
+                .AppendLine("public bool HasAccessTo<TComponent>()")
+                .AppendLine($"    =>{string.Join("||", generics.Select(x => $"typeof(TComponent) == typeof({x})"))};")
+                .AppendLine()
+                .AppendLine($"public readonly void ForEach(EntityUpdateFunc<{string.Join(", ", generics)}> updater)")
+                .AppendLine("{")
+                .AppendLine("foreach(var e in this)")
+                .AppendLine($"    updater.Invoke({string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
+                .AppendLine("}")
+                .AppendLine()
+                .AppendLine($"public readonly void ForEach<TData>(ref TData data, EntityUpdateFuncData<TData, {string.Join(", ", generics)}> updater)")
+                .AppendLine("{")
+                .AppendLine("foreach(var e in this)")
+                .AppendLine($"    updater.Invoke(ref data, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
+                .AppendLine("}")
+                .AppendLine()
+                .AppendLine($"public readonly void ForEachIndexed(EntityUpdateFuncIndexed<{string.Join(", ", generics)}> updater)")
+                .AppendLine("{")
+                .AppendLine("foreach(var e in this)")
+                .AppendLine($"    updater.Invoke(e.Entity, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
+                .AppendLine("}")
+                .AppendLine()
+                .AppendLine($"public readonly void ForEachIndexedData<TData>(ref TData data, EntityUpdateFuncIndexedData<TData, {string.Join(", ", generics)}> updater)")
+                .AppendLine("{")
+                .AppendLine("foreach(var e in this)")
+                .AppendLine($"    updater.Invoke(ref data, e.Entity, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
+                .AppendLine("}")
+                .AppendLine()
+                .AppendLine($"public readonly WorldQueryEnumerator<Query<{string.Join(", ", generics)}>> GetEnumerator() => new(this);")
+                .AppendLine("}");
 
-            code.WriteEmptyLines(3);
+            code.AppendLine();
 
             code
-                .WriteLine($"public record struct FilteredQuery<{string.Join(", ", generics)}, TFilter>() : IFilteredEntityQuery")
-                .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
-                .WriteLine("    where TFilter : IFilterQuery, new()")
-                .OpenBlock()
-                .WriteLine($"public static Type[] Types {{ get; }} = [{string.Join(", ", generics.Select(x => $"typeof({x})"))}];")
-                .WriteLine("public Type[] ImplTypes => Types;")
-                .WriteLine("public static IFilterQuery Filters { get; } = new TFilter();")
-                .WriteLine("public World World { get; set; }")
-                .WriteLine("public Processor CallingProcessor { get; init; }")
-                .WriteEmptyLines(1)
-                .WriteLine("public bool HasAccessTo<TComponent>()")
-                .WriteLine($"    =>{string.Join("||", generics.Select(x => $"typeof(TComponent) == typeof({x})"))}")
-                .WriteLine($"        && !Filters.ImplWithoutTypes.Contains(typeof(TComponent));")
-                .WriteEmptyLines(1)
-                .WriteLine($"public readonly void ForEach(EntityUpdateFunc<{string.Join(", ", generics)}> updater)")
-                .OpenBlock()
-                .WriteLine("foreach(var e in this)")
-                .WriteLine($"    updater.Invoke({string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
-                .CloseBlock()
-                .WriteEmptyLines(1)
-                .WriteLine($"public readonly void ForEach<TData>(ref TData data, EntityUpdateFuncData<TData, {string.Join(", ", generics)}> updater)")
-                .OpenBlock()
-                .WriteLine("foreach(var e in this)")
-                .WriteLine($"    updater.Invoke(ref data, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
-                .CloseBlock()
-                .WriteEmptyLines(1)
-                .WriteLine($"public readonly void ForEachIndexed(EntityUpdateFuncIndexed<{string.Join(", ", generics)}> updater)")
-                .OpenBlock()
-                .WriteLine("foreach(var e in this)")
-                .WriteLine($"    updater.Invoke(e.Entity, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
-                .CloseBlock()
-                .WriteEmptyLines(1)
-                .WriteLine($"public readonly void ForEachIndexedData<TData>(ref TData data, EntityUpdateFuncIndexedData<TData, {string.Join(", ", generics)}> updater)")
-                .OpenBlock()
-                .WriteLine("foreach(var e in this)")
-                .WriteLine($"    updater.Invoke(ref data, e.Entity, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
-                .CloseBlock()
-                .WriteEmptyLines(1)
-                .WriteLine($"public readonly WorldFilteredQueryEnumerator<FilteredQuery<{string.Join(", ", generics)}, TFilter>> GetEnumerator() => new(this);")
-                .CloseAllBlocks();
+                .AppendLine($"public record struct FilteredQuery<{string.Join(", ", generics)}, TFilter>() : IFilteredEntityQuery")
+                .AppendLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
+                .AppendLine("    where TFilter : IFilterQuery, new()")
+                .AppendLine("{")
+                .AppendLine($"public static Type[] Types {{ get; }} = [{string.Join(", ", generics.Select(x => $"typeof({x})"))}];")
+                .AppendLine("public Type[] ImplTypes => Types;")
+                .AppendLine("public static IFilterQuery Filters { get; } = new TFilter();")
+                .AppendLine("public World World { get; set; }")
+                .AppendLine("public Processor CallingProcessor { get; init; }")
+                .AppendLine()
+                .AppendLine("public bool HasAccessTo<TComponent>()")
+                .AppendLine($"    =>{string.Join("||", generics.Select(x => $"typeof(TComponent) == typeof({x})"))}")
+                .AppendLine($"        && !Filters.ImplWithoutTypes.Contains(typeof(TComponent));")
+                .AppendLine()
+                .AppendLine($"public readonly void ForEach(EntityUpdateFunc<{string.Join(", ", generics)}> updater)")
+                .AppendLine("{")
+                .AppendLine("foreach(var e in this)")
+                .AppendLine($"    updater.Invoke({string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
+                .AppendLine("}")
+                .AppendLine()
+                .AppendLine($"public readonly void ForEach<TData>(ref TData data, EntityUpdateFuncData<TData, {string.Join(", ", generics)}> updater)")
+                .AppendLine("{")
+                .AppendLine("foreach(var e in this)")
+                .AppendLine($"    updater.Invoke(ref data, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
+                .AppendLine("}")
+                .AppendLine()
+                .AppendLine($"public readonly void ForEachIndexed(EntityUpdateFuncIndexed<{string.Join(", ", generics)}> updater)")
+                .AppendLine("{")
+                .AppendLine("foreach(var e in this)")
+                .AppendLine($"    updater.Invoke(e.Entity, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
+                .AppendLine("}")
+                .AppendLine()
+                .AppendLine($"public readonly void ForEachIndexedData<TData>(ref TData data, EntityUpdateFuncIndexedData<TData, {string.Join(", ", generics)}> updater)")
+                .AppendLine("{")
+                .AppendLine("foreach(var e in this)")
+                .AppendLine($"    updater.Invoke(ref data, e.Entity, {string.Join(", ", generics.Select(x => $"ref e.Get<{x}>()"))});")
+                .AppendLine("}")
+                .AppendLine()
+                .AppendLine($"public readonly WorldFilteredQueryEnumerator<FilteredQuery<{string.Join(", ", generics)}, TFilter>> GetEnumerator() => new(this);")
+                .AppendLine("}");
 
-            code.WriteEmptyLines(3);
+            code.AppendLine();
 
         }
 
-        context.AddSource("Queries.g.cs", code.ToString());
+        context.RegisterPostInitializationOutput(ctx => ctx.AddSource("Queries.g.cs", code.ToSourceText()));
 
     }
 
 
-    public static void GenerateFilters(GeneratorExecutionContext context)
+    public static void GenerateFilters(IncrementalGeneratorInitializationContext context)
     {
-        var code = new CodeWriter();
-        code.WriteLine("using CommunityToolkit.HighPerformance.Buffers;")
-            .WriteLine("using System.Collections.Immutable;")
-            .WriteEmptyLines(2)
-            .WriteLine("namespace SoftTouch.ECS.Querying;")
-            .WriteEmptyLines(3);
+        var code = new StringBuilder();
+        code.AppendLine("using CommunityToolkit.HighPerformance.Buffers;")
+            .AppendLine("using System.Collections.Immutable;")
+            .AppendLine()
+            .AppendLine("namespace SoftTouch.ECS.Querying;")
+            .AppendLine();
         for (int i = 2; i < 17; i++)
         {
 
             var generics = Enumerable.Range(1, i).Select(x => "T" + x);
             code
-                .WriteLine($"public record With<{string.Join(", ", generics)}>() : IFilter")
-                .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
-                .OpenBlock()
-                .WriteLine($"public static TypeSet WithTypes {{ get; }} = TypeSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
-                .WriteLine($"public static TypeSet WithoutTypes {{ get; }} =  TypeSet.Empty;")
-                .WriteLine("public TypeSet ImplWithTypes => WithTypes;")
-                .WriteLine("public TypeSet ImplWithoutTypes => WithoutTypes;")
-                .CloseAllBlocks();
+                .AppendLine($"public record With<{string.Join(", ", generics)}>() : IFilter")
+                .AppendLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
+                .AppendLine("{")
+                .AppendLine($"public static TypeSet WithTypes {{ get; }} = TypeSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
+                .AppendLine($"public static TypeSet WithoutTypes {{ get; }} =  TypeSet.Empty;")
+                .AppendLine("public TypeSet ImplWithTypes => WithTypes;")
+                .AppendLine("public TypeSet ImplWithoutTypes => WithoutTypes;")
+                .AppendLine("}");
 
-            code.WriteEmptyLines(3);
+            code.AppendLine();
 
             code
-                .WriteLine($"public record Without<{string.Join(", ", generics)}>() : IFilter")
-                .WriteLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
-                .OpenBlock()
-                .WriteLine($"public static TypeSet WithoutTypes {{ get; }} = TypeSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
-                .WriteLine($"public static TypeSet WithTypes {{ get; }} = TypeSet.Empty;")
-                .WriteLine("public TypeSet ImplWithTypes => WithTypes;")
-                .WriteLine("public TypeSet ImplWithoutTypes => WithoutTypes;")
-                .CloseAllBlocks();
+                .AppendLine($"public record Without<{string.Join(", ", generics)}>() : IFilter")
+                .AppendLine(string.Join("\n", generics.Select(x => $"    where {x} : struct")))
+                .AppendLine("{")
+                .AppendLine($"public static TypeSet WithoutTypes {{ get; }} = TypeSet.Create({string.Join(", ", generics.Select(x => $"typeof({x})"))});")
+                .AppendLine($"public static TypeSet WithTypes {{ get; }} = TypeSet.Empty;")
+                .AppendLine("public TypeSet ImplWithTypes => WithTypes;")
+                .AppendLine("public TypeSet ImplWithoutTypes => WithoutTypes;")
+                .AppendLine("}");
         }
 
-        context.AddSource("Filters.g.cs", code.ToString());
+        context.RegisterPostInitializationOutput(ctx => ctx.AddSource("Filters.g.cs", code.ToSourceText()));
 
     }
+}
 
+
+public static class SourceCodeExtensions
+{
+    public static SourceText ToSourceText(this StringBuilder code)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(code.ToString());
+        var root = syntaxTree.GetRoot().NormalizeWhitespace();
+        return SourceText.From(root.ToFullString(), Encoding.UTF8);
+    }
 }

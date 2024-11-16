@@ -29,6 +29,15 @@ public class ArchetypeList
         }
     }
 
+    public bool Has(RefArchetypeID id)
+    {
+        foreach (var key in Keys)
+            if (id == key)
+                return true;
+        return false;
+    }
+
+
     public bool TryGetValue(ArchetypeID id, out Archetype arch)
     {
         var result = lookup.TryGetValue(id, out var index);

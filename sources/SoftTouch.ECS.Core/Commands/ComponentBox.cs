@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.ObjectPool;
+﻿using System.Runtime.CompilerServices;
+using Microsoft.Extensions.ObjectPool;
 using SoftTouch.ECS.Arrays;
 using SoftTouch.ECS.Storage;
 

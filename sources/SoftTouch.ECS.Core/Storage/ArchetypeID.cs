@@ -5,10 +5,19 @@ using System.Diagnostics.CodeAnalysis;
 using static System.MemoryExtensions;
 using System.Diagnostics;
 using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 
 namespace SoftTouch.ECS.Storage;
 
+
+public static class ArchetypeIDBuilder
+{
+    public static ArchetypeID Create(ReadOnlySpan<Type> items) => new(items);
+}
+
+
 [DebuggerDisplay("{TypesToString}")]
+[CollectionBuilder(typeof(ArchetypeIDBuilder), "Create")]
 public readonly struct ArchetypeID
 {
     public Type[] Types { get; }
@@ -18,6 +27,13 @@ public readonly struct ArchetypeID
     public ArchetypeID(ReadOnlySpan<Type> types)
     {
         Types = types.ToArray();
+        Array.Sort(Types, (a, b) => string.Compare(a.FullName, b.FullName));
+    }
+    public ArchetypeID(ReadOnlySpan<ComponentBox> components)
+    {
+        Types = new Type[components.Length];
+        for(int i = 0; i < components.Length; i++)
+            Types[i] = components[i].ComponentType;
         Array.Sort(Types, (a, b) => string.Compare(a.FullName, b.FullName));
     }
 
@@ -30,6 +46,7 @@ public readonly struct ArchetypeID
 
     // public static implicit operator ArchetypeID(TemporaryArchetypeID tid) => new(tid);
     public static implicit operator ArchetypeID(Type[] types) => new(types);
+    public static implicit operator ArchetypeID(ReadOnlySpan<Type> types) => new(types);
 
     internal bool IsAddedType(ArchetypeID other)
         => Types.Length == other.Types.Length + 1;
@@ -92,4 +109,6 @@ public readonly struct ArchetypeID
             return hash;
         }
     }
+
+    public Span<Type>.Enumerator GetEnumerator() => Types.AsSpan().GetEnumerator();
 }

@@ -1,3 +1,5 @@
+using System.Security.Cryptography.X509Certificates;
+
 namespace SoftTouch.ECS.Storage;
 
 
@@ -22,6 +24,15 @@ public class Entities(World world)
     public void SetFree(in Entity entity)
     {
         FreeIds.Add(entity.Index);
+    }
+    internal void Clear()
+    {
+        FreeIds.Clear();
+        for(int i = 0; i < Meta.Count; i += 1)
+        {
+            FreeIds.Add(i);
+            Meta[i] = Meta[i] with {Location = new EntityLocation(null!, 0)};
+        }
     }
     public Entity GetOrCreate()
     {
