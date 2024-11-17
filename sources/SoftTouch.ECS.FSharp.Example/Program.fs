@@ -4,6 +4,15 @@ open SoftTouch.ECS.Querying
 open SoftTouch.ECS.Scheduling
 open SoftTouch.ECS.Attributes
 
+
+type RenderApp(parent) =
+    inherit SubApp(parent)
+
+
+type RenderStage() =
+    inherit SubStage<Main>()
+
+
 [<Struct>]
 type NameComponent = 
     val mutable Name : string
@@ -57,10 +66,7 @@ let x = 0;
 app
 |> App.addProcessor (Proc.from startup None)
 |> App.addProcessor (Proc.from nameSystem None)
-|> App.addProcessors [
-        Proc.from nameSystem None; 
-        Proc.from3 twoEntities None
-    ]
+|> App.addProcessors [| Proc.from nameSystem None; Proc.from3 twoEntities None |]
 |> App.addProcessorsTo<Update> [
         Proc.from nameSystem None
     ]

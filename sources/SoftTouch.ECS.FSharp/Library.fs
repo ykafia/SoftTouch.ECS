@@ -117,7 +117,7 @@ module World =
 module App =
     open SoftTouch.ECS.Scheduling
     let update (frames: int) (app : App) =
-        for i in 0..frames do app.Update()
+        for _ in 0..frames do app.Update()
         app
     let run(app : App) =
         app.Run()
@@ -127,8 +127,8 @@ module App =
         app.AddProcessor<'T>()
     let addProcessor (processor : Processor) (app : App) =
         app.AddProcessor(processor)
-    let addProcessors (processors: Processor list) (app : App) =
-        app.AddProcessors<Update>(processors |> List.toArray)
+    let addProcessors (processors: Processor array) (app : App) =
+        app.AddProcessors<Update>(processors)
     let addProcessorsTo<'t & #SubStage> (processors: Processor list) (app : App) =
         app.AddProcessors<'t>(processors |> List.toArray)
 

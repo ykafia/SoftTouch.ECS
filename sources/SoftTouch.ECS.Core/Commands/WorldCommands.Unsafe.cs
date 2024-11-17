@@ -18,12 +18,14 @@ public partial class WorldCommands
             foreach(var component in components)
                 if (meta.Entity == entity && meta.Location.Archetype.Has<T>())
                     meta.Location.Archetype.SetComponent(meta.Location.RowIndex, component);
-            }
+        }
         // If archetype does not exist, create archetype and add entity
         else
         {
             var archetype = new Archetype(world, entity, components);
             world.Archetypes.Add([typeof(T)], archetype);
         }
+        foreach(var comp in components)
+            comp.Dispose();
     }
 }

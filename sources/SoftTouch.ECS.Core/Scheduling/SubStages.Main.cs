@@ -6,41 +6,41 @@ namespace SoftTouch.ECS.Scheduling;
 /// <summary>
 /// Base record for Startup stages
 /// </summary>
-public abstract record StartupBase : SubStage<Main>;
+public abstract class StartupBase : SubStage<Main>;
 
 /// <summary>
 /// Runs once before the startup stage.
 /// </summary>
-public sealed record PreStartup : StartupBase;
+public sealed class PreStartup : StartupBase;
 /// <summary>
 /// Runs once at the start of the app.
 /// </summary>
-public sealed record Startup : StartupBase;
+public sealed class Startup : StartupBase;
 /// <summary>
 /// Runs once after the startup stage.
 /// </summary>
-public sealed record PostStartup : StartupBase;
+public sealed class PostStartup : StartupBase;
 #endregion
 
 #region Main
 /// <summary>
 /// Runs first before everything else.
 /// </summary>
-public sealed record First : SubStage<Main>;
+public sealed class First : SubStage<Main>;
 /// <summary>
 /// Runs before the Update stage.
 /// </summary>
-public sealed record PreUpdate : SubStage<Main>;
+public sealed class PreUpdate : SubStage<Main>;
 /// <summary>
 /// Runs everytime, contains the main logic.
 /// </summary>
-public sealed record Update : SubStage<Main>;
+public sealed class Update : SubStage<Main>;
 /// <summary>
 /// Runs after the Update stage.
 /// </summary>
-public sealed record PostUpdate : SubStage<Main>;
+public sealed class PostUpdate : SubStage<Main>;
 /// <summary>
 /// Runs last after everything else.
 /// </summary>
-public sealed record Last : SubStage<Main>;
+public sealed class Last : SubStage<Main>;
 #endregion

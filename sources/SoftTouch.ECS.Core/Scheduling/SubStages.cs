@@ -4,11 +4,11 @@ using SoftTouch.ECS.Processors;
 namespace SoftTouch.ECS.Scheduling;
 
 
-public abstract record SubStage
+public abstract class SubStage
 {
     public abstract Type StageType { get; }
 }
-public abstract record SubStage<TStage> : SubStage
+public abstract class SubStage<TStage> : SubStage
     where TStage : Stage
 {
     public override Type StageType => typeof(TStage);

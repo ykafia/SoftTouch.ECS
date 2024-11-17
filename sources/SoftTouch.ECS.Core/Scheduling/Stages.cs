@@ -6,14 +6,14 @@ using SoftTouch.ECS.Processors;
 
 namespace SoftTouch.ECS.Scheduling;
 
-public abstract record Stage
+public abstract class Stage
 {
     public abstract void Update();
     public abstract bool TryAdd<TSubStage>(Processor processor) where TSubStage : SubStage;
     internal abstract void SetStages<TStage>(ReadOnlySpan<SubStage<TStage>> subStages) where TStage : Stage;
     
 }
-public abstract record Stage<T> : Stage
+public abstract class Stage<T> : Stage
     where T : Stage<T>
 {
     public bool Parallel { get; set; } = true;
@@ -78,7 +78,7 @@ public abstract record Stage<T> : Stage
     }
 }
 
-public sealed record Main : Stage<Main>
+public sealed class Main : Stage<Main>
 {
     bool started = false;
     protected override List<SubStage<Main>> SubStages { get; } = [
