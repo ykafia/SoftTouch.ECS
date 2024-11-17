@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+using System.Dynamic;
 using SoftTouch.ECS.Arrays;
 using SoftTouch.ECS.Events;
 using SoftTouch.ECS.Processors;
@@ -10,7 +12,7 @@ namespace SoftTouch.ECS;
 public sealed partial class World
 {
     public AppTime? AppTime { get; }
-    public WorldResources Resources { get; } = new();
+    public ConcurrentDictionary<Type, object> Resources { get; } = [];
     internal Entities Entities { get; }
 
     internal ArchetypeList Archetypes = new();
@@ -34,7 +36,7 @@ public sealed partial class World
         Resources.Set(new WorldCommands(this));
         Entities = new(this);
     }
-    public TResource GetResource<TResource>() where TResource : class 
+    public TResource GetResource<TResource>() where TResource : class
         => Resources.Get<TResource>();
 
     public void Clear()
@@ -43,4 +45,14 @@ public sealed partial class World
             arch.Clear();
         Entities.Clear();
     }
+}
+
+public static class ResourceExtensions
+{
+    public static T Get<T>(this ConcurrentDictionary<Type, object> resource)
+        where T : class
+        => (T)resource[typeof(T)];
+    public static void Set<T>(this ConcurrentDictionary<Type, object> resource, T value)
+        where T : class
+        => resource[typeof(T)] = value;
 }
