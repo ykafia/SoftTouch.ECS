@@ -21,7 +21,7 @@ let startup (commands : Commands) =
     |> ignore
     
 
-let nameSystem (entities : Query<NameComponent>) : unit =
+let nameSystem (entities : Query<NameComponent, NoFilter>) : unit =
     for entity in entities do
         entity.Get<NameComponent>().Name
         |> printfn "original name is : %s"
@@ -31,7 +31,7 @@ let nameSystem (entities : Query<NameComponent>) : unit =
         entity.Get<NameComponent>()
         |> printfn "Changed to %A"
 
-let twoEntities (entities1 : Query<NameComponent>) (entities2 : Query<NameComponent>) (commands : Commands) : unit =
+let twoEntities (entities1 : Query<NameComponent, NoFilter>) (entities2 : Query<NameComponent, NoFilter>) (commands : Commands) : unit =
     for entity in entities1 do
         entity.Get<NameComponent>().Name
         |> printfn "original name is : %s"
