@@ -19,10 +19,6 @@ type NameComponent =
     new (n : string) = {Name = n}
     override this.ToString() = $"{this.Name}"
     
-
-let app = new App()
-
-[<Bundle("MyBundle")>]
 let startup (commands : Commands) =
     commands
     |> Commands.spawn
@@ -61,18 +57,19 @@ let twoEntities (entities1 : Query<NameComponent, NoFilter>) (entities2 : Query<
         entity.Get<NameComponent>()
         |> printfn "Changed to %A"
 
-let x = 0;
-
-app
-|> App.addProcessor (Proc.from startup None)
-|> App.addProcessor (Proc.from nameSystem None)
-|> App.addProcessors [| Proc.from nameSystem None; Proc.from3 twoEntities None |]
-|> App.addProcessorsTo<Update> [
-        Proc.from nameSystem None
-    ]
-|> App.update 2
-|> (fun app -> app.World)
-|> World.getEntity 0
-|> ignore
-//|> fun x -> x.Name
-//|> printfn "Hello %s"
+[<EntryPoint>]
+let main argv =
+    let app = new App()
+    
+    app
+    |> App.addProcessor (Proc.from startup None)
+    |> App.addProcessor (Proc.from nameSystem None)
+    |> App.addProcessors [| Proc.from nameSystem None; Proc.from3 twoEntities None |]
+    |> App.addProcessorsTo<Update> [
+            Proc.from nameSystem None
+        ]
+    |> App.update 2
+    |> (fun app -> app.World)
+    |> World.getEntity 0
+    |> printfn "Hello %A"
+    0

@@ -6,12 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Components.fs" />
+    <Compile Include="Systems.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SoftTouch.ECS.Core\SoftTouch.ECS.Core.csproj" />
     <ProjectReference Include="..\SoftTouch.ECS.FSharp\SoftTouch.ECS.FSharp.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Raylib-cs" Version="6.1.1" />
   </ItemGroup>
 
 </Project>
