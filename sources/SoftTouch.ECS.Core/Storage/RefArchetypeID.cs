@@ -98,7 +98,7 @@ public ref struct RefArchetypeID
 
     public override readonly int GetHashCode()
     {
-        if (Types == null) return 0;
+        if (Types.IsEmpty) return 0;
 
         unchecked
         {

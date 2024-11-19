@@ -138,10 +138,9 @@ public partial class Archetype
         var result =
         new StringBuilder()
             .Append("Type : [")
-            .Append(string.Join(";", Storage.Keys.Select(x => x.Name) ?? new List<string>()))
+            .Append(string.Join(";", Storage.Keys.Select(x => x.Name) ?? []))
             .Append(']')
-            .AppendLine()
-            .Append("Storages : [")
+            .Append(" Storages : [")
             .Append(string.Join(";", Storage.Values.Select(x => x.ToString())))
             .Append(']');
         return result.ToString();

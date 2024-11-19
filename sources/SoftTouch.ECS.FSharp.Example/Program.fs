@@ -62,14 +62,11 @@ let main argv =
     let app = new App()
     
     app
-    |> App.addProcessor (Proc.from startup None)
+    |> App.addStartupProcessor (Proc.from startup None)
     |> App.addProcessor (Proc.from nameSystem None)
-    |> App.addProcessors [| Proc.from nameSystem None; Proc.from3 twoEntities None |]
-    |> App.addProcessorsTo<Update> [
-            Proc.from nameSystem None
-        ]
-    |> App.update 2
-    |> (fun app -> app.World)
-    |> World.getEntity 0
-    |> printfn "Hello %A"
+    |> App.update 5
+    |> ignore
+
+    printfn "%A" app.World[0]
+
     0
